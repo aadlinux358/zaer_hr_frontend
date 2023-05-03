@@ -1,10 +1,25 @@
+import { useAuthStore } from 'src/stores/auth-store';
 import { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
+    name: 'Dashboard',
     component: () => import('layouts/MainLayout.vue'),
+    beforeEnter: (to /* from */) => {
+      const authStore = useAuthStore();
+      if (!authStore.authState.isAuthenticated && to.name !== 'Login') {
+        authStore.authState.requestedUrl = to.name;
+        return { name: 'Login' };
+      }
+      return true;
+    },
     children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('pages/LoginPage.vue'),
   },
 
   // Always leave this as last one,
