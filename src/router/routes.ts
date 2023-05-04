@@ -19,42 +19,42 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/dashboard',
         name: 'Index',
-        component: () => import('pages/IndexPage.vue'),
+        component: () => import('pages/main/IndexPage.vue'),
       },
       {
         path: '/employees',
         name: 'Employees',
-        component: () => import('pages/EmployeePage.vue'),
+        component: () => import('pages/main/EmployeePage.vue'),
       },
       {
         path: '/departments',
         name: 'Departments',
-        component: () => import('pages/DepartmentPage.vue'),
+        component: () => import('pages/main/DepartmentPage.vue'),
       },
       {
         path: '/sections',
         name: 'Sections',
-        component: () => import('pages/SectionPage.vue'),
+        component: () => import('pages/main/SectionPage.vue'),
       },
       {
         path: '/sub-sections',
         name: 'SubSections',
-        component: () => import('pages/SubSectionPage.vue'),
+        component: () => import('pages/main/SubSectionPage.vue'),
       },
       {
         path: '/current-jobs',
         name: 'CurrentJobs',
-        component: () => import('pages/CurrentJobPage.vue'),
+        component: () => import('pages/main/CurrentJobPage.vue'),
       },
       {
         path: '/about',
         name: 'About',
-        component: () => import('pages/AboutPage.vue'),
+        component: () => import('pages/common/AboutPage.vue'),
       },
       {
         path: '/help',
         name: 'Help',
-        component: () => import('pages/HelpPage.vue'),
+        component: () => import('pages/common/HelpPage.vue'),
       },
       {
         path: '',
@@ -87,20 +87,50 @@ const routes: RouteRecordRaw[] = [
     },
 
     children: [
+      {
+        path: 'dashboard',
+        name: 'AdminDashboard',
+        component: () => import('pages/admin/AdminIndexPage.vue')
+      },
+      {
+        path: 'employees',
+        name: 'AdminEmployee',
+        component: () => import('pages/admin/AdminEmployeePage.vue')
+      },
+      {
+        path: 'departments',
+        name: 'AdminDepartment',
+        component: () => import('pages/admin/AdminDepartmentPage.vue')
+      },
+      {
+        path: 'sections',
+        name: 'AdminSection',
+        component: () => import('pages/admin/AdminSectionPage.vue')
+      },
+      {
+        path: 'sub-sections',
+        name: 'AdminSubSection',
+        component: () => import('pages/admin/AdminSubSectionPage.vue')
+      },
+      {
+        path: 'current-jobs',
+        name: 'AdminCurrentJob',
+        component: () => import('pages/admin/AdminCurrentJobPage.vue')
+      },
 
     ]
   },
   {
     path: '/login',
     name: 'Login',
-    component: () => import('pages/LoginPage.vue'),
+    component: () => import('pages/common/LoginPage.vue'),
   },
 
   // Always leave this as last one,
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue'),
+    component: () => import('pages/common/ErrorNotFound.vue'),
   },
 ];
 

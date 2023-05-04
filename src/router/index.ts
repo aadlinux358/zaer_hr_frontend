@@ -1,8 +1,8 @@
-import { route } from 'quasar/wrappers';
+// import {route} from 'quasar/wrappers';
 import {
-  createMemoryHistory,
+  // createMemoryHistory,
   createRouter,
-  createWebHashHistory,
+  // createWebHashHistory,
   createWebHistory,
 } from 'vue-router';
 
@@ -37,7 +37,7 @@ import routes from './routes';
 
 const createHistory = createWebHistory;
 const Router = createRouter({
-  scrollBehavior: () => ({ left: 0, top: 0 }),
+  scrollBehavior: () => ({left: 0, top: 0}),
   routes,
   history: createHistory(
     process.env.MODE === 'ssr' ? void 0 : process.env.VUE_ROUTER_BASE

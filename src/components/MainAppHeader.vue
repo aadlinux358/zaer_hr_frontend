@@ -70,7 +70,6 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
 import {useAuthStore} from 'src/stores/auth-store';
 import {useUiStore} from 'src/stores/ui-store.ts'
 
