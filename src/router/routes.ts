@@ -1,5 +1,6 @@
 import {useAuthStore} from 'src/stores/auth-store';
 import {RouteRecordRaw} from 'vue-router';
+import {Notify} from 'quasar';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -60,6 +61,34 @@ const routes: RouteRecordRaw[] = [
         redirect: {name: 'Index'},
       }
     ],
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: () => import('layouts/AdminLayout.vue'),
+    beforeEnter: (to /* from */) => {
+      const authStore = useAuthStore();
+      if (!authStore.authState.isAuthenticated && to.name !== 'Login') {
+        authStore.authState.requestedUrl = to.name;
+        return {name: 'Login'};
+      }
+      if (authStore.authState.user) {
+        if (!authStore.authState.user.is_superuser) {
+          Notify.create({
+            color: 'negative',
+            message: 'you must have admin privileges'
+          })
+          return false
+        }
+      } else {
+        return false;
+      }
+      return true;
+    },
+
+    children: [
+
+    ]
   },
   {
     path: '/login',

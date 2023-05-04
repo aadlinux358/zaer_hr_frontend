@@ -29,37 +29,37 @@ const essentialLinks: EssentialLinkProps[] = [
     title: 'Dashboard',
     caption: 'Basic statistics',
     icon: 'dashboard',
-    link: '/dashboard',
+    link: '/admin/dashboard',
   },
   {
     title: 'Employee',
     caption: 'Employee information',
     icon: 'reduce_capacity',
-    link: '/employees',
+    link: '/admin/employees',
   },
   {
     title: 'Department',
     caption: 'Company departments',
     icon: 'factory',
-    link: '/departments',
+    link: '/admin/departments',
   },
   {
     title: 'Section',
     caption: 'Section under departments',
     icon: 'view_module',
-    link: '/sections',
+    link: '/admin/sections',
   },
   {
     title: 'Sub Section',
     caption: 'Sub sections',
     icon: 'segment',
-    link: '/sub-sections',
+    link: '/admin/sub-sections',
   },
   {
     title: 'Current Job',
     caption: 'Job lists',
     icon: 'work',
-    link: '/current-jobs',
+    link: '/admin/current-jobs',
   },
 ];
 
