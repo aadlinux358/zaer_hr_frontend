@@ -20,6 +20,16 @@ const routes: RouteRecordRaw[] = [
         name: 'Index',
         component: () => import('pages/IndexPage.vue'),
       },
+      {
+        path: '/about',
+        name: 'About',
+        component: () => import('pages/AboutPage.vue'),
+      },
+      {
+        path: '/help',
+        name: 'Help',
+        component: () => import('pages/HelpPage.vue'),
+      },
     ],
   },
   {

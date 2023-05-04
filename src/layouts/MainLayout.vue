@@ -2,23 +2,12 @@
   <q-layout view="lHh Lpr lFf">
     <q-header>
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
         <q-toolbar-title> ZaEr P.L.C </q-toolbar-title>
         <div>
           <q-btn flat icon="settings">
-            <q-menu
-              square
-              transition-show="flip-right"
-              transition-hide="flip-left"
-            >
+            <q-menu square transition-show="flip-right" transition-hide="flip-left">
               <q-list dense style="min-width: 100px">
                 <q-item>
                   <q-item-section avatar>
@@ -39,15 +28,8 @@
                     <q-list dense style="min-width: 100px">
                       <q-item dense clickable>
                         <q-item-section>
-                          <q-toggle
-                            dense
-                            v-close-popup
-                            @update:model-value="toggleDark"
-                            color="red"
-                            checked-icon="dark_mode"
-                            unchecked-icon="light_mode"
-                            v-model="darkMode"
-                          />
+                          <q-toggle dense v-close-popup @update:model-value="toggleDark" color="red"
+                            checked-icon="dark_mode" unchecked-icon="light_mode" v-model="darkMode" />
                         </q-item-section>
                         <q-item-section> Theme </q-item-section>
                       </q-item>
@@ -61,13 +43,13 @@
                   </q-menu>
                 </q-item>
 
-                <q-item clickable v-close-popup>
+                <q-item clickable v-close-popup :to="{name: 'About'}">
                   <q-item-section avatar>
                     <q-icon color="primary" name="info" />
                   </q-item-section>
                   <q-item-section>About</q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup>
+                <q-item clickable v-close-popup :to="{name: 'Help'}">
                   <q-item-section avatar>
                     <q-icon color="primary" name="help" />
                   </q-item-section>
@@ -91,11 +73,7 @@
       <q-list>
         <q-item-label header> ZaEr Human Resources </q-item-label>
 
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
+        <EssentialLink v-for="link in essentialLinks" :key="link.title" v-bind="link" />
       </q-list>
     </q-drawer>
 
@@ -106,13 +84,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useQuasar } from 'quasar';
+import {ref} from 'vue';
+import {useQuasar} from 'quasar';
 import EssentialLink, {
   EssentialLinkProps,
 } from 'components/EssentialLink.vue';
 
-import { useAuthStore } from 'src/stores/auth-store';
+import {useAuthStore} from 'src/stores/auth-store';
 
 const authStore = useAuthStore();
 const $q = useQuasar();
