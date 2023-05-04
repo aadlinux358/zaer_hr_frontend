@@ -25,7 +25,7 @@
                     <q-icon color="primary" name="person" />
                   </q-item-section>
                   <q-item-section>
-                    {{ authStore.authState.user.username }}
+                    {{ authStore.authState.user?.username }}
                   </q-item-section>
                 </q-item>
                 <q-separator />

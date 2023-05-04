@@ -1,10 +1,9 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <login-page></login-page>
+    <h1>test</h1>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
-import LoginPage from './LoginPage.vue';
+import { ref } from 'vue';
 </script>

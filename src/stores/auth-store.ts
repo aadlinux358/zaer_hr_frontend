@@ -1,11 +1,11 @@
-import { reactive } from 'vue';
-import { defineStore } from 'pinia';
-import { Notify } from 'quasar';
-import { RouteRecordName } from 'vue-router';
+import {reactive} from 'vue';
+import {defineStore} from 'pinia';
+import {Notify} from 'quasar';
+import {RouteRecordName} from 'vue-router';
 
 import Router from 'src/router/index';
-import { api } from 'boot/axios';
-import { AuthUser } from 'src/models/auth-user';
+import {api} from 'boot/axios';
+import {AuthUser} from 'src/models/auth-user';
 interface LoginCredential {
   username: string;
   password: string;
@@ -19,7 +19,7 @@ interface AuthStoreState {
 }
 
 export const useAuthStore = defineStore('auth', () => {
-  const credential: LoginCredential = reactive({ username: '', password: '' });
+  const credential: LoginCredential = reactive({username: '', password: ''});
   const authState: AuthStoreState = reactive({
     isAuthenticated: false,
     access_token: '',
@@ -37,9 +37,9 @@ export const useAuthStore = defineStore('auth', () => {
         authState.access_token = res.data.access_token;
         authState.user = res.data.user;
         if (!authState.requestedUrl) {
-          await Router.push({ name: 'Dashboard' });
+          await Router.push({name: 'Main'});
         }
-        await Router.push({ name: authState.requestedUrl });
+        await Router.push({name: authState.requestedUrl});
       })
       .catch((err) => {
         Notify.create({
@@ -58,7 +58,7 @@ export const useAuthStore = defineStore('auth', () => {
     authState.requestedUrl = '';
     credential.username = '';
     credential.password = '';
-    await Router.push({ name: 'Login' });
+    await Router.push({name: 'Login'});
   }
   return {
     credential,
