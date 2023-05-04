@@ -16,9 +16,34 @@ const routes: RouteRecordRaw[] = [
     },
     children: [
       {
-        path: '',
+        path: '/dashboard',
         name: 'Index',
         component: () => import('pages/IndexPage.vue'),
+      },
+      {
+        path: '/employees',
+        name: 'Employees',
+        component: () => import('pages/EmployeePage.vue'),
+      },
+      {
+        path: '/departments',
+        name: 'Departments',
+        component: () => import('pages/DepartmentPage.vue'),
+      },
+      {
+        path: '/sections',
+        name: 'Sections',
+        component: () => import('pages/SectionPage.vue'),
+      },
+      {
+        path: '/sub-sections',
+        name: 'SubSections',
+        component: () => import('pages/SubSectionPage.vue'),
+      },
+      {
+        path: '/current-jobs',
+        name: 'CurrentJobs',
+        component: () => import('pages/CurrentJobPage.vue'),
       },
       {
         path: '/about',
@@ -30,6 +55,10 @@ const routes: RouteRecordRaw[] = [
         name: 'Help',
         component: () => import('pages/HelpPage.vue'),
       },
+      {
+        path: '',
+        redirect: {name: 'Index'},
+      }
     ],
   },
   {
