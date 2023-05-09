@@ -2,9 +2,10 @@ import {reactive} from 'vue';
 import {defineStore} from 'pinia';
 import {Notify} from 'quasar';
 import {RouteRecordName} from 'vue-router';
+import axios from 'axios';
 
 import Router from 'src/router/index';
-import {api} from 'boot/axios';
+import {authApi} from 'boot/axios';
 import {AuthUser} from 'src/models/auth-user';
 interface LoginCredential {
   username: string;
@@ -16,6 +17,7 @@ interface AuthStoreState {
   user: AuthUser | null;
   isAuthenticated: boolean;
   requestedUrl: RouteRecordName | undefined | null;
+  error: string;
 }
 
 export const useAuthStore = defineStore('auth', () => {
@@ -25,10 +27,30 @@ export const useAuthStore = defineStore('auth', () => {
     access_token: '',
     user: null,
     requestedUrl: '',
+    error: ''
   });
 
+  function _setError(err: unknown) {
+    if (axios.isAxiosError(err)) {
+      if (!err.response) {
+        authState.error = 'connection error.'
+      } else {
+        authState.error = err.response?.data.detail
+      }
+    } else if (err instanceof Error) {
+      authState.error = err.message;
+    } else {
+      authState.error = 'Unknown error.'
+    }
+
+    Notify.create({
+      color: 'negative',
+      message: authState.error,
+    });
+
+  }
   async function login() {
-    api
+    authApi
       .post('/login', credential)
       .then(async (res) => {
         credential.username = '';
@@ -42,12 +64,8 @@ export const useAuthStore = defineStore('auth', () => {
         await Router.push({name: authState.requestedUrl});
       })
       .catch((err) => {
-        Notify.create({
-          color: 'negative',
-          message: err.response?.data
-            ? err.response.data.detail
-            : 'Connection error',
-        });
+        console.log('inside catch block')
+        _setError(err);
       });
   }
 

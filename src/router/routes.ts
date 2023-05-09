@@ -27,6 +27,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/main/EmployeePage.vue'),
       },
       {
+        path: '/divisions',
+        name: 'Divisions',
+        component: () => import('pages/main/DivisionPage.vue'),
+      },
+      {
         path: '/departments',
         name: 'Departments',
         component: () => import('pages/main/DepartmentPage.vue'),
@@ -37,14 +42,14 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/main/SectionPage.vue'),
       },
       {
-        path: '/sub-sections',
-        name: 'SubSections',
-        component: () => import('pages/main/SubSectionPage.vue'),
+        path: '/units',
+        name: 'Units',
+        component: () => import('pages/main/UnitPage.vue'),
       },
       {
-        path: '/current-jobs',
-        name: 'CurrentJobs',
-        component: () => import('pages/main/CurrentJobPage.vue'),
+        path: '/designations',
+        name: 'Designations',
+        component: () => import('pages/main/DesignationPage.vue'),
       },
       {
         path: '/about',
@@ -94,28 +99,33 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'employees',
-        name: 'AdminEmployee',
+        name: 'AdminEmployees',
         component: () => import('pages/admin/AdminEmployeePage.vue')
       },
       {
+        path: 'divisions',
+        name: 'AdminDivisions',
+        component: () => import('pages/admin/AdminDivisionPage.vue')
+      },
+      {
         path: 'departments',
-        name: 'AdminDepartment',
+        name: 'AdminDepartments',
         component: () => import('pages/admin/AdminDepartmentPage.vue')
       },
       {
         path: 'sections',
-        name: 'AdminSection',
+        name: 'AdminSections',
         component: () => import('pages/admin/AdminSectionPage.vue')
       },
       {
-        path: 'sub-sections',
-        name: 'AdminSubSection',
-        component: () => import('pages/admin/AdminSubSectionPage.vue')
+        path: 'units',
+        name: 'AdminUnits',
+        component: () => import('pages/admin/AdminUnitPage.vue')
       },
       {
-        path: 'current-jobs',
-        name: 'AdminCurrentJob',
-        component: () => import('pages/admin/AdminCurrentJobPage.vue')
+        path: 'designations',
+        name: 'AdminDesignations',
+        component: () => import('pages/admin/AdminDesignationPage.vue')
       },
 
     ]
@@ -132,6 +142,7 @@ const routes: RouteRecordRaw[] = [
     path: '/:catchAll(.*)*',
     component: () => import('pages/common/ErrorNotFound.vue'),
   },
+
 ];
 
 export default routes;

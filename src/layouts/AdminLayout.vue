@@ -9,7 +9,7 @@
       </q-list>
     </q-drawer>
 
-    <q-page-container>
+    <q-page-container class="q-ma-xs">
       <router-view />
     </q-page-container>
   </q-layout>
@@ -27,39 +27,38 @@ const uiStore = useUiStore();
 const essentialLinks: EssentialLinkProps[] = [
   {
     title: 'Dashboard',
-    caption: 'Basic statistics',
     icon: 'dashboard',
-    link: '/admin/dashboard',
+    link: 'AdminDashboard',
   },
   {
     title: 'Employee',
-    caption: 'Employee information',
     icon: 'reduce_capacity',
-    link: '/admin/employees',
+    link: 'AdminEmployees',
+  },
+  {
+    title: 'Division',
+    icon: 'safety_divider',
+    link: 'AdminDivisions',
   },
   {
     title: 'Department',
-    caption: 'Company departments',
     icon: 'factory',
-    link: '/admin/departments',
+    link: 'AdminDepartments',
   },
   {
     title: 'Section',
-    caption: 'Section under departments',
     icon: 'view_module',
-    link: '/admin/sections',
+    link: 'AdminSections',
   },
   {
-    title: 'Sub Section',
-    caption: 'Sub sections',
+    title: 'Unit',
     icon: 'segment',
-    link: '/admin/sub-sections',
+    link: 'AdminUnits',
   },
   {
-    title: 'Current Job',
-    caption: 'Job lists',
+    title: 'Designation',
     icon: 'work',
-    link: '/admin/current-jobs',
+    link: 'AdminDesignations',
   },
 ];
 

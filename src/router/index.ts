@@ -42,5 +42,6 @@ const Router = createRouter({
   history: createHistory(
     process.env.MODE === 'ssr' ? void 0 : process.env.VUE_ROUTER_BASE
   ),
+  strict: true
 });
 export default Router;
