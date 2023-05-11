@@ -4,3 +4,9 @@ export enum CRUDType {
   UPDATE = 'UPDATE',
   DELETE = 'DELETE'
 }
+
+export enum DownloadFileType {
+  CSV = 'csv',
+  EXCEL = 'xlsx',
+  PDF = 'pdf',
+}
