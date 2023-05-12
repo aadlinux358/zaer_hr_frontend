@@ -10,3 +10,9 @@ export enum DownloadFileType {
   EXCEL = 'xlsx',
   PDF = 'pdf',
 }
+
+export enum AppLanguage {
+  ENG = 'ENG',
+  ITA = 'ITA',
+  TIG = 'TIR'
+}

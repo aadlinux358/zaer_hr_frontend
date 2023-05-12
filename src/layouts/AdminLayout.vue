@@ -3,7 +3,7 @@
     <MainAppHeader />
     <q-drawer bordered v-model="uiStore.leftDrawerOpen" show-if-above :width="250">
       <q-list>
-        <q-item-label header> ZaEr Human Resources </q-item-label>
+        <q-item-label header class="text-capitalize"> {{ $t('zaerhr') }} </q-item-label>
 
         <EssentialLink v-for="link in essentialLinks" :key="link.title" v-bind="link" />
       </q-list>
@@ -26,37 +26,37 @@ const uiStore = useUiStore();
 
 const essentialLinks: EssentialLinkProps[] = [
   {
-    title: 'Dashboard',
+    title: 'dashboard',
     icon: 'dashboard',
     link: 'AdminDashboard',
   },
   {
-    title: 'Employee',
+    title: 'employee',
     icon: 'reduce_capacity',
     link: 'AdminEmployees',
   },
   {
-    title: 'Division',
+    title: 'division',
     icon: 'safety_divider',
     link: 'AdminDivisions',
   },
   {
-    title: 'Department',
+    title: 'department',
     icon: 'factory',
     link: 'AdminDepartments',
   },
   {
-    title: 'Section',
+    title: 'section',
     icon: 'view_module',
     link: 'AdminSections',
   },
   {
-    title: 'Unit',
+    title: 'unit',
     icon: 'segment',
     link: 'AdminUnits',
   },
   {
-    title: 'Designation',
+    title: 'designation',
     icon: 'work',
     link: 'AdminDesignations',
   },
