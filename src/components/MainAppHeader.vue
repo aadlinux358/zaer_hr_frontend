@@ -25,20 +25,20 @@
       </q-btn>
 
       <div>
-        <q-btn flat icon-right="arrow_drop_down" icon="language" label="ENG">
+        <q-btn flat icon-right="arrow_drop_down" icon="language" :label="uiStore.selectedLanguage">
           <q-menu square transition-show="flip-right" transition-hide="flip-left">
             <q-list dense style="min-width: 100px">
-              <q-item clickable v-close-popup>
+              <q-item clickable v-close-popup @click="uiStore.setLanguage(AppLanguage.ENG)">
                 <q-item-section>
                   English
                 </q-item-section>
               </q-item>
-              <q-item clickable v-close-popup>
+              <q-item clickable v-close-popup @click="uiStore.setLanguage(AppLanguage.ITA)">
                 <q-item-section>
                   Italian
                 </q-item-section>
               </q-item>
-              <q-item clickable v-close-popup>
+              <q-item clickable v-close-popup @click="uiStore.setLanguage(AppLanguage.TIG)">
                 <q-item-section>
                   Tigrigna
                 </q-item-section>
@@ -107,6 +107,7 @@
 <script setup lang="ts">
 import {useAuthStore} from 'src/stores/auth-store';
 import {useUiStore} from 'src/stores/ui-store.ts'
+import {AppLanguage} from 'src/models/common.ts'
 import MessagesComponent from 'src/components/MessagesComponent.vue';
 
 const authStore = useAuthStore();
