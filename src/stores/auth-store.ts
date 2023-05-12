@@ -17,6 +17,7 @@ interface AuthStoreState {
   user: AuthUser | null;
   isAuthenticated: boolean;
   requestedUrl: RouteRecordName | undefined | null;
+  loading: boolean;
   error: string;
 }
 
@@ -27,6 +28,7 @@ export const useAuthStore = defineStore('auth', () => {
     access_token: '',
     user: null,
     requestedUrl: '',
+    loading: false,
     error: ''
   });
 
@@ -50,23 +52,24 @@ export const useAuthStore = defineStore('auth', () => {
 
   }
   async function login() {
-    authApi
-      .post('/login', credential)
-      .then(async (res) => {
-        credential.username = '';
-        credential.password = '';
-        authState.isAuthenticated = true;
-        authState.access_token = res.data.access_token;
-        authState.user = res.data.user;
-        if (!authState.requestedUrl) {
-          await Router.push({name: 'Main'});
-        }
-        await Router.push({name: authState.requestedUrl});
-      })
-      .catch((err) => {
-        console.log('inside catch block')
-        _setError(err);
-      });
+    authState.loading = true;
+    try {
+      const res = await authApi.post('/login', credential);
+      authState.isAuthenticated = true;
+      authState.access_token = res.data.access_token;
+      authState.user = res.data.user;
+      credential.username = '';
+      credential.password = '';
+      if (!authState.requestedUrl) {
+        await Router.push({name: 'Main'});
+      }
+      await Router.push({name: authState.requestedUrl});
+
+    } catch (err) {
+      _setError(err);
+    } finally {
+      authState.loading = false;
+    }
   }
 
   async function logout() {
