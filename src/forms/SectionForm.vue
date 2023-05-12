@@ -41,12 +41,14 @@ watch(divisionUid, (newValue, oldVAlue) => {
   }
 })
 onMounted(() => {
+  /*
   if (divisionStore.state.divisions.size === 0) {
     divisionStore.getManyDBDivisions()
   }
   if (departmentStore.state.departments.size === 0) {
     departmentStore.getManyDBDepartments();
   }
+  */
   if (sectionStore.state.crudType === CRUDType.UPDATE) {
     const section = sectionStore.state.selectedSection;
     const dep = departmentStore.state.departments.get(section.department_uid);
@@ -57,9 +59,11 @@ function onSubmit() {
   emit('save');
 }
 function onReset() {
+  divisionUid.value = '';
   emit('reset')
 }
 function onCancel() {
+  divisionUid.value = '';
   emit('cancel')
 }
 </script>
