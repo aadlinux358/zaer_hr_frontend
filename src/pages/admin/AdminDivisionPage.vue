@@ -40,7 +40,7 @@
   <q-dialog ref="dialogRef" @hide="onHide" persistent>
     <q-card class="q-dialog-plugin">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6">Add Division</div>
+        <div class="text-h6 text-uppercase">{{ divisionStore.state.crudType }} Division</div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
@@ -69,10 +69,12 @@ const {capitalize} = format;
 const divisionStore = useDivisionStore();
 
 const filter = ref('');
-onMounted(() => {
+onMounted(async () => {
+  $q.loading.show();
   if (divisionStore.state.divisions.size === 0) {
-    divisionStore.getManyDBDivisions();
+    await divisionStore.getManyDBDivisions();
   }
+  $q.loading.hide();
 })
 
 function onEdit(uid: string) {

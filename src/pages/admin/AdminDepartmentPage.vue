@@ -43,7 +43,7 @@
   <q-dialog ref="dialogRef" @hide="onHide" persistent>
     <q-card class="q-dialog-plugin">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6">Add Department</div>
+        <div class="text-h6 text-uppercase">{{ departmentStore.state.crudType }} Department</div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
@@ -75,13 +75,15 @@ const {capitalize} = format;
 const departmentStore = useDepartmentStore();
 const divisionStore = useDivisionStore();
 const filter = ref('');
-onMounted(() => {
+onMounted(async () => {
+  $q.loading.show();
   if (divisionStore.state.divisions.size == 0) {
-    divisionStore.getManyDBDivisions();
+    await divisionStore.getManyDBDivisions();
   }
   if (departmentStore.state.departments.size === 0) {
-    departmentStore.getManyDBDepartments();
+    await departmentStore.getManyDBDepartments();
   }
+  $q.loading.hide();
 })
 
 function onEdit(uid: string) {

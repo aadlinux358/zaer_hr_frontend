@@ -40,7 +40,7 @@
   <q-dialog ref="dialogRef" @hide="onHide" persistent>
     <q-card class="q-dialog-plugin">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6">Add Section</div>
+        <div class="text-h6 text-uppercase">{{ sectionStore.state.crudType }} Section</div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
@@ -74,10 +74,18 @@ const departmentStore = useDepartmentStore();
 const sectionStore = useSectionStore();
 
 const filter = ref('');
-onMounted(() => {
-  if (sectionStore.state.sections.size === 0) {
-    sectionStore.getManyDBSections();
+onMounted(async () => {
+  $q.loading.show();
+  if (divisionStore.state.divisions.size === 0) {
+    await divisionStore.getManyDBDivisions();
   }
+  if (departmentStore.state.departments.size === 0) {
+    await departmentStore.getManyDBDepartments();
+  }
+  if (sectionStore.state.sections.size === 0) {
+    await sectionStore.getManyDBSections();
+  }
+  $q.loading.hide();
 })
 
 function onEdit(uid: string) {
@@ -122,6 +130,7 @@ function onCancel() {
   onDialogCancel()
 }
 function onHide() {
+  sectionStore.resetForm();
   onDialogHide()
 }
 
@@ -154,7 +163,7 @@ const columns = [
     align: 'left',
     field: (row: SectionReadOne) => {
       const dep = departmentStore.state.departments.get(row.department_uid);
-      return capitalize(dep.name);
+      return capitalize(dep?.name);
     },
     format: (val: string) => capitalize(val),
     sortable: true
