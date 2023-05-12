@@ -1,6 +1,6 @@
 import {reactive} from 'vue';
 import {defineStore} from 'pinia';
-import {Notify} from 'quasar';
+import {Notify, Loading} from 'quasar';
 import {RouteRecordName} from 'vue-router';
 import axios from 'axios';
 
@@ -53,6 +53,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
   async function login() {
     authState.loading = true;
+    Loading.show();
     try {
       const res = await authApi.post('/login', credential);
       authState.isAuthenticated = true;
@@ -69,6 +70,7 @@ export const useAuthStore = defineStore('auth', () => {
       _setError(err);
     } finally {
       authState.loading = false;
+      Loading.hide();
     }
   }
 
