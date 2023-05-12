@@ -1,0 +1,17 @@
+export default {
+  zaerhr: 'risorse umane',
+  appinfo: 'applicazione informazione',
+  employee: 'dipendenti',
+  employees: 'dipendente',
+  dashboard: 'pannello di controllo',
+  division: 'divisione',
+  department: 'dipartimento',
+  section: 'sezione',
+  unit: 'unità',
+  units: 'unità',
+  new: 'nuovo',
+  designation: 'designazione',
+  designations: 'designazioni',
+  about: 'di',
+  help: 'aiuto',
+}
