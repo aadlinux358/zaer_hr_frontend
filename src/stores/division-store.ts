@@ -1,11 +1,11 @@
 import {computed, reactive} from 'vue';
 import {defineStore} from 'pinia';
-import {Notify} from 'quasar';
+import {exportFile, Notify} from 'quasar';
 import {hrApi} from 'src/boot/axios';
 import {DivisionReadOne, DivisionReadMany, DivisionCreate} from 'src/models/division';
 import {useAuthStore} from './auth-store';
 import axios from 'axios';
-import {CRUDType} from 'src/models/common';
+import {CRUDType, DownloadFileType} from 'src/models/common';
 
 export interface DivisionState {
   divisions: Map<string, DivisionReadOne>;
@@ -88,7 +88,7 @@ export const useDivisionStore = defineStore('division', () => {
     state.selectedDivision = division;
     await deleteDBDivision();
   }
-  async function getManyDBDivision() {
+  async function getManyDBDivisions() {
     state.divisions = new Map();
     state.loading = true;
     try {
@@ -108,8 +108,8 @@ export const useDivisionStore = defineStore('division', () => {
     try {
       const response = await hrApi.post(`${ENDPOINT}`, state.form, config);
       resetForm();
-      const data: DivisionReadOne = response.data;
-      state.divisions.set(data.uid, data);
+      const division: DivisionReadOne = response.data;
+      state.divisions.set(division.uid, division);
       Notify.create({
         color: 'positive',
         message: 'Successfully created division.'
@@ -126,8 +126,8 @@ export const useDivisionStore = defineStore('division', () => {
     state.loading = true;
     try {
       const response = await hrApi.patch(`${ENDPOINT}/${state.selectedDivision?.uid}`, state.form, config)
-      const data: DivisionReadOne = response.data;
-      state.divisions.set(data.uid, data);
+      const division: DivisionReadOne = response.data;
+      state.divisions.set(division.uid, division);
       Notify.create({
         color: 'positive',
         message: 'Successfully updated division.'
@@ -163,15 +163,30 @@ export const useDivisionStore = defineStore('division', () => {
     }
   }
 
+  async function downloadFile(fileType: DownloadFileType) {
+    state.loading = true;
+    try {
+      const response = await hrApi.get(`${ENDPOINT}/download/${fileType}`, Object.assign(config, {ResponseType: 'blob'}))
+      exportFile(`divisions.${fileType}`, response.data)
+    }
+    catch (err) {
+      _setError(err);
+    }
+    finally {
+      state.loading = false;
+    }
+  }
+
   return {
     state,
     addDivision,
     editDivision,
     deleteDivision,
-    getManyDBDivision,
+    getManyDBDivisions,
     createDBDivision,
     updateDBDivision,
     deleteDBDivision,
+    downloadFile,
     divisionList,
     resetForm,
   }

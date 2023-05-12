@@ -1,11 +1,11 @@
 import {computed, reactive} from 'vue';
 import {defineStore} from 'pinia';
-import {Notify} from 'quasar';
+import {exportFile, Notify} from 'quasar';
 import {hrApi} from 'src/boot/axios';
 import {DepartmentReadOne, DepartmentReadMany, DepartmentCreate} from 'src/models/department';
 import {useAuthStore} from './auth-store';
 import axios from 'axios';
-import {CRUDType} from 'src/models/common';
+import {CRUDType, DownloadFileType} from 'src/models/common';
 
 export interface DepartmentState {
   departments: Map<string, DepartmentReadOne>;
@@ -30,7 +30,8 @@ export const useDepartmentStore = defineStore('department', () => {
     departments: new Map(),
     selectedDepartment: null,
     form: {
-      name: ''
+      name: '',
+      division_uid: ''
     },
     crudType: CRUDType.READ,
     loading: false,
@@ -170,6 +171,19 @@ export const useDepartmentStore = defineStore('department', () => {
     }
   }
 
+  async function downloadFile(fileType: DownloadFileType) {
+    state.loading = true;
+    try {
+      const response = await hrApi.get(`${ENDPOINT}/download/${fileType}`, Object.assign(config, {ResponseType: 'blob'}))
+      exportFile(`department.${fileType}`, response.data)
+    }
+    catch (err) {
+      _setError(err);
+    }
+    finally {
+      state.loading = false;
+    }
+  }
   return {
     state,
     addDepartment,
@@ -179,6 +193,7 @@ export const useDepartmentStore = defineStore('department', () => {
     createDBDepartment,
     updateDBDepartment,
     deleteDBDepartment,
+    downloadFile,
     departmentList,
     resetForm,
   }
