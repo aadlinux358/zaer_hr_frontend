@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <MainAppHeader />
-    <q-drawer v-model="uiStore.leftDrawerOpen" show-if-above :width="250">
+    <q-drawer bordered v-model="uiStore.leftDrawerOpen" show-if-above :width="250">
       <q-list>
         <q-item-label header> ZaEr Human Resources </q-item-label>
 

@@ -1,6 +1,6 @@
 <template>
-  <q-table title="Divisions" :columns="columns" :rows="divisionStore.divisionList" row-key="uid" flat separator="cell"
-    :loading="divisionStore.state.loading" :filter="filter">
+  <q-table bordered square title="Divisions" :columns="columns" :rows="divisionStore.divisionList" row-key="uid" flat
+    separator="cell" :loading="divisionStore.state.loading" :filter="filter">
 
     <template v-slot:top="props">
       <div class="column full-width">
@@ -10,18 +10,20 @@
 
           <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
             @click="props.toggleFullscreen" class="q-mx-md" size="lg" />
-          <q-input filled dense debounce="300" color="primary" v-model="filter">
+        </div>
+        <div class="row q-my-md">
+          <q-btn color="primary" square no-caps :disable="divisionStore.state.loading" label="Add Division"
+            @click="addDivision" />
+          <q-space />
+          <div class="row q-mx-md items-center">
+            <q-btn color="primary" @click="downloadCSV" flat round dense icon="fas fa-file-csv" />
+            <q-btn color="primary" @click="downloadExcel" flat round dense icon="fas fa-file-excel" />
+          </div>
+          <q-input filled square dense debounce="300" color="primary" v-model="filter">
             <template v-slot:append>
               <q-icon name="search" />
             </template>
           </q-input>
-        </div>
-        <div class="row q-my-md">
-          <q-btn color="primary" :disable="divisionStore.state.loading" label="Add Division" @click="addDivision" />
-          <q-space />
-          <q-btn flat round dense icon="fas fa-file-csv" />
-          <q-btn flat round dense icon="fas fa-file-excel" />
-          <q-btn flat round dense icon="fas fa-file-pdf" />
         </div>
       </div>
     </template>
@@ -38,7 +40,7 @@
   <q-dialog ref="dialogRef" @hide="onHide" persistent>
     <q-card class="q-dialog-plugin">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6">Add Divisioin</div>
+        <div class="text-h6">Add Division</div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
@@ -54,22 +56,22 @@ import {onMounted} from 'vue';
 import {useDialogPluginComponent, useQuasar} from 'quasar'
 import {useDivisionStore} from 'src/stores/division-store';
 import {DivisionReadOne} from 'src/models/division';
-import {CRUDType} from 'src/models/common';
+import {CRUDType, DownloadFileType} from 'src/models/common';
 import DivisionForm from 'src/forms/DivisionForm.vue'
-
+import {format, date} from 'quasar';
 defineEmits({
   ...useDialogPluginComponent.emitsObject
 })
 
 const $q = useQuasar();
 const {dialogRef, onDialogHide, onDialogOK, onDialogCancel} = useDialogPluginComponent()
-
+const {capitalize} = format;
 const divisionStore = useDivisionStore();
 
 const filter = ref('');
 onMounted(() => {
   if (divisionStore.state.divisions.size === 0) {
-    divisionStore.getManyDBDivision();
+    divisionStore.getManyDBDivisions();
   }
 })
 
@@ -117,8 +119,17 @@ function onCancel() {
 function onHide() {
   onDialogHide()
 }
+
 function onFormReset() {
   divisionStore.resetForm();
+}
+
+function downloadCSV() {
+  divisionStore.downloadFile(DownloadFileType.CSV)
+}
+
+function downloadExcel() {
+  divisionStore.downloadFile(DownloadFileType.EXCEL)
 }
 
 const columns = [
@@ -128,14 +139,7 @@ const columns = [
     label: 'Division Name',
     align: 'left',
     field: (row: DivisionReadOne) => row.name,
-    sortable: true
-  },
-  {
-    name: 'uid',
-    required: true,
-    label: 'UUID',
-    align: 'left',
-    field: (row: DivisionReadOne) => row.uid,
+    format: (val: string) => capitalize(val),
     sortable: true
   },
   {
@@ -144,7 +148,15 @@ const columns = [
     label: 'Date Created',
     align: 'left',
     field: (row: DivisionReadOne) => row.date_created,
+    format: (val: string) => date.formatDate(val, 'DD-MMM-YYYY HH:mm A'),
     sortable: true
+  },
+  {
+    name: 'uid',
+    required: true,
+    label: 'Division UUID',
+    align: 'left',
+    field: (row: DivisionReadOne) => row.uid,
   },
   {
     name: 'actions',
@@ -155,3 +167,9 @@ const columns = [
 
 ]
 </script>
+<style lang="scss">
+thead tr:first-child th {
+  /* bg color is important for th; just specify one */
+  background-color: #e91c1c
+}
+</style>

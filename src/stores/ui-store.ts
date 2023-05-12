@@ -12,12 +12,9 @@ export const useUiStore = defineStore('ui', () => {
     leftDrawerOpen.value = !leftDrawerOpen.value;
   }
 
-  const toggleDark = (val: boolean) => {
-    if (val) {
-      $q.dark.set(true);
-    } else {
-      $q.dark.set(false);
-    }
+  const toggleDark = () => {
+    darkMode.value = !darkMode.value;
+    $q.dark.set(darkMode.value);
   };
 
 

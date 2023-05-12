@@ -1,11 +1,13 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <MainAppHeader />
-    <q-drawer v-model="uiStore.leftDrawerOpen" show-if-above :width="250">
+    <q-drawer bordered v-model="uiStore.leftDrawerOpen" show-if-above :width="250">
       <q-list>
         <q-item-label header> ZaEr Human Resources </q-item-label>
-
         <EssentialLink v-for="link in essentialLinks" :key="link.title" v-bind="link" />
+        <q-separator />
+        <q-item-label header>App Information </q-item-label>
+        <EssentialLink v-for="link in infoLinks" :key="link.title" v-bind="link" />
       </q-list>
     </q-drawer>
 
@@ -27,40 +29,52 @@ const uiStore = useUiStore();
 const essentialLinks: EssentialLinkProps[] = [
   {
     title: 'Dashboard',
-    caption: 'Basic statistics',
     icon: 'dashboard',
-    link: '/dashboard',
+    link: 'Dashboard',
   },
   {
     title: 'Employee',
-    caption: 'Employee information',
     icon: 'reduce_capacity',
-    link: '/employees',
+    link: 'Employees',
+  },
+  {
+    title: 'Division',
+    icon: 'safety_divider',
+    link: 'Divisions',
   },
   {
     title: 'Department',
-    caption: 'Company departments',
     icon: 'factory',
-    link: '/departments',
+    link: 'Departments',
   },
   {
     title: 'Section',
-    caption: 'Section under departments',
     icon: 'view_module',
-    link: '/sections',
+    link: 'Sections',
   },
   {
-    title: 'Sub Section',
-    caption: 'Sub sections',
+    title: 'Unit',
     icon: 'segment',
-    link: '/sub-sections',
+    link: 'Units',
   },
   {
-    title: 'Current Job',
-    caption: 'Job lists',
+    title: 'Designation',
     icon: 'work',
-    link: '/current-jobs',
+    link: 'Designations',
   },
 ];
+const infoLinks: EssentialLinkProps[] = [
+
+  {
+    title: 'About',
+    icon: 'info',
+    link: 'About',
+  },
+  {
+    title: 'Help',
+    icon: 'help',
+    link: 'Help',
+  },
+]
 
 </script>

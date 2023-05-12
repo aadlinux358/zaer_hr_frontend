@@ -2,13 +2,13 @@
   <div class="q-pa-md" style="max-width: 400px">
 
     <q-form :autofocus="true" @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-      <q-input filled v-model="divisionStore.state.form.name" label="Division name" lazy-rules
+      <q-input square filled v-model="divisionStore.state.form.name" label="Division name" lazy-rules
         :rules="[val => val && val.length > 0 || 'Please type something']" />
 
       <div class="q-gutter-xs">
-        <q-btn label="Save" type="submit" color="primary" />
-        <q-btn label="Reset" type="reset" color="primary" />
-        <q-btn label="Cancel" type="button" @click="onCancel" color="primary" />
+        <q-btn square label="Save" type="submit" color="primary" />
+        <q-btn square label="Reset" type="reset" color="primary" />
+        <q-btn square label="Cancel" type="button" @click="onCancel" color="primary" />
       </div>
     </q-form>
 

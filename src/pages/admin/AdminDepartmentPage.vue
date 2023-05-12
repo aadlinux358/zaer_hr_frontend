@@ -1,5 +1,5 @@
 <template>
-  <q-table :columns="columns" :rows="departmentStore.departmentList" row-key="uid" flat separator="cell"
+  <q-table bordered square :columns="columns" :rows="departmentStore.departmentList" row-key="uid" flat separator="cell"
     :loading="departmentStore.state.loading" :filter="filter">
 
     <template v-slot:top="props">
@@ -10,18 +10,23 @@
 
           <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
             @click="props.toggleFullscreen" class="q-mx-md" size="lg" />
-          <q-input filled dense debounce="300" color="primary" v-model="filter">
+        </div>
+        <div class="row q-my-md">
+          <q-btn color="primary" square no-caps :disable="departmentStore.state.loading" label="Add Department"
+            @click="addDepartment" />
+          <q-space />
+
+          <div class="row q-mx-md items-center">
+
+            <q-btn color="primary" @click="downloadCSV" flat round dense icon="fas fa-file-csv" />
+            <q-btn color="primary" @click="downloadExcel" flat round dense icon="fas fa-file-excel" />
+          </div>
+
+          <q-input square filled dense debounce="300" color="primary" v-model="filter" label="Search">
             <template v-slot:append>
               <q-icon name="search" />
             </template>
           </q-input>
-        </div>
-        <div class="row q-my-md">
-          <q-btn color="primary" no-caps :disable="departmentStore.state.loading" label="Add Department"
-            @click="addDepartment" />
-          <q-space />
-          <q-btn color="primary" @click="downloadCSV" flat round dense icon="fas fa-file-csv" />
-          <q-btn color="primary" @click="downloadExcel" flat round dense icon="fas fa-file-excel" />
         </div>
       </div>
     </template>
@@ -153,7 +158,7 @@ const columns = [
       const division = divisionStore.state.divisions.get(row.division_uid)
       return division?.name
     },
-    format: (val, row) => capitalize(val),
+    format: (val: string) => capitalize(val),
     sortable: true
   },
   {
@@ -164,6 +169,13 @@ const columns = [
     field: (row: DepartmentReadOne) => row.date_created,
     format: (val: string) => date.formatDate(val, 'DD-MMM-YYYY HH:mm A'),
     sortable: true
+  },
+  {
+    name: 'uid',
+    required: true,
+    label: 'Department UUID',
+    align: 'left',
+    field: (row: DepartmentReadOne) => row.uid,
   },
   {
     name: 'actions',
