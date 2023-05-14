@@ -128,6 +128,16 @@ const routes: RouteRecordRaw[] = [
         name: 'AdminDesignations',
         component: () => import('pages/admin/AdminDesignationPage.vue')
       },
+      {
+        path: 'nationalities',
+        name: 'AdminNationalities',
+        component: () => import('pages/admin/AdminNationalityPage.vue')
+      },
+      {
+        path: 'educational-levels',
+        name: 'AdminEducationalLevels',
+        component: () => import('pages/admin/AdminEducationalLevelPage.vue')
+      }
 
     ]
   },
