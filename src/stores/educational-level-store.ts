@@ -89,13 +89,13 @@ export const useEducationalLevelStore = defineStore('education', () => {
     state.selectedEducationalLevel = nationality;
     await deleteDBEducationalLevel();
   }
-  async function getManyDBNationalities() {
+  async function getManyDBEducationalLevels() {
     state.educationalLevels = new Map();
     state.loading = true;
     try {
       const response = await hrApi.get(`${ENDPOINT}`, config);
       const data: EducationalLevelReadMany = response.data;
-      data.result.forEach((nat) => state.educationalLevels.set(nat.uid, nat));
+      data.result.forEach((edu) => state.educationalLevels.set(edu.uid, edu));
     }
     catch (err) {
       _setError(err);
@@ -183,7 +183,7 @@ export const useEducationalLevelStore = defineStore('education', () => {
     addEducationalLevel,
     editEducationalLevel,
     deleteEducationalLevel,
-    getManyDBNationalities,
+    getManyDBEducationalLevels,
     createDBEducationalLevel,
     updateDBEducationalLevel,
     deleteDBEducationalLevel,
