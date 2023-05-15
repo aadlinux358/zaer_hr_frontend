@@ -1,11 +1,17 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <MainAppHeader />
-    <q-drawer bordered v-model="uiStore.leftDrawerOpen" show-if-above :width="250">
+    <q-drawer bordered
+              v-model="uiStore.leftDrawerOpen"
+              show-if-above
+              :width="250">
       <q-list>
-        <q-item-label header class="text-capitalize"> {{ $t('zaerhr') }} </q-item-label>
+        <q-item-label header
+                      class="text-capitalize"> {{ $t('zaerhr') }} </q-item-label>
 
-        <EssentialLink v-for="link in essentialLinks" :key="link.title" v-bind="link" />
+        <EssentialLink v-for="link in essentialLinks"
+                       :key="link.title"
+                       v-bind="link" />
       </q-list>
     </q-drawer>
 
@@ -60,6 +66,16 @@ const essentialLinks: EssentialLinkProps[] = [
     icon: 'work',
     link: 'AdminDesignations',
   },
+  {
+    title: 'nationality',
+    icon: 'flag',
+    link: 'AdminNationalities'
+  },
+  {
+    title: 'educational_level',
+    icon: 'school',
+    link: 'AdminEducationalLevels'
+  }
 ];
 
 </script>

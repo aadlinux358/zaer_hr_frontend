@@ -1,20 +1,65 @@
 <template>
-  <div class="q-pa-md" style="max-width: 400px">
+  <div class="q-pa-md"
+       style="max-width: 400px">
 
-    <q-form :autofocus="true" @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-      <q-select square outlined v-model="divisionUid" :options="divisionStore.divisionList" label="Division" emit-value
-        map-options option-label="name" option-value="uid" />
-      <q-select square outlined v-model="departmentUid" :options="filteredDepartments" label="Department" emit-value
-        map-options option-label="name" option-value="uid" />
-      <q-select square outlined v-model="unitStore.state.form.section_uid" :options="filteredSections" label="Section"
-        emit-value map-options option-label="name" option-value="uid" />
-      <q-input square filled v-model="unitStore.state.form.name" label="Unit name" lazy-rules
-        :rules="[val => val && val.length > 0 || 'Please type something']" />
+    <q-form :autofocus="true"
+            @submit="onSubmit"
+            @reset="onReset"
+            class="q-gutter-md">
+      <q-select square
+                outlined
+                v-model="divisionUid"
+                :options="divisionStore.divisionList"
+                label="Division"
+                emit-value
+                map-options
+                option-label="name"
+                option-value="uid" />
+      <q-select square
+                outlined
+                v-model="departmentUid"
+                :options="filteredDepartments"
+                label="Department"
+                emit-value
+                map-options
+                option-label="name"
+                option-value="uid" />
+      <q-select square
+                outlined
+                v-model="unitStore.state.form.section_uid"
+                :options="filteredSections"
+                label="Section"
+                emit-value
+                map-options
+                option-label="name"
+                option-value="uid" />
+      <q-input square
+               filled
+               v-model="unitStore.state.form.name"
+               label="Unit name"
+               lazy-rules
+               :rules="[val => val && val.length > 0 || 'Please type something']" />
 
       <div class="q-gutter-xs">
-        <q-btn square label="Save" type="submit" color="primary" />
-        <q-btn square label="Reset" type="reset" color="primary" />
-        <q-btn square label="Cancel" type="button" @click="onCancel" color="primary" />
+        <q-btn no-caps
+               class="text-capitalize"
+               square
+               :label="$t('save')"
+               type="submit"
+               color="primary" />
+        <q-btn no-caps
+               class="text-capitalize"
+               square
+               :label="$t('reset')"
+               type="reset"
+               color="primary" />
+        <q-btn no-caps
+               class="text-capitalize"
+               square
+               :label="$t('cancel')"
+               type="button"
+               @click="onCancel"
+               color="primary" />
       </div>
     </q-form>
 
