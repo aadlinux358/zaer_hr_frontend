@@ -1,8 +1,8 @@
 export enum CRUDType {
-  READ = 'READ',
-  CREATE = 'CREATE',
-  UPDATE = 'UPDATE',
-  DELETE = 'DELETE'
+  READ = 'read',
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete'
 }
 
 export enum DownloadFileType {
