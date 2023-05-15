@@ -20,10 +20,10 @@ const ENDPOINT = '/sections';
 
 export const useSectionStore = defineStore('section', () => {
 
-  const authStore = useAuthStore();
+  const {AuthorizationHeader} = useAuthStore();
   const config = {
     headers: {
-      Authorization: `Bearer ${authStore.authState.access_token}`
+      Authorization: AuthorizationHeader
     }
   }
   const state: SectionState = reactive({

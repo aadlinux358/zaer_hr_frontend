@@ -1,4 +1,4 @@
-import {reactive} from 'vue';
+import {computed, ref, Ref} from 'vue';
 import {defineStore} from 'pinia';
 import {Notify, Loading} from 'quasar';
 import {RouteRecordName} from 'vue-router';
@@ -7,86 +7,111 @@ import axios from 'axios';
 import Router from 'src/router/index';
 import {authApi} from 'boot/axios';
 import {AuthUser} from 'src/models/auth-user';
-interface LoginCredential {
-  username: string;
-  password: string;
-}
 
-interface AuthStoreState {
-  access_token: string;
-  user: AuthUser | null;
-  isAuthenticated: boolean;
-  requestedUrl: RouteRecordName | undefined | null;
-  loading: boolean;
-  error: string;
-}
 
 export const useAuthStore = defineStore('auth', () => {
-  const credential: LoginCredential = reactive({username: '', password: ''});
-  const authState: AuthStoreState = reactive({
-    isAuthenticated: false,
-    access_token: '',
-    user: null,
-    requestedUrl: '',
-    loading: false,
-    error: ''
-  });
+  const _username = ref('');
+  const _password = ref('');
+  const _access_token = ref('');
+  const _user: Ref<AuthUser | null> = ref(null);
+  const _isAuthenticated = ref(false)
+  const _requestedUrl: Ref<RouteRecordName | undefined | null> = ref('');
+  const _loading = ref(false);
+  const _error = ref('');
+  const _authHeader = ref('')
 
   function _setError(err: unknown) {
     if (axios.isAxiosError(err)) {
       if (!err.response) {
-        authState.error = 'connection error.'
+        _error.value = 'connection error.'
       } else {
-        authState.error = err.response?.data.detail
+        _error.value = err.response?.data.detail
       }
     } else if (err instanceof Error) {
-      authState.error = err.message;
+      _error.value = err.message;
     } else {
-      authState.error = 'Unknown error.'
+      _error.value = 'Unknown error.'
     }
 
     Notify.create({
       color: 'negative',
-      message: authState.error,
+      message: _error.value,
     });
 
   }
+
+  const AuthorizationHeader = computed(() => _authHeader.value)
+  const isAuthenticated = computed(() => _isAuthenticated.value);
+  const user = computed(() => _user.value);
+  const username = computed({
+    get() {
+      return _username.value;
+    },
+    set(username: string) {
+      _username.value = username;
+    }
+  })
+  const password = computed({
+    get() {
+      return _password.value;
+    },
+    set(password: string) {
+      _password.value = password;
+    }
+  })
+  const requestedUrl = computed({
+    get() {
+      return _requestedUrl.value;
+    },
+    set(url) {
+      _requestedUrl.value = url;
+    }
+  })
+
   async function login() {
-    authState.loading = true;
+    _loading.value = true;
     Loading.show();
     try {
-      const res = await authApi.post('/login', credential);
-      authState.isAuthenticated = true;
-      authState.access_token = res.data.access_token;
-      authState.user = res.data.user;
-      credential.username = '';
-      credential.password = '';
-      if (!authState.requestedUrl) {
+      const res = await authApi.post('/login', {
+        username: _username.value,
+        password: _password.value
+      });
+      _isAuthenticated.value = true;
+      _access_token.value = res.data.access_token;
+      _authHeader.value = `Bearer ${_access_token.value}`
+      _user.value = res.data.user;
+      _username.value = '';
+      _password.value = '';
+      if (!requestedUrl.value) {
         await Router.push({name: 'Main'});
       }
-      await Router.push({name: authState.requestedUrl});
+      await Router.push({name: requestedUrl.value});
 
     } catch (err) {
       _setError(err);
     } finally {
-      authState.loading = false;
+      _loading.value = false;
       Loading.hide();
     }
   }
 
   async function logout() {
-    authState.isAuthenticated = false;
-    authState.access_token = '';
-    authState.user = null;
-    authState.requestedUrl = '';
-    credential.username = '';
-    credential.password = '';
+    _isAuthenticated.value = false;
+    _access_token.value = '';
+    _user.value = null;
+    _requestedUrl.value = '';
+    _username.value = '';
+    _password.value = '';
     await Router.push({name: 'Login'});
   }
   return {
-    credential,
+    username,
+    password,
     login,
     logout,
-    authState,
+    user,
+    isAuthenticated,
+    requestedUrl,
+    AuthorizationHeader,
   };
 });

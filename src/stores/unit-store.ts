@@ -20,10 +20,10 @@ const ENDPOINT = '/units';
 
 export const useUnitStore = defineStore('unit', () => {
 
-  const authStore = useAuthStore();
+  const {AuthorizationHeader} = useAuthStore();
   const config = {
     headers: {
-      Authorization: `Bearer ${authStore.authState.access_token}`
+      Authorization: AuthorizationHeader
     }
   }
   const state: UnitState = reactive({

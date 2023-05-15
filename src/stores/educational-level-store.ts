@@ -20,10 +20,10 @@ const ENDPOINT = '/educational-levels';
 
 export const useEducationalLevelStore = defineStore('education', () => {
 
-  const authStore = useAuthStore();
+  const {AuthorizationHeader} = useAuthStore();
   const config = {
     headers: {
-      Authorization: `Bearer ${authStore.authState.access_token}`
+      Authorization: AuthorizationHeader
     }
   }
   const state: EducationalLevelState = reactive({

@@ -20,10 +20,10 @@ const ENDPOINT = '/nationalities';
 
 export const useNationalityStore = defineStore('nationality', () => {
 
-  const authStore = useAuthStore();
+  const {AuthorizationHeader} = useAuthStore();
   const config = {
     headers: {
-      Authorization: `Bearer ${authStore.authState.access_token}`
+      Authorization: AuthorizationHeader
     }
   }
   const state: NationalityState = reactive({

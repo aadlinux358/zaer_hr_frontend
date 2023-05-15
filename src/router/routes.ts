@@ -9,8 +9,8 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     beforeEnter: (to /* from */) => {
       const authStore = useAuthStore();
-      if (!authStore.authState.isAuthenticated && to.name !== 'Login') {
-        authStore.authState.requestedUrl = to.name;
+      if (!authStore.isAuthenticated && to.name !== 'Login') {
+        authStore.requestedUrl = to.name;
         return {name: 'Login'};
       }
       return true;
@@ -74,12 +74,12 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/AdminLayout.vue'),
     beforeEnter: (to /* from */) => {
       const authStore = useAuthStore();
-      if (!authStore.authState.isAuthenticated && to.name !== 'Login') {
-        authStore.authState.requestedUrl = to.name;
+      if (!authStore.isAuthenticated && to.name !== 'Login') {
+        authStore.requestedUrl = to.name;
         return {name: 'Login'};
       }
-      if (authStore.authState.user) {
-        if (!authStore.authState.user.is_superuser) {
+      if (authStore.user) {
+        if (!authStore.user.is_superuser) {
           Notify.create({
             color: 'negative',
             message: 'you must have admin privileges'

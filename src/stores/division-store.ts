@@ -20,10 +20,10 @@ const ENDPOINT = '/divisions';
 
 export const useDivisionStore = defineStore('division', () => {
 
-  const authStore = useAuthStore();
+  const {AuthorizationHeader} = useAuthStore();
   const config = {
     headers: {
-      Authorization: `Bearer ${authStore.authState.access_token}`
+      Authorization: AuthorizationHeader
     }
   }
   const state: DivisionState = reactive({
