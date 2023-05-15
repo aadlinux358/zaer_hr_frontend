@@ -1,25 +1,57 @@
 <template>
-  <q-table bordered square title="Divisions" :columns="columns" :rows="divisionStore.divisionList" row-key="uid" flat
-    separator="cell" :loading="divisionStore.state.loading" :filter="filter">
+  <q-table bordered
+           square
+           title="Divisions"
+           :columns="columns"
+           :rows="divisionStore.divisionList"
+           row-key="uid"
+           flat
+           separator="cell"
+           :loading="divisionStore.state.loading"
+           :filter="filter">
 
     <template v-slot:top="props">
       <div class="column full-width">
         <div class="row items-center full-width">
-          <div class="col-2 q-table__title">Divisions</div>
+          <div class="col-2 q-table__title text-capitalize">{{ $t('divisions') }}</div>
           <q-space />
 
-          <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-            @click="props.toggleFullscreen" class="q-mx-md" size="lg" />
+          <q-btn flat
+                 round
+                 dense
+                 :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                 @click="props.toggleFullscreen"
+                 class="q-mx-md"
+                 size="lg" />
         </div>
         <div class="row q-my-md">
-          <q-btn color="primary" square no-caps :disable="divisionStore.state.loading" label="Add Division"
-            @click="addDivision" />
+          <q-btn color="primary"
+                 class="text-capitalize"
+                 square
+                 no-caps
+                 :disable="divisionStore.state.loading"
+                 @click="addDivision"> {{ $t('new') }} {{ $t('division') }} </q-btn>
           <q-space />
           <div class="row q-mx-md items-center">
-            <q-btn color="primary" @click="downloadCSV" flat round dense icon="fas fa-file-csv" />
-            <q-btn color="primary" @click="downloadExcel" flat round dense icon="fas fa-file-excel" />
+            <q-btn color="primary"
+                   @click="downloadCSV"
+                   flat
+                   round
+                   dense
+                   icon="fas fa-file-csv" />
+            <q-btn color="primary"
+                   @click="downloadExcel"
+                   flat
+                   round
+                   dense
+                   icon="fas fa-file-excel" />
           </div>
-          <q-input filled square dense debounce="300" color="primary" v-model="filter">
+          <q-input filled
+                   square
+                   dense
+                   debounce="300"
+                   color="primary"
+                   v-model="filter">
             <template v-slot:append>
               <q-icon name="search" />
             </template>
@@ -29,53 +61,67 @@
     </template>
     <template v-slot:body-cell-actions="props">
       <q-td :props="props">
-        <q-btn size="xs" class="q-mx-xs" color="primary" icon="mode_edit" @click="onEdit(props.row.uid)"></q-btn>
-        <q-btn size="xs" class="q-mx-xs" color="primary" icon="delete" @click="onDelete(props.row.uid)"></q-btn>
+        <q-btn size="xs"
+               class="q-mx-xs"
+               color="primary"
+               icon="mode_edit"
+               @click="onEdit(props.row.uid)"></q-btn>
+        <q-btn size="xs"
+               class="q-mx-xs"
+               color="primary"
+               icon="delete"
+               @click="onDelete(props.row.uid)"></q-btn>
       </q-td>
     </template>
     <template v-slot:loading>
-      <q-inner-loading showing color="primary" />
+      <q-inner-loading showing
+                       color="primary" />
     </template>
   </q-table>
-  <q-dialog ref="dialogRef" @hide="onHide" persistent>
+  <q-dialog ref="dialogRef"
+            @hide="onHide"
+            persistent>
     <q-card class="q-dialog-plugin">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6 text-uppercase">{{ divisionStore.state.crudType }} Division</div>
+        <div class="text-h6 text-capitalize">{{ $t(divisionStore.state.crudType) }} {{ $t('division') }}</div>
         <q-space />
-        <q-btn icon="close" flat round dense v-close-popup />
+        <q-btn icon="close"
+               flat
+               round
+               dense
+               v-close-popup />
       </q-card-section>
       <q-card-section class="q-mt-md">
-        <DivisionForm @save="onSave" @reset="onFormReset" @cancel="onCancel" />
+        <DivisionForm @save="onSave"
+                      @reset="onFormReset"
+                      @cancel="onCancel" />
       </q-card-section>
     </q-card>
   </q-dialog>
 </template>
 <script setup lang="ts">
 import {ref} from 'vue';
-import {onMounted} from 'vue';
-import {useDialogPluginComponent, useQuasar} from 'quasar'
-import {useDivisionStore} from 'src/stores/division-store';
+import {useQuasar, useDialogPluginComponent} from 'quasar'
 import {DivisionReadOne} from 'src/models/division';
 import {CRUDType, DownloadFileType} from 'src/models/common';
 import DivisionForm from 'src/forms/DivisionForm.vue'
 import {format, date} from 'quasar';
+import {useStores} from 'src/composables/stores';
+
 defineEmits({
   ...useDialogPluginComponent.emitsObject
 })
 
 const $q = useQuasar();
-const {dialogRef, onDialogHide, onDialogOK, onDialogCancel} = useDialogPluginComponent()
+const {
+  dialogRef,
+  onDialogHide,
+  onDialogOK,
+  onDialogCancel} = useDialogPluginComponent()
 const {capitalize} = format;
-const divisionStore = useDivisionStore();
+const {divisionStore} = useStores();
 
 const filter = ref('');
-onMounted(async () => {
-  $q.loading.show();
-  if (divisionStore.state.divisions.size === 0) {
-    await divisionStore.getManyDBDivisions();
-  }
-  $q.loading.hide();
-})
 
 function onEdit(uid: string) {
   divisionStore.editDivision(uid);

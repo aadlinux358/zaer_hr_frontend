@@ -99,13 +99,13 @@
   </q-dialog>
 </template>
 <script setup lang="ts">
-import {ref, onMounted} from 'vue';
+import {ref} from 'vue';
 import {useDialogPluginComponent, useQuasar} from 'quasar'
-import {useNationalityStore} from 'src/stores/nationality-store';
 import {NationalityReadOne} from 'src/models/nationality';
 import {CRUDType, DownloadFileType} from 'src/models/common';
 import NationalityForm from 'src/forms/NationalityForm.vue'
 import {format, date} from 'quasar';
+import {useStores} from 'src/composables/stores';
 defineEmits({
   ...useDialogPluginComponent.emitsObject
 })
@@ -113,16 +113,9 @@ defineEmits({
 const $q = useQuasar();
 const {dialogRef, onDialogHide, onDialogOK, onDialogCancel} = useDialogPluginComponent()
 const {capitalize} = format;
-const nationalityStore = useNationalityStore();
+const {nationalityStore} = useStores()
 
 const filter = ref('');
-onMounted(async () => {
-  $q.loading.show();
-  if (nationalityStore.state.nationalities.size === 0) {
-    await nationalityStore.getManyDBNationalities();
-  }
-  $q.loading.hide();
-})
 
 function onEdit(uid: string) {
   nationalityStore.editNationality(uid);

@@ -2,11 +2,11 @@
   <q-table bordered
            square
            :columns="columns"
-           :rows="educationStore.educationalLevelList"
+           :rows="eduStore.educationalLevelList"
            row-key="uid"
            flat
            separator="cell"
-           :loading="educationStore.state.loading"
+           :loading="eduStore.state.loading"
            :filter="filter">
 
     <template v-slot:top="props">
@@ -28,7 +28,7 @@
                  class="text-capitalize"
                  square
                  no-caps
-                 :disable="educationStore.state.loading"
+                 :disable="eduStore.state.loading"
                  @click="addEducationalLevel"> {{ $t('new') }} {{ $t('educational_level') }} </q-btn>
           <q-space />
           <div class="row q-mx-md items-center">
@@ -82,7 +82,7 @@
             persistent>
     <q-card class="q-dialog-plugin">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6 text-capitalize">{{ $t(educationStore.state.crudType) }} {{ $t('educational_level') }}</div>
+        <div class="text-h6 text-capitalize">{{ $t(eduStore.state.crudType) }} {{ $t('educational_level') }}</div>
         <q-space />
         <q-btn icon="close"
                flat
@@ -99,13 +99,13 @@
   </q-dialog>
 </template>
 <script setup lang="ts">
-import {ref, onMounted} from 'vue';
+import {ref} from 'vue';
 import {useDialogPluginComponent, useQuasar} from 'quasar'
-import {useEducationalLevelStore} from 'src/stores/educational-level-store';
 import {EducationalLevelReadOne} from 'src/models/education';
 import {CRUDType, DownloadFileType} from 'src/models/common';
 import EducationalLevelForm from 'src/forms/EducationalLevelForm.vue'
 import {format, date} from 'quasar';
+import {useStores} from 'src/composables/stores';
 defineEmits({
   ...useDialogPluginComponent.emitsObject
 })
@@ -113,19 +113,12 @@ defineEmits({
 const $q = useQuasar();
 const {dialogRef, onDialogHide, onDialogOK, onDialogCancel} = useDialogPluginComponent()
 const {capitalize} = format;
-const educationStore = useEducationalLevelStore();
+const {eduStore} = useStores();
 
 const filter = ref('');
-onMounted(async () => {
-  $q.loading.show();
-  if (educationStore.state.educationalLevels.size === 0) {
-    await educationStore.getManyDBNationalities();
-  }
-  $q.loading.hide();
-})
 
 function onEdit(uid: string) {
-  educationStore.editEducationalLevel(uid);
+  eduStore.editEducationalLevel(uid);
   dialogRef.value?.show();
 }
 
@@ -136,22 +129,22 @@ function onDelete(uid: string) {
     cancel: true,
     persistent: true
   }).onOk(async () => {
-    await educationStore.deleteEducationalLevel(uid);
+    await eduStore.deleteEducationalLevel(uid);
   })
 }
 
 function addEducationalLevel() {
-  educationStore.addEducationalLevel();
+  eduStore.addEducationalLevel();
   dialogRef.value?.show()
 }
 function onSave() {
-  switch (educationStore.state.crudType) {
+  switch (eduStore.state.crudType) {
     case CRUDType.CREATE: {
-      educationStore.createDBEducationalLevel();
+      eduStore.createDBEducationalLevel();
       break;
     }
     case CRUDType.UPDATE: {
-      educationStore.updateDBEducationalLevel();
+      eduStore.updateDBEducationalLevel();
       break;
     }
     default: {
@@ -162,7 +155,7 @@ function onSave() {
   onDialogOK();
 }
 function onCancel() {
-  educationStore.resetForm();
+  eduStore.resetForm();
   onDialogCancel()
 }
 function onHide() {
@@ -170,15 +163,15 @@ function onHide() {
 }
 
 function onFormReset() {
-  educationStore.resetForm();
+  eduStore.resetForm();
 }
 
 function downloadCSV() {
-  educationStore.downloadFile(DownloadFileType.CSV)
+  eduStore.downloadFile(DownloadFileType.CSV)
 }
 
 function downloadExcel() {
-  educationStore.downloadFile(DownloadFileType.EXCEL)
+  eduStore.downloadFile(DownloadFileType.EXCEL)
 }
 
 const columns = [
