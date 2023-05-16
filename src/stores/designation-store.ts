@@ -1,4 +1,4 @@
-import {computed, reactive} from 'vue';
+import {computed, Ref, ref} from 'vue';
 import {defineStore} from 'pinia';
 import {exportFile, Notify} from 'quasar';
 import {hrApi} from 'src/boot/axios';
@@ -6,110 +6,98 @@ import {DesignationReadOne, DesignationReadMany, DesignationCreate} from 'src/mo
 import {useAuthStore} from './auth-store';
 import axios from 'axios';
 import {CRUDType, DownloadFileType} from 'src/models/common';
-
-export interface DesignationState {
-  designations: Map<string, DesignationReadOne>;
-  selectedDesignation: DesignationReadOne | null | undefined;
-  form: DesignationCreate;
-  crudType: CRUDType;
-  loading: boolean;
-  error: string;
-}
+import {useFlags} from 'src/composables/flags';
 
 const ENDPOINT = '/designations';
 
 export const useDesignationStore = defineStore('designation', () => {
 
+  const {crudType, loading, error} = useFlags();
   const {AuthorizationHeader} = useAuthStore();
   const config = {
     headers: {
       Authorization: AuthorizationHeader
     }
   }
-  const state: DesignationState = reactive({
-    designations: new Map(),
-    selectedDesignation: null,
-    form: {
-      title: ''
-    },
-    crudType: CRUDType.READ,
-    loading: false,
-    error: ''
+  const designations: Ref<Map<string, DesignationReadOne>> = ref(new Map())
+  const selectedDesignation: Ref<DesignationReadOne | null | undefined> = ref(null);
+  const form: Ref<DesignationCreate> = ref({
+    title: ''
   })
 
   const designationList = computed(() => {
-    return Array.from(state.designations, entry => entry[1])
+    return Array.from(designations.value, entry => entry[1])
   })
 
   function resetForm() {
-    state.form.title = '';
+    form.value.title = '';
   }
 
   function _removeDesignation(uid: string) {
-    state.designations.delete(uid);
+    designations.value.delete(uid);
   }
   function _setError(err: unknown) {
     if (axios.isAxiosError(err)) {
       if (!err.response) {
-        state.error = 'connection error.'
+        error.value = 'connection error.'
       } else {
         if (err.response?.data.detail instanceof String) {
-          state.error = err.response?.data.detail
+          error.value = err.response?.data.detail
         } else {
-          state.error = err.message
+          error.value = err.message
         }
       }
     } else if (err instanceof Error) {
-      state.error = err.message;
+      error.value = err.message;
     } else {
-      state.error = 'Unknown error.'
+      error.value = 'Unknown error.'
     }
 
     Notify.create({
       color: 'negative',
-      message: state.error,
+      message: error.value,
     });
 
   }
 
   function addDesignation() {
-    state.crudType = CRUDType.CREATE;
+    crudType.value = CRUDType.CREATE;
   }
   function editDesignation(uid: string) {
-    state.crudType = CRUDType.UPDATE;
-    const designation = state.designations.get(uid);
-    state.selectedDesignation = designation;
-    state.form = <DesignationCreate>{...state.selectedDesignation}
+    crudType.value = CRUDType.UPDATE;
+    const designation = designations.value.get(uid);
+    selectedDesignation.value = designation;
+    form.value = <DesignationCreate>{...selectedDesignation.value}
   }
 
   async function deleteDesignation(uid: string) {
-    state.crudType = CRUDType.DELETE
-    const designation = state.designations.get(uid);
-    state.selectedDesignation = designation;
+    crudType.value = CRUDType.DELETE
+    const designation = designations.value.get(uid);
+    selectedDesignation.value = designation;
     await deleteDBDesignation();
   }
   async function getManyDBDesignations() {
-    state.designations = new Map();
-    state.loading = true;
+    designations.value.clear()
+    loading.value = true;
     try {
       const response = await hrApi.get(`${ENDPOINT}`, config);
       const data: DesignationReadMany = response.data;
-      data.result.forEach((div) => state.designations.set(div.uid, div));
+      data.result.forEach((div) => designations.value.set(div.uid, div));
     }
     catch (err) {
       _setError(err);
     }
     finally {
-      state.loading = false;
+      loading.value = false;
     }
   }
   async function createDBDesignation() {
-    state.loading = true;
+    loading.value = true;
     try {
-      const response = await hrApi.post(`${ENDPOINT}`, state.form, config);
+      const response = await hrApi.post(`${ENDPOINT}`, form.value, config);
       resetForm();
       const designation: DesignationReadOne = response.data;
-      state.designations.set(designation.uid, designation);
+      designations.value.set(designation.uid, designation);
       Notify.create({
         color: 'positive',
         message: 'Successfully created designation.'
@@ -118,16 +106,16 @@ export const useDesignationStore = defineStore('designation', () => {
       _setError(err);
     }
     finally {
-      state.loading = false;
+      loading.value = false;
     }
   }
 
   async function updateDBDesignation() {
-    state.loading = true;
+    loading.value = true;
     try {
-      const response = await hrApi.patch(`${ENDPOINT}/${state.selectedDesignation?.uid}`, state.form, config)
+      const response = await hrApi.patch(`${ENDPOINT}/${selectedDesignation.value?.uid}`, form.value, config)
       const designation: DesignationReadOne = response.data;
-      state.designations.set(designation.uid, designation);
+      designations.value.set(designation.uid, designation);
       Notify.create({
         color: 'positive',
         message: 'Successfully updated designation.'
@@ -137,17 +125,17 @@ export const useDesignationStore = defineStore('designation', () => {
       _setError(err);
     }
     finally {
-      state.loading = false;
+      loading.value = false;
     }
   }
 
   async function deleteDBDesignation() {
-    state.loading = true;
+    loading.value = true;
     try {
-      if (state.selectedDesignation) {
-        await hrApi.delete(`${ENDPOINT}/${state.selectedDesignation.uid}`, config);
-        _removeDesignation(state.selectedDesignation.uid);
-        state.selectedDesignation = null;
+      if (selectedDesignation.value) {
+        await hrApi.delete(`${ENDPOINT}/${selectedDesignation.value.uid}`, config);
+        _removeDesignation(selectedDesignation.value.uid);
+        selectedDesignation.value = null;
         Notify.create({
           color: 'positive',
           message: 'Successfully deleted designation.'
@@ -159,12 +147,12 @@ export const useDesignationStore = defineStore('designation', () => {
       _setError(err);
     }
     finally {
-      state.loading = false;
+      loading.value = false;
     }
   }
 
   async function downloadFile(fileType: DownloadFileType) {
-    state.loading = true;
+    loading.value = true;
     try {
       const response = await hrApi.get(`${ENDPOINT}/download/${fileType}`, Object.assign(config, {ResponseType: 'blob'}))
       exportFile(`designations.${fileType}`, response.data)
@@ -173,12 +161,16 @@ export const useDesignationStore = defineStore('designation', () => {
       _setError(err);
     }
     finally {
-      state.loading = false;
+      loading.value = false;
     }
   }
 
   return {
-    state,
+    designations,
+    selectedDesignation,
+    form,
+    crudType,
+    loading,
     addDesignation,
     editDesignation,
     deleteDesignation,

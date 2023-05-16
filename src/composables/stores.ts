@@ -22,28 +22,28 @@ export function useStores() {
 
   onMounted(async () => {
     $q.loading.show();
-    if (divisionStore.state.divisions.size === 0) {
+    if (divisionStore.divisions.size === 0) {
       await divisionStore.getManyDBDivisions();
     }
-    if (departmentStore.state.departments.size === 0) {
+    if (departmentStore.departments.size === 0) {
       await departmentStore.getManyDBDepartments();
     }
-    if (sectionStore.state.sections.size == 0) {
+    if (sectionStore.sections.size == 0) {
       await sectionStore.getManyDBSections();
     }
-    if (unitStore.state.units.size === 0) {
+    if (unitStore.units.size === 0) {
       await unitStore.getManyDBUnits();
     }
-    if (designationStore.state.designations.size === 0) {
+    if (designationStore.designations.size === 0) {
       await designationStore.getManyDBDesignations();
     }
-    if (nationalityStore.state.nationalities.size === 0) {
+    if (nationalityStore.nationalities.size === 0) {
       await nationalityStore.getManyDBNationalities();
     }
-    if (eduStore.state.educationalLevels.size == 0) {
+    if (eduStore.educationalLevels.size == 0) {
       await eduStore.getManyDBEducationalLevels();
     }
-    if (empStore.state.employees.size === 0) {
+    if (empStore.employees.size === 0) {
       await empStore.getManyDBEmployees();
     }
     $q.loading.hide();

@@ -1,4 +1,4 @@
-import {computed, reactive} from 'vue';
+import {computed, Ref, ref} from 'vue';
 import {defineStore} from 'pinia';
 import {exportFile, Notify} from 'quasar';
 import {hrApi} from 'src/boot/axios';
@@ -6,115 +6,104 @@ import {DepartmentReadOne, DepartmentReadMany, DepartmentCreate} from 'src/model
 import {useAuthStore} from './auth-store';
 import axios from 'axios';
 import {CRUDType, DownloadFileType} from 'src/models/common';
-
-export interface DepartmentState {
-  departments: Map<string, DepartmentReadOne>;
-  selectedDepartment: DepartmentReadOne | null | undefined;
-  form: DepartmentCreate;
-  crudType: CRUDType;
-  loading: boolean;
-  error: string;
-}
+import {useFlags} from 'src/composables/flags';
 
 const ENDPOINT = '/departments';
 
 export const useDepartmentStore = defineStore('department', () => {
 
+
   const {AuthorizationHeader} = useAuthStore();
+  const {crudType, loading, error} = useFlags();
   const config = {
     headers: {
       Authorization: AuthorizationHeader
     }
   }
-  const state: DepartmentState = reactive({
-    departments: new Map(),
-    selectedDepartment: null,
-    form: {
-      name: '',
-      division_uid: ''
-    },
-    crudType: CRUDType.READ,
-    loading: false,
-    error: ''
+  const departments: Ref<Map<string, DepartmentReadOne>> = ref(new Map())
+  const selectedDepartment: Ref<DepartmentReadOne | null | undefined> = ref(null);
+  const form: Ref<DepartmentCreate> = ref({
+    name: '',
+    division_uid: ''
   })
 
   const departmentList = computed(() => {
-    return Array.from(state.departments, entry => entry[1])
+    return Array.from(departments.value, entry => entry[1])
   })
 
   function resetForm() {
-    state.form.division_uid = '';
-    state.form.name = '';
+    form.value.division_uid = '';
+    form.value.name = '';
   }
 
   function _removeDepartment(uid: string) {
-    state.departments.delete(uid);
+    departments.value.delete(uid);
   }
   function _setError(err: unknown) {
     if (axios.isAxiosError(err)) {
       if (!err.response) {
-        state.error = 'connection error.'
+        error.value = 'connection error.'
       } else {
         if (err.response?.data.detail instanceof String) {
-          state.error = err.response?.data.detail
+          error.value = err.response?.data.detail
         } else {
-          state.error = err.message
+          error.value = err.message
         }
       }
     } else if (err instanceof Error) {
-      state.error = err.message;
+      error.value = err.message;
     } else {
-      state.error = 'Unknown error.'
+      error.value = 'Unknown error.'
     }
 
     Notify.create({
       color: 'negative',
-      message: state.error,
+      message: error.value,
     });
 
   }
 
   function addDepartment() {
-    state.crudType = CRUDType.CREATE;
+    crudType.value = CRUDType.CREATE;
   }
 
   function editDepartment(uid: string) {
-    state.crudType = CRUDType.UPDATE;
-    const department = state.departments.get(uid);
-    state.selectedDepartment = department;
-    state.form = <DepartmentCreate>{...state.selectedDepartment};
+    crudType.value = CRUDType.UPDATE;
+    const department = departments.value.get(uid);
+    selectedDepartment.value = department;
+    form.value = <DepartmentCreate>{...selectedDepartment.value};
   }
 
   async function deleteDepartment(uid: string) {
-    state.crudType = CRUDType.DELETE;
-    const department = state.departments.get(uid);
-    state.selectedDepartment = department;
+    crudType.value = CRUDType.DELETE;
+    const department = departments.value.get(uid);
+    selectedDepartment.value = department;
     await deleteDBDepartment();
   }
 
   async function getManyDBDepartments() {
-    state.departments = new Map();
-    state.loading = true;
+    departments.value.clear()
+    loading.value = true;
     try {
       const response = await hrApi.get(`${ENDPOINT}`, config);
       const data: DepartmentReadMany = response.data;
-      data.result.forEach((dep) => state.departments.set(dep.uid, dep));
+      data.result.forEach((dep) => departments.value.set(dep.uid, dep));
     }
     catch (err) {
       _setError(err);
     }
     finally {
-      state.loading = false;
+      loading.value = false;
     }
   }
   async function createDBDepartment() {
     // create department
-    state.loading = true;
+    loading.value = true;
     try {
-      const response = await hrApi.post(`${ENDPOINT}`, state.form, config);
+      const response = await hrApi.post(`${ENDPOINT}`, form.value, config);
       resetForm();
       const department: DepartmentReadOne = response.data;
-      state.departments.set(department.uid, department);
+      departments.value.set(department.uid, department);
       Notify.create({
         color: 'positive',
         message: 'Successfully created department.'
@@ -123,16 +112,16 @@ export const useDepartmentStore = defineStore('department', () => {
       _setError(err);
     }
     finally {
-      state.loading = false;
+      loading.value = false;
     }
   }
 
   async function updateDBDepartment() {
-    state.loading = true;
+    loading.value = true;
     try {
-      const response = await hrApi.patch(`${ENDPOINT}/${state.selectedDepartment?.uid}`, state.form, config)
+      const response = await hrApi.patch(`${ENDPOINT}/${selectedDepartment.value?.uid}`, form.value, config)
       const department: DepartmentReadOne = response.data;
-      state.departments.set(department.uid, department);
+      departments.value.set(department.uid, department);
       Notify.create({
         color: 'positive',
         message: 'Successfully updated department'
@@ -143,19 +132,19 @@ export const useDepartmentStore = defineStore('department', () => {
       _setError(err);
     }
     finally {
-      state.loading = false;
+      loading.value = false;
     }
   }
 
 
   async function deleteDBDepartment() {
     // delete department
-    state.loading = true;
+    loading.value = true;
     try {
-      if (state.selectedDepartment) {
-        await hrApi.delete(`${ENDPOINT}/${state.selectedDepartment.uid}`, config);
-        _removeDepartment(state.selectedDepartment.uid);
-        state.selectedDepartment = null;
+      if (selectedDepartment.value) {
+        await hrApi.delete(`${ENDPOINT}/${selectedDepartment.value.uid}`, config);
+        _removeDepartment(selectedDepartment.value.uid);
+        selectedDepartment.value = null;
         Notify.create({
           color: 'positive',
           message: 'Successfully deleted department.'
@@ -167,12 +156,12 @@ export const useDepartmentStore = defineStore('department', () => {
       _setError(err);
     }
     finally {
-      state.loading = false;
+      loading.value = false;
     }
   }
 
   async function downloadFile(fileType: DownloadFileType) {
-    state.loading = true;
+    loading.value = true;
     try {
       const response = await hrApi.get(`${ENDPOINT}/download/${fileType}`, Object.assign(config, {ResponseType: 'blob'}))
       exportFile(`department.${fileType}`, response.data)
@@ -181,11 +170,15 @@ export const useDepartmentStore = defineStore('department', () => {
       _setError(err);
     }
     finally {
-      state.loading = false;
+      loading.value = false;
     }
   }
   return {
-    state,
+    departments,
+    selectedDepartment,
+    form,
+    crudType,
+    loading,
     addDepartment,
     editDepartment,
     deleteDepartment,

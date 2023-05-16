@@ -1,4 +1,4 @@
-import {computed, reactive} from 'vue';
+import {computed, ref, Ref} from 'vue';
 import {defineStore} from 'pinia';
 import {exportFile, Notify} from 'quasar';
 import {hrApi} from 'src/boot/axios';
@@ -6,110 +6,102 @@ import {DivisionReadOne, DivisionReadMany, DivisionCreate} from 'src/models/divi
 import {useAuthStore} from './auth-store';
 import axios from 'axios';
 import {CRUDType, DownloadFileType} from 'src/models/common';
+import {useFlags} from 'src/composables/flags';
 
-export interface DivisionState {
-  divisions: Map<string, DivisionReadOne>;
-  selectedDivision: DivisionReadOne | null | undefined;
-  form: DivisionCreate;
-  crudType: CRUDType;
-  loading: boolean;
-  error: string;
-}
 
 const ENDPOINT = '/divisions';
 
 export const useDivisionStore = defineStore('division', () => {
 
+  const {crudType, loading, error} = useFlags();
   const {AuthorizationHeader} = useAuthStore();
   const config = {
     headers: {
       Authorization: AuthorizationHeader
     }
   }
-  const state: DivisionState = reactive({
-    divisions: new Map(),
-    selectedDivision: null,
-    form: {
-      name: ''
-    },
-    crudType: CRUDType.READ,
-    loading: false,
-    error: ''
-  })
+
+  const divisions: Ref<Map<string, DivisionReadOne>> = ref(new Map());
+  const selectedDivision: Ref<DivisionReadOne | null | undefined> = ref(null);
+  const form: Ref<DivisionCreate> = ref({
+    name: ''
+  });
+
 
   const divisionList = computed(() => {
-    return Array.from(state.divisions, entry => entry[1])
+    return Array.from(divisions.value, entry => entry[1])
   })
 
+
   function resetForm() {
-    state.form.name = '';
+    form.value.name = '';
   }
 
   function _removeDivision(uid: string) {
-    state.divisions.delete(uid);
+    divisions.value.delete(uid);
   }
   function _setError(err: unknown) {
     if (axios.isAxiosError(err)) {
       if (!err.response) {
-        state.error = 'connection error.'
+        error.value = 'connection error.'
       } else {
         if (err.response?.data.detail instanceof String) {
-          state.error = err.response?.data.detail
+          error.value = err.response?.data.detail
         } else {
-          state.error = err.message
+          error.value = err.message
         }
       }
     } else if (err instanceof Error) {
-      state.error = err.message;
+      error.value = err.message;
     } else {
-      state.error = 'Unknown error.'
+      error.value = 'Unknown error.'
     }
 
     Notify.create({
       color: 'negative',
-      message: state.error,
+      message: error.value,
     });
 
   }
 
   function addDivision() {
-    state.crudType = CRUDType.CREATE;
+    crudType.value = CRUDType.CREATE;
   }
   function editDivision(uid: string) {
-    state.crudType = CRUDType.UPDATE;
-    const division = state.divisions.get(uid);
-    state.selectedDivision = division;
-    state.form = <DivisionCreate>{...state.selectedDivision}
+    crudType.value = CRUDType.UPDATE;
+    const division = divisions.value.get(uid);
+    selectedDivision.value = division;
+    form.value = <DivisionCreate>{...selectedDivision.value}
   }
 
   async function deleteDivision(uid: string) {
-    state.crudType = CRUDType.DELETE
-    const division = state.divisions.get(uid);
-    state.selectedDivision = division;
+    crudType.value = CRUDType.DELETE
+    const division = divisions.value.get(uid);
+    selectedDivision.value = division;
     await deleteDBDivision();
   }
   async function getManyDBDivisions() {
-    state.divisions = new Map();
-    state.loading = true;
+    divisions.value.clear()
+    loading.value = true;
     try {
       const response = await hrApi.get(`${ENDPOINT}`, config);
       const data: DivisionReadMany = response.data;
-      data.result.forEach((div) => state.divisions.set(div.uid, div));
+      data.result.forEach((div) => divisions.value.set(div.uid, div));
     }
     catch (err) {
       _setError(err);
     }
     finally {
-      state.loading = false;
+      loading.value = false;
     }
   }
   async function createDBDivision() {
-    state.loading = true;
+    loading.value = true;
     try {
-      const response = await hrApi.post(`${ENDPOINT}`, state.form, config);
+      const response = await hrApi.post(`${ENDPOINT}`, form, config);
       resetForm();
       const division: DivisionReadOne = response.data;
-      state.divisions.set(division.uid, division);
+      divisions.value.set(division.uid, division);
       Notify.create({
         color: 'positive',
         message: 'Successfully created division.'
@@ -118,16 +110,16 @@ export const useDivisionStore = defineStore('division', () => {
       _setError(err);
     }
     finally {
-      state.loading = false;
+      loading.value = false;
     }
   }
 
   async function updateDBDivision() {
-    state.loading = true;
+    loading.value = true;
     try {
-      const response = await hrApi.patch(`${ENDPOINT}/${state.selectedDivision?.uid}`, state.form, config)
+      const response = await hrApi.patch(`${ENDPOINT}/${selectedDivision.value?.uid}`, form, config)
       const division: DivisionReadOne = response.data;
-      state.divisions.set(division.uid, division);
+      divisions.value.set(division.uid, division);
       Notify.create({
         color: 'positive',
         message: 'Successfully updated division.'
@@ -137,17 +129,17 @@ export const useDivisionStore = defineStore('division', () => {
       _setError(err);
     }
     finally {
-      state.loading = false;
+      loading.value = false;
     }
   }
 
   async function deleteDBDivision() {
-    state.loading = true;
+    loading.value = true;
     try {
-      if (state.selectedDivision) {
-        await hrApi.delete(`${ENDPOINT}/${state.selectedDivision.uid}`, config);
-        _removeDivision(state.selectedDivision.uid);
-        state.selectedDivision = null;
+      if (selectedDivision.value) {
+        await hrApi.delete(`${ENDPOINT}/${selectedDivision.value.uid}`, config);
+        _removeDivision(selectedDivision.value.uid);
+        selectedDivision.value = null;
         Notify.create({
           color: 'positive',
           message: 'Successfully deleted division.'
@@ -159,12 +151,12 @@ export const useDivisionStore = defineStore('division', () => {
       _setError(err);
     }
     finally {
-      state.loading = false;
+      loading.value = false;
     }
   }
 
   async function downloadFile(fileType: DownloadFileType) {
-    state.loading = true;
+    loading.value = true;
     try {
       const response = await hrApi.get(`${ENDPOINT}/download/${fileType}`, Object.assign(config, {ResponseType: 'blob'}))
       exportFile(`divisions.${fileType}`, response.data)
@@ -173,12 +165,14 @@ export const useDivisionStore = defineStore('division', () => {
       _setError(err);
     }
     finally {
-      state.loading = false;
+      loading.value = false;
     }
   }
 
   return {
-    state,
+    divisions,
+    crudType,
+    loading,
     addDivision,
     editDivision,
     deleteDivision,

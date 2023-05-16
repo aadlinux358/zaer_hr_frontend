@@ -1,13 +1,22 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <MainAppHeader />
-    <q-drawer bordered v-model="uiStore.leftDrawerOpen" show-if-above :width="250">
+    <q-drawer bordered
+              v-model="uiStore.leftDrawerOpen"
+              show-if-above
+              :width="250">
       <q-list>
-        <q-item-label header class="text-capitalize"> {{ $t('zaerhr') }} </q-item-label>
-        <EssentialLink v-for="link in essentialLinks" :key="link.title" v-bind="link" />
+        <q-item-label header
+                      class="text-capitalize"> {{ $t('zaerhr') }} </q-item-label>
+        <EssentialLink v-for="link in essentialLinks"
+                       :key="link.title"
+                       v-bind="link" />
         <q-separator />
-        <q-item-label header class="text-capitalize">{{ $t('appinfo') }}</q-item-label>
-        <EssentialLink v-for="link in infoLinks" :key="link.title" v-bind="link" />
+        <q-item-label header
+                      class="text-capitalize">{{ $t('appinfo') }}</q-item-label>
+        <EssentialLink v-for="link in infoLinks"
+                       :key="link.title"
+                       v-bind="link" />
       </q-list>
     </q-drawer>
 

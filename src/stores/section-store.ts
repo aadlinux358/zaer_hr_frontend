@@ -1,4 +1,4 @@
-import {computed, reactive} from 'vue';
+import {computed, ref, Ref} from 'vue';
 import {defineStore} from 'pinia';
 import {exportFile, Notify} from 'quasar';
 import {hrApi} from 'src/boot/axios';
@@ -6,115 +6,104 @@ import {SectionReadOne, SectionReadMany, SectionCreate} from 'src/models/section
 import {useAuthStore} from './auth-store';
 import axios from 'axios';
 import {CRUDType, DownloadFileType} from 'src/models/common';
-
-export interface SectionState {
-  sections: Map<string, SectionReadOne>;
-  selectedSection: SectionReadOne | null | undefined;
-  form: SectionCreate;
-  crudType: CRUDType;
-  loading: boolean;
-  error: string;
-}
+import {useFlags} from 'src/composables/flags';
 
 const ENDPOINT = '/sections';
 
 export const useSectionStore = defineStore('section', () => {
 
+  const {crudType, loading, error} = useFlags();
   const {AuthorizationHeader} = useAuthStore();
   const config = {
     headers: {
       Authorization: AuthorizationHeader
     }
   }
-  const state: SectionState = reactive({
-    sections: new Map(),
-    selectedSection: null,
-    form: {
-      name: '',
-      department_uid: ''
-    },
-    crudType: CRUDType.READ,
-    loading: false,
-    error: ''
+
+  const sections: Ref<Map<string, SectionReadOne>> = ref(new Map());
+  const selectedSection: Ref<SectionReadOne | null | undefined> = ref(null)
+  const form: Ref<SectionCreate> = ref({
+    name: '',
+    department_uid: ''
   })
 
   const sectionList = computed(() => {
-    return Array.from(state.sections, entry => entry[1])
+    return Array.from(sections.value, entry => entry[1])
   })
 
   function resetForm() {
-    state.form.department_uid = '';
-    state.form.name = '';
+    form.value.department_uid = '';
+    form.value.name = '';
   }
 
   function _removeSection(uid: string) {
-    state.sections.delete(uid);
+    sections.value.delete(uid);
   }
   function _setError(err: unknown) {
     if (axios.isAxiosError(err)) {
       if (!err.response) {
-        state.error = 'connection error.'
+        error.value = 'connection error.'
       } else {
         if (err.response?.data.detail instanceof String) {
-          state.error = err.response?.data.detail
+          error.value = err.response?.data.detail
         } else {
-          state.error = err.message
+          error.value = err.message
         }
       }
     } else if (err instanceof Error) {
-      state.error = err.message;
+      error.value = err.message;
     } else {
-      state.error = 'Unknown error.'
+      error.value = 'Unknown error.'
     }
 
     Notify.create({
       color: 'negative',
-      message: state.error,
+      message: error.value,
     });
 
   }
 
   function addSection() {
-    state.crudType = CRUDType.CREATE;
+    crudType.value = CRUDType.CREATE;
   }
 
   function editSection(uid: string) {
-    state.crudType = CRUDType.UPDATE;
-    const section = state.sections.get(uid);
-    state.selectedSection = section;
-    state.form = <SectionCreate>{...state.selectedSection};
+    crudType.value = CRUDType.UPDATE;
+    const section = sections.value.get(uid);
+    selectedSection.value = section;
+    form.value = <SectionCreate>{...selectedSection.value};
   }
 
   async function deleteSection(uid: string) {
-    state.crudType = CRUDType.DELETE;
-    const section = state.sections.get(uid);
-    state.selectedSection = section;
+    crudType.value = CRUDType.DELETE;
+    const section = sections.value.get(uid);
+    selectedSection.value = section;
     await deleteDBSection();
   }
 
   async function getManyDBSections() {
-    state.sections = new Map();
-    state.loading = true;
+    sections.value.clear()
+    loading.value = true;
     try {
       const response = await hrApi.get(`${ENDPOINT}`, config);
       const data: SectionReadMany = response.data;
-      data.result.forEach((dep) => state.sections.set(dep.uid, dep));
+      data.result.forEach((dep) => sections.value.set(dep.uid, dep));
     }
     catch (err) {
       _setError(err);
     }
     finally {
-      state.loading = false;
+      loading.value = false;
     }
   }
   async function createDBSection() {
     // create section
-    state.loading = true;
+    loading.value = true;
     try {
-      const response = await hrApi.post(`${ENDPOINT}`, state.form, config);
+      const response = await hrApi.post(`${ENDPOINT}`, form.value, config);
       resetForm();
       const section: SectionReadOne = response.data;
-      state.sections.set(section.uid, section);
+      sections.value.set(section.uid, section);
       Notify.create({
         color: 'positive',
         message: 'Successfully created section.'
@@ -123,16 +112,16 @@ export const useSectionStore = defineStore('section', () => {
       _setError(err);
     }
     finally {
-      state.loading = false;
+      loading.value = false;
     }
   }
 
   async function updateDBSection() {
-    state.loading = true;
+    loading.value = true;
     try {
-      const response = await hrApi.patch(`${ENDPOINT}/${state.selectedSection?.uid}`, state.form, config)
+      const response = await hrApi.patch(`${ENDPOINT}/${selectedSection.value?.uid}`, form.value, config)
       const section: SectionReadOne = response.data;
-      state.sections.set(section.uid, section);
+      sections.value.set(section.uid, section);
       Notify.create({
         color: 'positive',
         message: 'Successfully updated section'
@@ -143,19 +132,19 @@ export const useSectionStore = defineStore('section', () => {
       _setError(err);
     }
     finally {
-      state.loading = false;
+      loading.value = false;
     }
   }
 
 
   async function deleteDBSection() {
     // delete section
-    state.loading = true;
+    loading.value = true;
     try {
-      if (state.selectedSection) {
-        await hrApi.delete(`${ENDPOINT}/${state.selectedSection.uid}`, config);
-        _removeSection(state.selectedSection.uid);
-        state.selectedSection = null;
+      if (selectedSection.value) {
+        await hrApi.delete(`${ENDPOINT}/${selectedSection.value.uid}`, config);
+        _removeSection(selectedSection.value.uid);
+        selectedSection.value = null;
         Notify.create({
           color: 'positive',
           message: 'Successfully deleted section.'
@@ -167,12 +156,12 @@ export const useSectionStore = defineStore('section', () => {
       _setError(err);
     }
     finally {
-      state.loading = false;
+      loading.value = false;
     }
   }
 
   async function downloadFile(fileType: DownloadFileType) {
-    state.loading = true;
+    loading.value = true;
     try {
       const response = await hrApi.get(`${ENDPOINT}/download/${fileType}`, Object.assign(config, {ResponseType: 'blob'}))
       exportFile(`section.${fileType}`, response.data)
@@ -181,11 +170,14 @@ export const useSectionStore = defineStore('section', () => {
       _setError(err);
     }
     finally {
-      state.loading = false;
+      loading.value = false;
     }
   }
   return {
-    state,
+    sections,
+    selectedSection,
+    loading,
+    crudType,
     addSection,
     editSection,
     deleteSection,
