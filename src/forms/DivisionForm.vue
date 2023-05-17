@@ -8,7 +8,7 @@
             class="q-gutter-md">
       <q-input square
                filled
-               v-model="divisionStore.state.form.name"
+               v-model="divisionStore.form.name"
                label="Division name"
                lazy-rules
                :rules="[val => val && val.length > 0 || 'Please type something']" />

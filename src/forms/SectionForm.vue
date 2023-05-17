@@ -17,7 +17,7 @@
                 option-value="uid" />
       <q-select square
                 outlined
-                v-model="sectionStore.state.form.department_uid"
+                v-model="sectionStore.form.department_uid"
                 :options="filteredDepartments"
                 label="Department"
                 emit-value
@@ -26,7 +26,7 @@
                 option-value="uid" />
       <q-input square
                filled
-               v-model="sectionStore.state.form.name"
+               v-model="sectionStore.form.name"
                label="Section name"
                lazy-rules
                :rules="[val => val && val.length > 0 || 'Please type something']" />
@@ -79,17 +79,9 @@ watch(divisionUid, (newValue, oldVAlue) => {
   }
 })
 onMounted(() => {
-  /*
-  if (divisionStore.state.divisions.size === 0) {
-    divisionStore.getManyDBDivisions()
-  }
-  if (departmentStore.state.departments.size === 0) {
-    departmentStore.getManyDBDepartments();
-  }
-  */
-  if (sectionStore.state.crudType === CRUDType.UPDATE) {
-    const section = sectionStore.state.selectedSection;
-    const dep = departmentStore.state.departments.get(section.department_uid);
+  if (sectionStore.crudType === CRUDType.UPDATE) {
+    const section = sectionStore.selectedSection;
+    const dep = departmentStore.departments.get(section.department_uid);
     divisionUid.value = dep.division_uid;
   }
 })

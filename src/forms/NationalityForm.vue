@@ -8,7 +8,7 @@
             class="q-gutter-md">
       <q-input square
                filled
-               v-model="nationalityStore.state.form.name"
+               v-model="nationalityStore.form.name"
                label="Nationality name"
                lazy-rules
                :rules="[val => val && val.length > 0 || 'Please type something']" />
@@ -34,9 +34,10 @@
                @click="onCancel"
                color="primary" />
       </div>
-  </q-form>
+    </q-form>
 
-</div></template>
+  </div>
+</template>
 <script setup lang="ts">
 import {useNationalityStore} from 'src/stores/nationality-store';
 

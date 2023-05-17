@@ -8,7 +8,7 @@
             class="q-gutter-md">
       <q-select square
                 outlined
-                v-model="departmentStore.state.form.division_uid"
+                v-model="departmentStore.form.division_uid"
                 :options="divisionStore.divisionList"
                 label="Division"
                 emit-value
@@ -17,7 +17,7 @@
                 option-value="uid" />
       <q-input square
                filled
-               v-model="departmentStore.state.form.name"
+               v-model="departmentStore.form.name"
                label="Department name"
                lazy-rules
                :rules="[val => val && val.length > 0 || 'Please type something']" />

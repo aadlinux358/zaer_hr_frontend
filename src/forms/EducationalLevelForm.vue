@@ -8,7 +8,7 @@
             class="q-gutter-md">
       <q-input square
                filled
-               v-model="educationStore.state.form.level"
+               v-model="educationStore.form.level"
                label="EducationalLevel name"
                lazy-rules
                :rules="[val => val && val.length > 0 || 'Please type something']" />
