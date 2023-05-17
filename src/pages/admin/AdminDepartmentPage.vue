@@ -6,61 +6,16 @@
            row-key="uid"
            flat
            separator="cell"
-           :loading="departmentStore.state.loading"
+           :loading="departmentStore.loading"
            :filter="filter">
 
     <template v-slot:top="props">
-      <div class="column full-width">
-        <div class="row items-center full-width">
-          <div class="col-2 q-table__title">Departments</div>
-          <q-space />
-
-          <q-btn flat
-                 round
-                 dense
-                 :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                 @click="props.toggleFullscreen"
-                 class="q-mx-md"
-                 size="lg" />
-        </div>
-        <div class="row q-my-md">
-          <q-btn color="primary"
-                 square
-                 no-caps
-                 :disable="departmentStore.state.loading"
-                 label="Add Department"
-                 @click="addDepartment" />
-          <q-space />
-
-          <div class="row q-mx-md items-center">
-
-            <q-btn color="primary"
-                   @click="downloadCSV"
-                   flat
-                   round
-                   dense
-                   icon="fas fa-file-csv" />
-            <q-btn color="primary"
-                   @click="downloadExcel"
-                   flat
-                   round
-                   dense
-                   icon="fas fa-file-excel" />
-          </div>
-
-          <q-input square
-                   filled
-                   dense
-                   debounce="300"
-                   color="primary"
-                   v-model="filter"
-                   label="Search">
-            <template v-slot:append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
-        </div>
-      </div>
+      <DataTableHeader title="departments"
+                       v-model:filter="filter"
+                       entity="department"
+                       :loading="departmentStore.loading"
+                       :table-props="props"
+                       @add="addDepartment" />
     </template>
     <template v-slot:body-cell-actions="props">
       <q-td :props="props">
@@ -86,7 +41,7 @@
             persistent>
     <q-card class="q-dialog-plugin">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6 text-uppercase">{{ departmentStore.state.crudType }} Department</div>
+        <div class="text-h6 text-uppercase">{{ departmentStore.crudType }} Department</div>
         <q-space />
         <q-btn icon="close"
                flat
@@ -110,6 +65,7 @@ import {CRUDType, DownloadFileType} from 'src/models/common';
 import DepartmentForm from 'src/forms/DepartmentForm.vue'
 import {format, date} from 'quasar';
 import {useStores} from 'src/composables/stores';
+import DataTableHeader from 'src/components/DataTableHeader.vue';
 
 defineEmits({
   ...useDialogPluginComponent.emitsObject
@@ -143,7 +99,7 @@ function addDepartment() {
   dialogRef.value?.show()
 }
 function onSave() {
-  switch (departmentStore.state.crudType) {
+  switch (departmentStore.crudType) {
     case CRUDType.CREATE: {
       departmentStore.createDBDepartment();
       break;
@@ -193,7 +149,7 @@ const columns = [
     label: 'Division',
     align: 'left',
     field: (row: DepartmentReadOne) => {
-      const division = divisionStore.state.divisions.get(row.division_uid)
+      const division = divisionStore.divisions.get(row.division_uid)
       return division?.name
     },
     format: (val: string) => capitalize(val),

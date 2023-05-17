@@ -6,57 +6,16 @@
            row-key="uid"
            flat
            separator="cell"
-           :loading="sectionStore.state.loading"
+           :loading="sectionStore.loading"
            :filter="filter">
 
     <template v-slot:top="props">
-      <div class="column full-width">
-        <div class="row items-center full-width">
-          <div class="col-2 q-table__title">Sections</div>
-          <q-space />
-
-          <q-btn flat
-                 round
-                 dense
-                 :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                 @click="props.toggleFullscreen"
-                 class="q-mx-md"
-                 size="lg" />
-        </div>
-        <div class="row q-my-md">
-          <q-btn color="primary"
-                 square
-                 no-caps
-                 :disable="sectionStore.state.loading"
-                 label="Add Section"
-                 @click="addSection" />
-          <q-space />
-          <div class="row q-mx-md items-center">
-            <q-btn color="primary"
-                   @click="downloadCSV"
-                   flat
-                   round
-                   dense
-                   icon="fas fa-file-csv" />
-            <q-btn color="primary"
-                   @click="downloadExcel"
-                   flat
-                   round
-                   dense
-                   icon="fas fa-file-excel" />
-          </div>
-          <q-input filled
-                   square
-                   dense
-                   debounce="300"
-                   color="primary"
-                   v-model="filter">
-            <template v-slot:append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
-        </div>
-      </div>
+      <DataTableHeader title="sections"
+                       v-model:filter="filter"
+                       entity="section"
+                       :loading="sectionStore.loading"
+                       :table-props="props"
+                       @add="addSection" />
     </template>
     <template v-slot:body-cell-actions="props">
       <q-td :props="props">
@@ -82,7 +41,7 @@
             persistent>
     <q-card class="q-dialog-plugin">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6 text-uppercase">{{ sectionStore.state.crudType }} Section</div>
+        <div class="text-h6 text-uppercase">{{ sectionStore.crudType }} Section</div>
         <q-space />
         <q-btn icon="close"
                flat
@@ -106,6 +65,7 @@ import {CRUDType, DownloadFileType} from 'src/models/common';
 import SectionForm from 'src/forms/SectionForm.vue'
 import {format, date} from 'quasar';
 import {useStores} from 'src/composables/stores';
+import DataTableHeader from 'src/components/DataTableHeader.vue';
 defineEmits({
   ...useDialogPluginComponent.emitsObject
 })
@@ -142,7 +102,7 @@ function addSection() {
   dialogRef.value?.show()
 }
 function onSave() {
-  switch (sectionStore.state.crudType) {
+  switch (sectionStore.crudType) {
     case CRUDType.CREATE: {
       sectionStore.createDBSection();
       break;
@@ -195,7 +155,7 @@ const columns = [
     label: 'Department Name',
     align: 'left',
     field: (row: SectionReadOne) => {
-      const dep = departmentStore.state.departments.get(row.department_uid);
+      const dep = departmentStore.departments.get(row.department_uid);
       return capitalize(dep?.name);
     },
     format: (val: string) => capitalize(val),
@@ -207,8 +167,8 @@ const columns = [
     label: 'Division Name',
     align: 'left',
     field: (row: SectionReadOne) => {
-      const dep = departmentStore.state.departments.get(row.department_uid);
-      const div = divisionStore.state.divisions.get(dep?.division_uid);
+      const dep = departmentStore.departments.get(row.department_uid);
+      const div = divisionStore.divisions.get(dep?.division_uid);
       return capitalize(div?.name);
     },
     format: (val: string) => capitalize(val),

@@ -6,57 +6,16 @@
            row-key="uid"
            flat
            separator="cell"
-           :loading="nationalityStore.state.loading"
+           :loading="nationalityStore.loading"
            :filter="filter">
 
     <template v-slot:top="props">
-      <div class="column full-width">
-        <div class="row items-center full-width">
-          <div class="col-2 q-table__title text-capitalize">{{ $t('nationalities') }}</div>
-          <q-space />
-
-          <q-btn flat
-                 round
-                 dense
-                 :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                 @click="props.toggleFullscreen"
-                 class="q-mx-md"
-                 size="lg" />
-        </div>
-        <div class="row q-my-md">
-          <q-btn color="primary"
-                 class="text-capitalize"
-                 square
-                 no-caps
-                 :disable="nationalityStore.state.loading"
-                 @click="addNationality"> {{ $t('new') }} {{ $t('nationality') }} </q-btn>
-          <q-space />
-          <div class="row q-mx-md items-center">
-            <q-btn color="primary"
-                   @click="downloadCSV"
-                   flat
-                   round
-                   dense
-                   icon="fas fa-file-csv" />
-            <q-btn color="primary"
-                   @click="downloadExcel"
-                   flat
-                   round
-                   dense
-                   icon="fas fa-file-excel" />
-          </div>
-          <q-input filled
-                   square
-                   dense
-                   debounce="300"
-                   color="primary"
-                   v-model="filter">
-            <template v-slot:append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
-        </div>
-      </div>
+      <DataTableHeader title="nationalities"
+                       v-model:filter="filter"
+                       entity="nationality"
+                       :loading="nationalityStore.loading"
+                       :table-props="props"
+                       @add="addNationality" />
     </template>
     <template v-slot:body-cell-actions="props">
       <q-td :props="props">
@@ -82,7 +41,7 @@
             persistent>
     <q-card class="q-dialog-plugin">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6 text-capitalize">{{ $t(nationalityStore.state.crudType) }} {{ $t('nationality') }}</div>
+        <div class="text-h6 text-capitalize">{{ $t(nationalityStore.crudType) }} {{ $t('nationality') }}</div>
         <q-space />
         <q-btn icon="close"
                flat
@@ -104,6 +63,7 @@ import {useDialogPluginComponent, useQuasar} from 'quasar'
 import {NationalityReadOne} from 'src/models/nationality';
 import {CRUDType, DownloadFileType} from 'src/models/common';
 import NationalityForm from 'src/forms/NationalityForm.vue'
+import DataTableHeader from 'src/components/DataTableHeader.vue'
 import {format, date} from 'quasar';
 import {useStores} from 'src/composables/stores';
 defineEmits({
@@ -138,7 +98,7 @@ function addNationality() {
   dialogRef.value?.show()
 }
 function onSave() {
-  switch (nationalityStore.state.crudType) {
+  switch (nationalityStore.crudType) {
     case CRUDType.CREATE: {
       nationalityStore.createDBNationality();
       break;

@@ -7,57 +7,16 @@
            row-key="uid"
            flat
            separator="cell"
-           :loading="divisionStore.state.loading"
+           :loading="divisionStore.loading"
            :filter="filter">
 
     <template v-slot:top="props">
-      <div class="column full-width">
-        <div class="row items-center full-width">
-          <div class="col-2 q-table__title text-capitalize">{{ $t('divisions') }}</div>
-          <q-space />
-
-          <q-btn flat
-                 round
-                 dense
-                 :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                 @click="props.toggleFullscreen"
-                 class="q-mx-md"
-                 size="lg" />
-        </div>
-        <div class="row q-my-md">
-          <q-btn color="primary"
-                 class="text-capitalize"
-                 square
-                 no-caps
-                 :disable="divisionStore.state.loading"
-                 @click="addDivision"> {{ $t('new') }} {{ $t('division') }} </q-btn>
-          <q-space />
-          <div class="row q-mx-md items-center">
-            <q-btn color="primary"
-                   @click="downloadCSV"
-                   flat
-                   round
-                   dense
-                   icon="fas fa-file-csv" />
-            <q-btn color="primary"
-                   @click="downloadExcel"
-                   flat
-                   round
-                   dense
-                   icon="fas fa-file-excel" />
-          </div>
-          <q-input filled
-                   square
-                   dense
-                   debounce="300"
-                   color="primary"
-                   v-model="filter">
-            <template v-slot:append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
-        </div>
-      </div>
+      <DataTableHeader title="divisions"
+                       v-model:filter="filter"
+                       entity="division"
+                       :loading="divisionStore.loading"
+                       :table-props="props"
+                       @add="addDivision" />
     </template>
     <template v-slot:body-cell-actions="props">
       <q-td :props="props">
@@ -83,7 +42,7 @@
             persistent>
     <q-card class="q-dialog-plugin">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6 text-capitalize">{{ $t(divisionStore.state.crudType) }} {{ $t('division') }}</div>
+        <div class="text-h6 text-capitalize">{{ $t(divisionStore.crudType) }} {{ $t('division') }}</div>
         <q-space />
         <q-btn icon="close"
                flat
@@ -107,6 +66,7 @@ import {CRUDType, DownloadFileType} from 'src/models/common';
 import DivisionForm from 'src/forms/DivisionForm.vue'
 import {format, date} from 'quasar';
 import {useStores} from 'src/composables/stores';
+import DataTableHeader from 'src/components/DataTableHeader.vue';
 
 defineEmits({
   ...useDialogPluginComponent.emitsObject
@@ -144,7 +104,7 @@ function addDivision() {
   dialogRef.value?.show()
 }
 function onSave() {
-  switch (divisionStore.state.crudType) {
+  switch (divisionStore.crudType) {
     case CRUDType.CREATE: {
       divisionStore.createDBDivision();
       break;

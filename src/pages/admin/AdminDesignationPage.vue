@@ -6,57 +6,16 @@
            row-key="uid"
            flat
            separator="cell"
-           :loading="designationStore.state.loading"
+           :loading="designationStore.loading"
            :filter="filter">
 
     <template v-slot:top="props">
-      <div class="column full-width">
-        <div class="row items-center full-width">
-          <div class="col-2 q-table__title">Designations</div>
-          <q-space />
-
-          <q-btn flat
-                 round
-                 dense
-                 :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                 @click="props.toggleFullscreen"
-                 class="q-mx-md"
-                 size="lg" />
-        </div>
-        <div class="row q-my-md">
-          <q-btn color="primary"
-                 square
-                 no-caps
-                 :disable="designationStore.state.loading"
-                 label="Add Designation"
-                 @click="addDesignation" />
-          <q-space />
-          <div class="row q-mx-md items-center">
-            <q-btn color="primary"
-                   @click="downloadCSV"
-                   flat
-                   round
-                   dense
-                   icon="fas fa-file-csv" />
-            <q-btn color="primary"
-                   @click="downloadExcel"
-                   flat
-                   round
-                   dense
-                   icon="fas fa-file-excel" />
-          </div>
-          <q-input filled
-                   square
-                   dense
-                   debounce="300"
-                   color="primary"
-                   v-model="filter">
-            <template v-slot:append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
-        </div>
-      </div>
+      <DataTableHeader title="designations"
+                       v-model:filter="filter"
+                       entity="designation"
+                       :loading="designationStore.loading"
+                       :table-props="props"
+                       @add="addDesignation" />
     </template>
     <template v-slot:body-cell-actions="props">
       <q-td :props="props">
@@ -82,7 +41,7 @@
             persistent>
     <q-card class="q-dialog-plugin">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6 text-uppercase">{{ designationStore.state.crudType }} Designation</div>
+        <div class="text-h6 text-uppercase">{{ designationStore.crudType }} Designation</div>
         <q-space />
         <q-btn icon="close"
                flat
@@ -106,6 +65,7 @@ import {CRUDType, DownloadFileType} from 'src/models/common';
 import DesignationForm from 'src/forms/DesignationForm.vue'
 import {format, date} from 'quasar';
 import {useStores} from 'src/composables/stores';
+import DataTableHeader from 'src/components/DataTableHeader.vue';
 defineEmits({
   ...useDialogPluginComponent.emitsObject
 })
@@ -138,7 +98,7 @@ function addDesignation() {
   dialogRef.value?.show()
 }
 function onSave() {
-  switch (designationStore.state.crudType) {
+  switch (designationStore.crudType) {
     case CRUDType.CREATE: {
       designationStore.createDBDesignation();
       break;

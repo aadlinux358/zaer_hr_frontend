@@ -6,57 +6,16 @@
            row-key="uid"
            flat
            separator="cell"
-           :loading="eduStore.state.loading"
+           :loading="eduStore.loading"
            :filter="filter">
 
     <template v-slot:top="props">
-      <div class="column full-width">
-        <div class="row items-center full-width">
-          <div class="col-2 q-table__title text-capitalize">{{ $t('educational_levels') }}</div>
-          <q-space />
-
-          <q-btn flat
-                 round
-                 dense
-                 :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                 @click="props.toggleFullscreen"
-                 class="q-mx-md"
-                 size="lg" />
-        </div>
-        <div class="row q-my-md">
-          <q-btn color="primary"
-                 class="text-capitalize"
-                 square
-                 no-caps
-                 :disable="eduStore.state.loading"
-                 @click="addEducationalLevel"> {{ $t('new') }} {{ $t('educational_level') }} </q-btn>
-          <q-space />
-          <div class="row q-mx-md items-center">
-            <q-btn color="primary"
-                   @click="downloadCSV"
-                   flat
-                   round
-                   dense
-                   icon="fas fa-file-csv" />
-            <q-btn color="primary"
-                   @click="downloadExcel"
-                   flat
-                   round
-                   dense
-                   icon="fas fa-file-excel" />
-          </div>
-          <q-input filled
-                   square
-                   dense
-                   debounce="300"
-                   color="primary"
-                   v-model="filter">
-            <template v-slot:append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
-        </div>
-      </div>
+      <DataTableHeader title="educational_levels"
+                       v-model:filter="filter"
+                       entity="educational_level"
+                       :loading="eduStore.loading"
+                       :table-props="props"
+                       @add="addEducationalLevel" />
     </template>
     <template v-slot:body-cell-actions="props">
       <q-td :props="props">
@@ -82,7 +41,7 @@
             persistent>
     <q-card class="q-dialog-plugin">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6 text-capitalize">{{ $t(eduStore.state.crudType) }} {{ $t('educational_level') }}</div>
+        <div class="text-h6 text-capitalize">{{ $t(eduStore.crudType) }} {{ $t('educational_level') }}</div>
         <q-space />
         <q-btn icon="close"
                flat
@@ -103,6 +62,7 @@ import {ref} from 'vue';
 import {useDialogPluginComponent, useQuasar} from 'quasar'
 import {EducationalLevelReadOne} from 'src/models/education';
 import {CRUDType, DownloadFileType} from 'src/models/common';
+import DataTableHeader from 'src/components/DataTableHeader.vue';
 import EducationalLevelForm from 'src/forms/EducationalLevelForm.vue'
 import {format, date} from 'quasar';
 import {useStores} from 'src/composables/stores';
@@ -138,7 +98,7 @@ function addEducationalLevel() {
   dialogRef.value?.show()
 }
 function onSave() {
-  switch (eduStore.state.crudType) {
+  switch (eduStore.crudType) {
     case CRUDType.CREATE: {
       eduStore.createDBEducationalLevel();
       break;

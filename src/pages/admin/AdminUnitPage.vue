@@ -6,57 +6,16 @@
            row-key="uid"
            flat
            separator="cell"
-           :loading="unitStore.state.loading"
+           :loading="unitStore.loading"
            :filter="filter">
 
     <template v-slot:top="props">
-      <div class="column full-width">
-        <div class="row items-center full-width">
-          <div class="col-2 q-table__title">Units</div>
-          <q-space />
-
-          <q-btn flat
-                 round
-                 dense
-                 :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                 @click="props.toggleFullscreen"
-                 class="q-mx-md"
-                 size="lg" />
-        </div>
-        <div class="row q-my-md">
-          <q-btn color="primary"
-                 square
-                 no-caps
-                 :disable="unitStore.state.loading"
-                 label="Add Unit"
-                 @click="addUnit" />
-          <q-space />
-          <div class="row q-mx-md items-center">
-            <q-btn color="primary"
-                   @click="downloadCSV"
-                   flat
-                   round
-                   dense
-                   icon="fas fa-file-csv" />
-            <q-btn color="primary"
-                   @click="downloadExcel"
-                   flat
-                   round
-                   dense
-                   icon="fas fa-file-excel" />
-          </div>
-          <q-input filled
-                   square
-                   dense
-                   debounce="300"
-                   color="primary"
-                   v-model="filter">
-            <template v-slot:append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
-        </div>
-      </div>
+      <DataTableHeader title="units"
+                       v-model:filter="filter"
+                       entity="unit"
+                       :loading="unitStore.loading"
+                       :table-props="props"
+                       @add="addUnit" />
     </template>
     <template v-slot:body-cell-actions="props">
       <q-td :props="props">
@@ -82,7 +41,7 @@
             persistent>
     <q-card class="q-dialog-plugin">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6 text-uppercase">{{ unitStore.state.crudType }} Unit</div>
+        <div class="text-h6 text-uppercase">{{ unitStore.crudType }} Unit</div>
         <q-space />
         <q-btn icon="close"
                flat
@@ -106,6 +65,7 @@ import {CRUDType, DownloadFileType} from 'src/models/common';
 import UnitForm from 'src/forms/UnitForm.vue'
 import {format, date} from 'quasar';
 import {useStores} from 'src/composables/stores';
+import DataTableHeader from 'src/components/DataTableHeader.vue';
 defineEmits({
   ...useDialogPluginComponent.emitsObject
 })
@@ -143,7 +103,7 @@ function addUnit() {
   dialogRef.value?.show()
 }
 function onSave() {
-  switch (unitStore.state.crudType) {
+  switch (unitStore.crudType) {
     case CRUDType.CREATE: {
       unitStore.createDBUnit();
       break;
@@ -196,7 +156,7 @@ const columns = [
     label: 'Section Name',
     align: 'left',
     field: (row: UnitReadOne) => {
-      const sec = sectionStore.state.sections.get(row.section_uid);
+      const sec = sectionStore.sections.get(row.section_uid);
       return capitalize(sec?.name);
     },
     format: (val: string) => capitalize(val),
@@ -208,8 +168,8 @@ const columns = [
     label: 'Department Name',
     align: 'left',
     field: (row: UnitReadOne) => {
-      const sec = sectionStore.state.sections.get(row.section_uid);
-      const dep = departmentStore.state.departments.get(sec.department_uid);
+      const sec = sectionStore.sections.get(row.section_uid);
+      const dep = departmentStore.departments.get(sec.department_uid);
       return capitalize(dep?.name);
     },
     format: (val: string) => capitalize(val),
@@ -221,9 +181,9 @@ const columns = [
     label: 'Division Name',
     align: 'left',
     field: (row: UnitReadOne) => {
-      const sec = sectionStore.state.sections.get(row.section_uid);
-      const dep = departmentStore.state.departments.get(sec.department_uid);
-      const div = divisionStore.state.divisions.get(dep?.division_uid);
+      const sec = sectionStore.sections.get(row.section_uid);
+      const dep = departmentStore.departments.get(sec.department_uid);
+      const div = divisionStore.divisions.get(dep?.division_uid);
       return capitalize(div?.name);
     },
     format: (val: string) => capitalize(val),
