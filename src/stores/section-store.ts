@@ -176,6 +176,7 @@ export const useSectionStore = defineStore('section', () => {
   return {
     sections,
     selectedSection,
+    form,
     loading,
     crudType,
     addSection,

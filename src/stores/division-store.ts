@@ -98,7 +98,7 @@ export const useDivisionStore = defineStore('division', () => {
   async function createDBDivision() {
     loading.value = true;
     try {
-      const response = await hrApi.post(`${ENDPOINT}`, form, config);
+      const response = await hrApi.post(`${ENDPOINT}`, form.value, config);
       resetForm();
       const division: DivisionReadOne = response.data;
       divisions.value.set(division.uid, division);
@@ -117,7 +117,7 @@ export const useDivisionStore = defineStore('division', () => {
   async function updateDBDivision() {
     loading.value = true;
     try {
-      const response = await hrApi.patch(`${ENDPOINT}/${selectedDivision.value?.uid}`, form, config)
+      const response = await hrApi.patch(`${ENDPOINT}/${selectedDivision.value?.uid}`, form.value, config)
       const division: DivisionReadOne = response.data;
       divisions.value.set(division.uid, division);
       Notify.create({
@@ -171,6 +171,8 @@ export const useDivisionStore = defineStore('division', () => {
 
   return {
     divisions,
+    selectedDivision,
+    form,
     crudType,
     loading,
     addDivision,
