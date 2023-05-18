@@ -4,7 +4,6 @@ import {exportFile, Notify} from 'quasar';
 import {hrApi} from 'src/boot/axios';
 import {DepartmentReadOne, DepartmentReadMany, DepartmentCreate} from 'src/models/department';
 import {useAuthStore} from './auth-store';
-import axios from 'axios';
 import {CRUDType, DownloadFileType} from 'src/models/common';
 import {useFlags} from 'src/composables/flags';
 
@@ -14,7 +13,7 @@ export const useDepartmentStore = defineStore('department', () => {
 
 
   const {AuthorizationHeader} = useAuthStore();
-  const {crudType, loading, error} = useFlags();
+  const {crudType, loading, setError} = useFlags();
   const config = {
     headers: {
       Authorization: AuthorizationHeader
@@ -38,29 +37,6 @@ export const useDepartmentStore = defineStore('department', () => {
 
   function _removeDepartment(uid: string) {
     departments.value.delete(uid);
-  }
-  function _setError(err: unknown) {
-    if (axios.isAxiosError(err)) {
-      if (!err.response) {
-        error.value = 'connection error.'
-      } else {
-        if (err.response?.data.detail instanceof String) {
-          error.value = err.response?.data.detail
-        } else {
-          error.value = err.message
-        }
-      }
-    } else if (err instanceof Error) {
-      error.value = err.message;
-    } else {
-      error.value = 'Unknown error.'
-    }
-
-    Notify.create({
-      color: 'negative',
-      message: error.value,
-    });
-
   }
 
   function addDepartment() {
@@ -90,7 +66,7 @@ export const useDepartmentStore = defineStore('department', () => {
       data.result.forEach((dep) => departments.value.set(dep.uid, dep));
     }
     catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -109,7 +85,7 @@ export const useDepartmentStore = defineStore('department', () => {
         message: 'Successfully created department.'
       })
     } catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -129,7 +105,7 @@ export const useDepartmentStore = defineStore('department', () => {
 
     }
     catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -153,7 +129,7 @@ export const useDepartmentStore = defineStore('department', () => {
         throw new Error('No department selected')
       }
     } catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -167,7 +143,7 @@ export const useDepartmentStore = defineStore('department', () => {
       exportFile(`department.${fileType}`, response.data)
     }
     catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;

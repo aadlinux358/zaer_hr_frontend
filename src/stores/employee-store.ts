@@ -4,7 +4,6 @@ import {exportFile, Notify, date} from 'quasar';
 import {hrApi} from 'src/boot/axios';
 import {EmployeeReadOne, EmployeeReadMany, EmployeeCreate} from 'src/models/employee';
 import {useAuthStore} from './auth-store';
-import axios from 'axios';
 import {CRUDType, DownloadFileType} from 'src/models/common';
 import {useDivisionStore} from './division-store';
 import {useDepartmentStore} from './department-store';
@@ -34,7 +33,7 @@ export const useEmployeeStore = defineStore('employee', () => {
   const natStore = useNationalityStore();
   const eduStore = useEducationalLevelStore();
 
-  const {loading, crudType, error} = useFlags();
+  const {loading, crudType, setError} = useFlags();
   const employees: Ref<Map<string, EmployeeReadOne>> = ref(new Map())
   const selectedEmployee: Ref<EmployeeReadOne | null | undefined> = ref(null)
   const form: Ref<EmployeeCreate> = ref({
@@ -178,29 +177,6 @@ export const useEmployeeStore = defineStore('employee', () => {
   function _removeEmployee(uid: string) {
     employees.value.delete(uid);
   }
-  function _setError(err: unknown) {
-    if (axios.isAxiosError(err)) {
-      if (!err.response) {
-        error.value = 'connection error.'
-      } else {
-        if (err.response?.data.detail instanceof String) {
-          error.value = err.response?.data.detail
-        } else {
-          error.value = err.message
-        }
-      }
-    } else if (err instanceof Error) {
-      error.value = err.message;
-    } else {
-      error.value = 'Unknown error.'
-    }
-
-    Notify.create({
-      color: 'negative',
-      message: error.value,
-    });
-
-  }
 
   function addEmployee() {
     crudType.value = CRUDType.CREATE;
@@ -238,7 +214,7 @@ export const useEmployeeStore = defineStore('employee', () => {
       data.result.forEach((div) => employees.value.set(div.uid, div));
     }
     catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -259,7 +235,7 @@ export const useEmployeeStore = defineStore('employee', () => {
         message: 'Successfully created employee.'
       })
     } catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -282,7 +258,7 @@ export const useEmployeeStore = defineStore('employee', () => {
       })
 
     } catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -304,7 +280,7 @@ export const useEmployeeStore = defineStore('employee', () => {
         throw new Error('No employee selected')
       }
     } catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -318,7 +294,7 @@ export const useEmployeeStore = defineStore('employee', () => {
       exportFile(`employees.${fileType}`, response.data)
     }
     catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;

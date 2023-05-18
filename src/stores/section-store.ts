@@ -4,7 +4,6 @@ import {exportFile, Notify} from 'quasar';
 import {hrApi} from 'src/boot/axios';
 import {SectionReadOne, SectionReadMany, SectionCreate} from 'src/models/section';
 import {useAuthStore} from './auth-store';
-import axios from 'axios';
 import {CRUDType, DownloadFileType} from 'src/models/common';
 import {useFlags} from 'src/composables/flags';
 
@@ -12,7 +11,7 @@ const ENDPOINT = '/sections';
 
 export const useSectionStore = defineStore('section', () => {
 
-  const {crudType, loading, error} = useFlags();
+  const {crudType, loading, setError} = useFlags();
   const {AuthorizationHeader} = useAuthStore();
   const config = {
     headers: {
@@ -38,29 +37,6 @@ export const useSectionStore = defineStore('section', () => {
 
   function _removeSection(uid: string) {
     sections.value.delete(uid);
-  }
-  function _setError(err: unknown) {
-    if (axios.isAxiosError(err)) {
-      if (!err.response) {
-        error.value = 'connection error.'
-      } else {
-        if (err.response?.data.detail instanceof String) {
-          error.value = err.response?.data.detail
-        } else {
-          error.value = err.message
-        }
-      }
-    } else if (err instanceof Error) {
-      error.value = err.message;
-    } else {
-      error.value = 'Unknown error.'
-    }
-
-    Notify.create({
-      color: 'negative',
-      message: error.value,
-    });
-
   }
 
   function addSection() {
@@ -90,7 +66,7 @@ export const useSectionStore = defineStore('section', () => {
       data.result.forEach((dep) => sections.value.set(dep.uid, dep));
     }
     catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -109,7 +85,7 @@ export const useSectionStore = defineStore('section', () => {
         message: 'Successfully created section.'
       })
     } catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -129,7 +105,7 @@ export const useSectionStore = defineStore('section', () => {
 
     }
     catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -153,7 +129,7 @@ export const useSectionStore = defineStore('section', () => {
         throw new Error('No section selected')
       }
     } catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -167,7 +143,7 @@ export const useSectionStore = defineStore('section', () => {
       exportFile(`section.${fileType}`, response.data)
     }
     catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;

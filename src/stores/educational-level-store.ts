@@ -4,7 +4,6 @@ import {exportFile, Notify} from 'quasar';
 import {hrApi} from 'src/boot/axios';
 import {EducationalLevelReadOne, EducationalLevelReadMany, EducationalLevelCreate} from 'src/models/educational-level';
 import {useAuthStore} from './auth-store';
-import axios from 'axios';
 import {CRUDType, DownloadFileType} from 'src/models/common';
 import {useFlags} from 'src/composables/flags';
 
@@ -12,7 +11,7 @@ const ENDPOINT = '/educational-levels';
 
 export const useEducationalLevelStore = defineStore('education', () => {
 
-  const {crudType, loading, error} = useFlags();
+  const {crudType, loading, setError} = useFlags();
   const {AuthorizationHeader} = useAuthStore();
   const config = {
     headers: {
@@ -41,30 +40,6 @@ export const useEducationalLevelStore = defineStore('education', () => {
     educationalLevels.value.delete(uid);
   }
 
-  function _setError(err: unknown) {
-    if (axios.isAxiosError(err)) {
-      if (!err.response) {
-        error.value = 'connection error.'
-      } else {
-        if (err.response?.data.detail instanceof String) {
-          error.value = err.response?.data.detail
-        } else {
-          error.value = err.message
-        }
-      }
-    } else if (err instanceof Error) {
-      error.value = err.message;
-    } else {
-      error.value = 'Unknown error.'
-    }
-
-    Notify.create({
-      color: 'negative',
-      message: error.value,
-    });
-
-  }
-
   function addEducationalLevel() {
     crudType.value = CRUDType.CREATE;
   }
@@ -91,7 +66,7 @@ export const useEducationalLevelStore = defineStore('education', () => {
       data.result.forEach((edu) => educationalLevels.value.set(edu.uid, edu));
     }
     catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -109,7 +84,7 @@ export const useEducationalLevelStore = defineStore('education', () => {
         message: 'Successfully created educational_level.'
       })
     } catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -128,7 +103,7 @@ export const useEducationalLevelStore = defineStore('education', () => {
       })
 
     } catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -150,7 +125,7 @@ export const useEducationalLevelStore = defineStore('education', () => {
         throw new Error('No educational_level selected')
       }
     } catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -164,7 +139,7 @@ export const useEducationalLevelStore = defineStore('education', () => {
       exportFile(`educationalLevels.${fileType}`, response.data)
     }
     catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;

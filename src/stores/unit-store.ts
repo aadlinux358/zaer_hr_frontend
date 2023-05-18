@@ -4,7 +4,6 @@ import {exportFile, Notify} from 'quasar';
 import {hrApi} from 'src/boot/axios';
 import {UnitReadOne, UnitReadMany, UnitCreate} from 'src/models/unit';
 import {useAuthStore} from './auth-store';
-import axios from 'axios';
 import {CRUDType, DownloadFileType} from 'src/models/common';
 import {useFlags} from 'src/composables/flags';
 
@@ -13,7 +12,7 @@ const ENDPOINT = '/units';
 
 export const useUnitStore = defineStore('unit', () => {
 
-  const {crudType, loading, error} = useFlags();
+  const {crudType, loading, setError} = useFlags();
   const {AuthorizationHeader} = useAuthStore();
   const config = {
     headers: {
@@ -39,29 +38,6 @@ export const useUnitStore = defineStore('unit', () => {
 
   function _removeUnit(uid: string) {
     units.value.delete(uid);
-  }
-  function _setError(err: unknown) {
-    if (axios.isAxiosError(err)) {
-      if (!err.response) {
-        error.value = 'connection error.'
-      } else {
-        if (err.response?.data.detail instanceof String) {
-          error.value = err.response?.data.detail
-        } else {
-          error.value = err.message
-        }
-      }
-    } else if (err instanceof Error) {
-      error.value = err.message;
-    } else {
-      error.value = 'Unknown error.'
-    }
-
-    Notify.create({
-      color: 'negative',
-      message: error.value,
-    });
-
   }
 
   function addUnit() {
@@ -91,7 +67,7 @@ export const useUnitStore = defineStore('unit', () => {
       data.result.forEach((dep) => units.value.set(dep.uid, dep));
     }
     catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -110,7 +86,7 @@ export const useUnitStore = defineStore('unit', () => {
         message: 'Successfully created unit.'
       })
     } catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -130,7 +106,7 @@ export const useUnitStore = defineStore('unit', () => {
 
     }
     catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -154,7 +130,7 @@ export const useUnitStore = defineStore('unit', () => {
         throw new Error('No unit selected')
       }
     } catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -168,7 +144,7 @@ export const useUnitStore = defineStore('unit', () => {
       exportFile(`unit.${fileType}`, response.data)
     }
     catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;

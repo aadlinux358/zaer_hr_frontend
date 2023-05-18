@@ -4,7 +4,6 @@ import {exportFile, Notify} from 'quasar';
 import {hrApi} from 'src/boot/axios';
 import {NationalityReadOne, NationalityReadMany, NationalityCreate} from 'src/models/nationality';
 import {useAuthStore} from './auth-store';
-import axios from 'axios';
 import {CRUDType, DownloadFileType} from 'src/models/common';
 import {useFlags} from 'src/composables/flags';
 
@@ -12,7 +11,7 @@ const ENDPOINT = '/nationalities';
 
 export const useNationalityStore = defineStore('nationality', () => {
 
-  const {crudType, loading, error} = useFlags()
+  const {crudType, loading, setError} = useFlags()
   const {AuthorizationHeader} = useAuthStore();
   const config = {
     headers: {
@@ -40,29 +39,6 @@ export const useNationalityStore = defineStore('nationality', () => {
     nationalities.value.delete(uid);
   }
 
-  function _setError(err: unknown) {
-    if (axios.isAxiosError(err)) {
-      if (!err.response) {
-        error.value = 'connection error.'
-      } else {
-        if (err.response?.data.detail instanceof String) {
-          error.value = err.response?.data.detail
-        } else {
-          error.value = err.message
-        }
-      }
-    } else if (err instanceof Error) {
-      error.value = err.message;
-    } else {
-      error.value = 'Unknown error.'
-    }
-
-    Notify.create({
-      color: 'negative',
-      message: error.value,
-    });
-
-  }
 
   function addNationality() {
     crudType.value = CRUDType.CREATE;
@@ -89,7 +65,7 @@ export const useNationalityStore = defineStore('nationality', () => {
       data.result.forEach((nat) => nationalities.value.set(nat.uid, nat));
     }
     catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -108,7 +84,7 @@ export const useNationalityStore = defineStore('nationality', () => {
         message: 'Successfully created nationality.'
       })
     } catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -127,7 +103,7 @@ export const useNationalityStore = defineStore('nationality', () => {
       })
 
     } catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -149,7 +125,7 @@ export const useNationalityStore = defineStore('nationality', () => {
         throw new Error('No nationality selected')
       }
     } catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -163,7 +139,7 @@ export const useNationalityStore = defineStore('nationality', () => {
       exportFile(`nationalities.${fileType}`, response.data)
     }
     catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;

@@ -4,16 +4,14 @@ import {exportFile, Notify} from 'quasar';
 import {hrApi} from 'src/boot/axios';
 import {DivisionReadOne, DivisionReadMany, DivisionCreate} from 'src/models/division';
 import {useAuthStore} from './auth-store';
-import axios from 'axios';
 import {CRUDType, DownloadFileType} from 'src/models/common';
 import {useFlags} from 'src/composables/flags';
-
 
 const ENDPOINT = '/divisions';
 
 export const useDivisionStore = defineStore('division', () => {
 
-  const {crudType, loading, error} = useFlags();
+  const {crudType, loading, setError} = useFlags();
   const {AuthorizationHeader} = useAuthStore();
   const config = {
     headers: {
@@ -39,29 +37,6 @@ export const useDivisionStore = defineStore('division', () => {
 
   function _removeDivision(uid: string) {
     divisions.value.delete(uid);
-  }
-  function _setError(err: unknown) {
-    if (axios.isAxiosError(err)) {
-      if (!err.response) {
-        error.value = 'connection error.'
-      } else {
-        if (err.response?.data.detail instanceof String) {
-          error.value = err.response?.data.detail
-        } else {
-          error.value = err.message
-        }
-      }
-    } else if (err instanceof Error) {
-      error.value = err.message;
-    } else {
-      error.value = 'Unknown error.'
-    }
-
-    Notify.create({
-      color: 'negative',
-      message: error.value,
-    });
-
   }
 
   function addDivision() {
@@ -89,7 +64,7 @@ export const useDivisionStore = defineStore('division', () => {
       data.result.forEach((div) => divisions.value.set(div.uid, div));
     }
     catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -107,7 +82,7 @@ export const useDivisionStore = defineStore('division', () => {
         message: 'Successfully created division.'
       })
     } catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -126,7 +101,7 @@ export const useDivisionStore = defineStore('division', () => {
       })
 
     } catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -148,7 +123,7 @@ export const useDivisionStore = defineStore('division', () => {
         throw new Error('No division selected')
       }
     } catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -162,7 +137,7 @@ export const useDivisionStore = defineStore('division', () => {
       exportFile(`divisions.${fileType}`, response.data)
     }
     catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;

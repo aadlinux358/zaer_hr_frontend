@@ -4,7 +4,6 @@ import {exportFile, Notify} from 'quasar';
 import {hrApi} from 'src/boot/axios';
 import {DesignationReadOne, DesignationReadMany, DesignationCreate} from 'src/models/designation';
 import {useAuthStore} from './auth-store';
-import axios from 'axios';
 import {CRUDType, DownloadFileType} from 'src/models/common';
 import {useFlags} from 'src/composables/flags';
 
@@ -12,7 +11,7 @@ const ENDPOINT = '/designations';
 
 export const useDesignationStore = defineStore('designation', () => {
 
-  const {crudType, loading, error} = useFlags();
+  const {crudType, loading, setError} = useFlags();
   const {AuthorizationHeader} = useAuthStore();
   const config = {
     headers: {
@@ -35,29 +34,6 @@ export const useDesignationStore = defineStore('designation', () => {
 
   function _removeDesignation(uid: string) {
     designations.value.delete(uid);
-  }
-  function _setError(err: unknown) {
-    if (axios.isAxiosError(err)) {
-      if (!err.response) {
-        error.value = 'connection error.'
-      } else {
-        if (err.response?.data.detail instanceof String) {
-          error.value = err.response?.data.detail
-        } else {
-          error.value = err.message
-        }
-      }
-    } else if (err instanceof Error) {
-      error.value = err.message;
-    } else {
-      error.value = 'Unknown error.'
-    }
-
-    Notify.create({
-      color: 'negative',
-      message: error.value,
-    });
-
   }
 
   function addDesignation() {
@@ -85,7 +61,7 @@ export const useDesignationStore = defineStore('designation', () => {
       data.result.forEach((div) => designations.value.set(div.uid, div));
     }
     catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -103,7 +79,7 @@ export const useDesignationStore = defineStore('designation', () => {
         message: 'Successfully created designation.'
       })
     } catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -122,7 +98,7 @@ export const useDesignationStore = defineStore('designation', () => {
       })
 
     } catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -144,7 +120,7 @@ export const useDesignationStore = defineStore('designation', () => {
         throw new Error('No designation selected')
       }
     } catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
@@ -158,7 +134,7 @@ export const useDesignationStore = defineStore('designation', () => {
       exportFile(`designations.${fileType}`, response.data)
     }
     catch (err) {
-      _setError(err);
+      setError(err);
     }
     finally {
       loading.value = false;
