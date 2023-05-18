@@ -9,9 +9,16 @@
       <q-input square
                filled
                v-model="educationStore.form.level"
-               label="EducationalLevel name"
+               label="Educational level name"
                lazy-rules
                :rules="[val => val && val.length > 0 || 'Please type something']" />
+      <q-input square
+               filled
+               type="number"
+               v-model.number="educationStore.form.level_order"
+               label="Educational level order number"
+               lazy-rules
+               :rules="[val => val && val > 0 || 'Please type level order number']" />
 
       <div class="q-gutter-xs">
         <q-btn no-caps

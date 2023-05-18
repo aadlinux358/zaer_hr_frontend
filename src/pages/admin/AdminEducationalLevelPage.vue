@@ -15,7 +15,9 @@
                        entity="educational_level"
                        :loading="eduStore.loading"
                        :table-props="props"
-                       @add="addEducationalLevel" />
+                       @add="addEducationalLevel"
+                       @download-csv="downloadCSV"
+                       @download-excel="downloadExcel" />
     </template>
     <template v-slot:body-cell-actions="props">
       <q-td :props="props">
@@ -142,6 +144,15 @@ const columns = [
     align: 'left',
     field: (row: EducationalLevelReadOne) => row.level,
     format: (val: string) => capitalize(val),
+    sortable: true
+  },
+  {
+    name: 'level_order',
+    required: true,
+    label: 'Educational Level Order',
+    align: 'left',
+    field: (row: EducationalLevelReadOne) => row.level_order,
+    format: (val: number) => val,
     sortable: true
   },
   {

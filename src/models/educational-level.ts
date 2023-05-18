@@ -1,5 +1,6 @@
 export interface EducationalLevelCreate {
   level: string;
+  level_order: number;
 }
 
 export interface EducationalLevelReadOne extends EducationalLevelCreate {
