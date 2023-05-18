@@ -12,53 +12,15 @@
              :filter="filter">
 
       <template v-slot:top="props">
-        <div class="column full-width">
-          <div class="row items-center full-width">
-            <div class="col-2 q-table__title text-capitalize">{{ $t('employees') }}</div>
-            <q-space />
+        <DataTableHeaderVue title="employees"
+                            v-model:filter="filter"
+                            entity="employee"
+                            :loading="empStore.loading"
+                            :table-props="props"
+                            @add="addEmployee"
+                            @download-csv="downloadCSV"
+                            @download-excel="downloadExcel" />
 
-            <q-btn flat
-                   round
-                   dense
-                   :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   @click="props.toggleFullscreen"
-                   class="q-mx-md"
-                   size="lg" />
-          </div>
-          <div class="row q-my-md">
-            <q-btn color="primary"
-                   class="text-capitalize"
-                   square
-                   no-caps
-                   :disable="empStore.loading"
-                   @click="addEmployee"> {{ $t('new') }} {{ $t('employee') }} </q-btn>
-            <q-space />
-            <div class="row q-mx-md items-center">
-              <q-btn color="primary"
-                     @click="downloadCSV"
-                     flat
-                     round
-                     dense
-                     icon="fas fa-file-csv" />
-              <q-btn color="primary"
-                     @click="downloadExcel"
-                     flat
-                     round
-                     dense
-                     icon="fas fa-file-excel" />
-            </div>
-            <q-input filled
-                     square
-                     dense
-                     debounce="300"
-                     color="primary"
-                     v-model="filter">
-              <template v-slot:append>
-                <q-icon name="search" />
-              </template>
-            </q-input>
-          </div>
-        </div>
       </template>
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
@@ -112,6 +74,7 @@ import {CRUDType, DownloadFileType} from 'src/models/common';
 import EmployeeForm from 'src/forms/EmployeeForm.vue'
 import {format, date} from 'quasar';
 import {useStores} from 'src/composables/stores';
+import DataTableHeaderVue from 'src/components/DataTableHeader.vue';
 defineEmits({
   ...useDialogPluginComponent.emitsObject
 })

@@ -15,7 +15,9 @@
                        entity="department"
                        :loading="departmentStore.loading"
                        :table-props="props"
-                       @add="addDepartment" />
+                       @add="addDepartment"
+                       @download-csv="downloadCSV"
+                       @download-excel="downloadExcel" />
     </template>
     <template v-slot:body-cell-actions="props">
       <q-td :props="props">

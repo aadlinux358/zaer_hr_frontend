@@ -15,7 +15,9 @@
                        entity="unit"
                        :loading="unitStore.loading"
                        :table-props="props"
-                       @add="addUnit" />
+                       @add="addUnit"
+                       @download-csv="downloadCSV"
+                       @download-excel="downloadExcel" />
     </template>
     <template v-slot:body-cell-actions="props">
       <q-td :props="props">

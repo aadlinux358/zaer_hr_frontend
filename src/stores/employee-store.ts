@@ -208,6 +208,13 @@ export const useEmployeeStore = defineStore('employee', () => {
   function editEmployee(uid: string) {
     crudType.value = CRUDType.UPDATE;
     const employee = employees.value.get(uid);
+    const unit = uniStore.units.get(employee?.unit_uid)
+    const section = secStore.sections.get(unit?.section_uid)
+    const department = depStore.departments.get(section?.department_uid)
+    divisionUid.value = department?.division_uid
+    departmentUid.value = department.uid
+    sectionUid.value = section.uid
+
     selectedEmployee.value = employee;
     const formObj = <EmployeeCreate>{...selectedEmployee.value}
     // TODO: fix quasar date mask
@@ -265,9 +272,9 @@ export const useEmployeeStore = defineStore('employee', () => {
       const payload = Object.assign({}, form.value)
       payload.current_hire_date = date.formatDate(payload.current_hire_date, 'YYYY-MM-DD')
       payload.birth_date = date.formatDate(payload.birth_date, 'YYYY-MM-DD')
-      const response = await hrApi.patch(`${ENDPOINT}/${state.selectedEmployee?.uid}`, payload, config)
+      const response = await hrApi.patch(`${ENDPOINT}/${selectedEmployee.value?.uid}`, payload, config)
       const employee: EmployeeReadOne = response.data;
-      state.employees.set(employee.uid, employee);
+      employees.value.set(employee.uid, employee);
       resetForm();
       Notify.create({
         color: 'positive',
@@ -286,8 +293,8 @@ export const useEmployeeStore = defineStore('employee', () => {
     loading.value = true;
     try {
       if (selectedEmployee.value) {
-        await hrApi.delete(`${ENDPOINT}/${state.selectedEmployee.uid}`, config);
-        _removeEmployee(state.selectedEmployee.uid);
+        await hrApi.delete(`${ENDPOINT}/${selectedEmployee.value.uid}`, config);
+        _removeEmployee(selectedEmployee.value.uid);
         selectedEmployee.value = null;
         Notify.create({
           color: 'positive',

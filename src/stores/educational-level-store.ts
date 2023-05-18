@@ -23,7 +23,8 @@ export const useEducationalLevelStore = defineStore('education', () => {
   const educationalLevels: Ref<Map<string, EducationalLevelReadOne>> = ref(new Map())
   const selectedEducationalLevel: Ref<EducationalLevelReadOne | null | undefined> = ref(null);
   const form: Ref<EducationalLevelCreate> = ref({
-    level: ''
+    level: '',
+    level_order: 0
   })
 
 
@@ -33,6 +34,7 @@ export const useEducationalLevelStore = defineStore('education', () => {
 
   function resetForm() {
     form.value.level = '';
+    form.value.level_order = 0;
   }
 
   function _removeEducationalLevel(uid: string) {
@@ -68,15 +70,16 @@ export const useEducationalLevelStore = defineStore('education', () => {
   }
   function editEducationalLevel(uid: string) {
     crudType.value = CRUDType.UPDATE;
-    const nationality = educationalLevels.value.get(uid);
-    selectedEducationalLevel.value = nationality;
+    const educational_level = educationalLevels.value.get(uid);
+    selectedEducationalLevel.value = educational_level;
+    console.log(selectedEducationalLevel.value)
     form.value = <EducationalLevelCreate>{...selectedEducationalLevel.value}
   }
 
   async function deleteEducationalLevel(uid: string) {
     crudType.value = CRUDType.DELETE
-    const nationality = educationalLevels.value.get(uid);
-    selectedEducationalLevel.value = nationality;
+    const educational_level = educationalLevels.value.get(uid);
+    selectedEducationalLevel.value = educational_level;
     await deleteDBEducationalLevel();
   }
   async function getManyDBEducationalLevels() {
@@ -99,11 +102,11 @@ export const useEducationalLevelStore = defineStore('education', () => {
     try {
       const response = await hrApi.post(`${ENDPOINT}`, form.value, config);
       resetForm();
-      const nationality: EducationalLevelReadOne = response.data;
-      educationalLevels.value.set(nationality.uid, nationality);
+      const educational_level: EducationalLevelReadOne = response.data;
+      educationalLevels.value.set(educational_level.uid, educational_level);
       Notify.create({
         color: 'positive',
-        message: 'Successfully created nationality.'
+        message: 'Successfully created educational_level.'
       })
     } catch (err) {
       _setError(err);
@@ -117,11 +120,11 @@ export const useEducationalLevelStore = defineStore('education', () => {
     loading.value = true;
     try {
       const response = await hrApi.patch(`${ENDPOINT}/${selectedEducationalLevel.value?.uid}`, form.value, config)
-      const nationality: EducationalLevelReadOne = response.data;
-      educationalLevels.value.set(nationality.uid, nationality);
+      const educational_level: EducationalLevelReadOne = response.data;
+      educationalLevels.value.set(educational_level.uid, educational_level);
       Notify.create({
         color: 'positive',
-        message: 'Successfully updated nationality.'
+        message: 'Successfully updated educational_level.'
       })
 
     } catch (err) {
@@ -141,10 +144,10 @@ export const useEducationalLevelStore = defineStore('education', () => {
         selectedEducationalLevel.value = null;
         Notify.create({
           color: 'positive',
-          message: 'Successfully deleted nationality.'
+          message: 'Successfully deleted educational_level.'
         })
       } else {
-        throw new Error('No nationality selected')
+        throw new Error('No educational_level selected')
       }
     } catch (err) {
       _setError(err);

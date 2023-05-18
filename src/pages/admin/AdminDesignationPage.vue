@@ -15,7 +15,9 @@
                        entity="designation"
                        :loading="designationStore.loading"
                        :table-props="props"
-                       @add="addDesignation" />
+                       @add="addDesignation"
+                       @download-csv="downloadCSV"
+                       @download-excel="downloadExcel" />
     </template>
     <template v-slot:body-cell-actions="props">
       <q-td :props="props">

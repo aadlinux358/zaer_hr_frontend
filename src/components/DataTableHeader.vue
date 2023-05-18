@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, computed} from 'vue';
+import {computed} from 'vue';
 
 const props = defineProps<{
   title: string
@@ -12,7 +12,7 @@ const props = defineProps<{
   }
 }>()
 
-const emits = defineEmits(['update:filter'])
+const emits = defineEmits(['update:filter', 'add', 'downloadCsv', 'downloadExcel'])
 
 const filter = computed({
   get() {return props.filter},

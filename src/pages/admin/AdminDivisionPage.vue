@@ -16,7 +16,9 @@
                        entity="division"
                        :loading="divisionStore.loading"
                        :table-props="props"
-                       @add="addDivision" />
+                       @add="addDivision"
+                       @download-csv="downloadCSV"
+                       @download-excel="downloadExcel" />
     </template>
     <template v-slot:body-cell-actions="props">
       <q-td :props="props">
