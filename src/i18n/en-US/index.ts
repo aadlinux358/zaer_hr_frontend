@@ -10,6 +10,7 @@ export default {
   division: 'division',
   divisions: 'divisions',
   department: 'department',
+  departments: 'departments',
   nationality: 'nationality',
   nationalities: 'nationalities',
   section: 'section',

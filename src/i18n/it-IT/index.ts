@@ -7,6 +7,7 @@ export default {
   division: 'divisione',
   divisions: 'divisioni',
   department: 'dipartimento',
+  departments: 'dipartimenti',
   section: 'sezione',
   unit: 'unità',
   units: 'unità',
