@@ -115,41 +115,42 @@
                           name="account_circle" />
                 </q-item-section>
                 <q-item-section>Profile</q-item-section>
-            </q-item>
-            <q-item clickable
-                    v-close-popup
-                    :to="{name: 'Setting'}">
-              <q-item-section avatar>
-                <q-icon color="primary"
-                        name="settings" />
-              </q-item-section>
-              <q-item-section>Settings</q-item-section>
-            </q-item>
-            <q-item clickable
-                    v-close-popup
-                    :to="{name: 'Message'}">
-              <q-item-section avatar>
-                <q-icon color="primary"
-                        name="message" />
-              </q-item-section>
-              <q-item-section>Messages</q-item-section>
-            </q-item>
-            <q-separator />
-            <q-item clickable
-                    v-close-popup
-                    @click="authStore.logout">
-              <q-item-section avatar>
-                <q-icon color="primary"
-                        name="logout" />
-              </q-item-section>
-              <q-item-section>Logout</q-item-section>
-            </q-item>
-          </q-list>
-        </q-menu>
-      </q-btn>
-    </div>
-  </q-toolbar>
-</q-header></template>
+              </q-item>
+              <q-item clickable
+                      v-close-popup
+                      :to="{name: 'Settings'}">
+                <q-item-section avatar>
+                  <q-icon color="primary"
+                          name="settings" />
+                </q-item-section>
+                <q-item-section>Settings</q-item-section>
+              </q-item>
+              <q-item clickable
+                      v-close-popup
+                      :to="{name: 'Message'}">
+                <q-item-section avatar>
+                  <q-icon color="primary"
+                          name="message" />
+                </q-item-section>
+                <q-item-section>Messages</q-item-section>
+              </q-item>
+              <q-separator />
+              <q-item clickable
+                      v-close-popup
+                      @click="authStore.logout">
+                <q-item-section avatar>
+                  <q-icon color="primary"
+                          name="logout" />
+                </q-item-section>
+                <q-item-section>Logout</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-btn>
+      </div>
+    </q-toolbar>
+  </q-header>
+</template>
 
 <script setup lang="ts">
 import {useAuthStore} from 'src/stores/auth-store';
