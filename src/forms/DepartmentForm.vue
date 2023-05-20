@@ -17,6 +17,7 @@
         <q-form :autofocus="true"
                 v-on:submit.prevent
                 @reset="onReset"
+                ref="formRef"
                 class="q-gutter-md">
           <q-select square
                     outlined
@@ -26,7 +27,8 @@
                     emit-value
                     map-options
                     option-label="name"
-                    option-value="uid" />
+                    option-value="uid"
+                    :rules="[val => val && val.length > 0 || 'Please select division']" />
           <q-input square
                    filled
                    v-model="form.name"
@@ -58,6 +60,7 @@ const divisionStore = useDivisionStore();
 const {
   crudType,
   form,
+  formRef,
   onCreate,
   onUpdate,
   onReset,
