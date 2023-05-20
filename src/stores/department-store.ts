@@ -4,7 +4,7 @@ import {exportFile, Notify} from 'quasar';
 import {hrApi} from 'src/boot/axios';
 import {DepartmentReadOne, DepartmentReadMany, DepartmentCreate} from 'src/models/department';
 import {useAuthStore} from './auth-store';
-import {CRUDType, DownloadFileType} from 'src/models/common';
+import {DownloadFileType} from 'src/models/common';
 import {useFlags} from 'src/composables/flags';
 
 const ENDPOINT = '/departments';
@@ -13,51 +13,19 @@ export const useDepartmentStore = defineStore('department', () => {
 
 
   const {AuthorizationHeader} = useAuthStore();
-  const {crudType, loading, setError} = useFlags();
+  const {loading, setError} = useFlags();
   const config = {
     headers: {
       Authorization: AuthorizationHeader
     }
   }
   const departments: Ref<Map<string, DepartmentReadOne>> = ref(new Map())
-  const selectedDepartment: Ref<DepartmentReadOne | null | undefined> = ref(null);
-  const form: Ref<DepartmentCreate> = ref({
-    name: '',
-    division_uid: ''
-  })
 
   const departmentList = computed(() => {
     return Array.from(departments.value, entry => entry[1])
   })
 
-  function resetForm() {
-    form.value.division_uid = '';
-    form.value.name = '';
-  }
-
-  function _removeDepartment(uid: string) {
-    departments.value.delete(uid);
-  }
-
-  function addDepartment() {
-    crudType.value = CRUDType.CREATE;
-  }
-
-  function editDepartment(uid: string) {
-    crudType.value = CRUDType.UPDATE;
-    const department = departments.value.get(uid);
-    selectedDepartment.value = department;
-    form.value = <DepartmentCreate>{...selectedDepartment.value};
-  }
-
-  async function deleteDepartment(uid: string) {
-    crudType.value = CRUDType.DELETE;
-    const department = departments.value.get(uid);
-    selectedDepartment.value = department;
-    await deleteDBDepartment();
-  }
-
-  async function getManyDBDepartments() {
+  async function getManyDB() {
     departments.value.clear()
     loading.value = true;
     try {
@@ -72,12 +40,10 @@ export const useDepartmentStore = defineStore('department', () => {
       loading.value = false;
     }
   }
-  async function createDBDepartment() {
-    // create department
+  async function createDB(dep: DepartmentCreate) {
     loading.value = true;
     try {
-      const response = await hrApi.post(`${ENDPOINT}`, form.value, config);
-      resetForm();
+      const response = await hrApi.post(`${ENDPOINT}`, dep, config);
       const department: DepartmentReadOne = response.data;
       departments.value.set(department.uid, department);
       Notify.create({
@@ -92,10 +58,10 @@ export const useDepartmentStore = defineStore('department', () => {
     }
   }
 
-  async function updateDBDepartment() {
+  async function updateDB(dep: DepartmentReadOne) {
     loading.value = true;
     try {
-      const response = await hrApi.patch(`${ENDPOINT}/${selectedDepartment.value?.uid}`, form.value, config)
+      const response = await hrApi.patch(`${ENDPOINT}/${dep.uid}`, dep, config)
       const department: DepartmentReadOne = response.data;
       departments.value.set(department.uid, department);
       Notify.create({
@@ -113,21 +79,15 @@ export const useDepartmentStore = defineStore('department', () => {
   }
 
 
-  async function deleteDBDepartment() {
-    // delete department
+  async function deleteDB(depUid: string) {
     loading.value = true;
     try {
-      if (selectedDepartment.value) {
-        await hrApi.delete(`${ENDPOINT}/${selectedDepartment.value.uid}`, config);
-        _removeDepartment(selectedDepartment.value.uid);
-        selectedDepartment.value = null;
-        Notify.create({
-          color: 'positive',
-          message: 'Successfully deleted department.'
-        })
-      } else {
-        throw new Error('No department selected')
-      }
+      await hrApi.delete(`${ENDPOINT}/${depUid}`, config);
+      departments.value.delete(depUid)
+      Notify.create({
+        color: 'positive',
+        message: 'Successfully deleted department.'
+      })
     } catch (err) {
       setError(err);
     }
@@ -151,19 +111,12 @@ export const useDepartmentStore = defineStore('department', () => {
   }
   return {
     departments,
-    selectedDepartment,
-    form,
-    crudType,
     loading,
-    addDepartment,
-    editDepartment,
-    deleteDepartment,
-    getManyDBDepartments,
-    createDBDepartment,
-    updateDBDepartment,
-    deleteDBDepartment,
+    getManyDB,
+    createDB,
+    updateDB,
+    deleteDB,
     downloadFile,
     departmentList,
-    resetForm,
   }
 })

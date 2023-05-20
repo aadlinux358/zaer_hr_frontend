@@ -1,67 +1,67 @@
 <template>
-  <div class="q-pa-md"
-       style="max-width: 400px">
-
-    <q-form :autofocus="true"
-            @submit="onSubmit"
-            @reset="onReset"
-            class="q-gutter-md">
-      <q-select square
-                outlined
-                v-model="departmentStore.form.division_uid"
-                :options="divisionStore.divisionList"
-                label="Division"
-                emit-value
-                map-options
-                option-label="name"
-                option-value="uid" />
-      <q-input square
-               filled
-               v-model="departmentStore.form.name"
-               label="Department name"
-               lazy-rules
-               :rules="[val => val && val.length > 0 || 'Please type something']" />
-
-      <div class="q-gutter-xs">
-        <q-btn no-caps
-               class="text-capitalize"
-               square
-               :label="$t('save')"
-               type="submit"
-               color="primary" />
-        <q-btn no-caps
-               class="text-capitalize"
-               square
-               :label="$t('reset')"
-               type="reset"
-               color="primary" />
-        <q-btn no-caps
-               class="text-capitalize"
-               square
-               :label="$t('cancel')"
-               type="button"
-               @click="onCancel"
-               color="primary" />
+  <q-card class="q-dialog-plugin">
+    <q-card-section class="row items-center q-pb-none">
+      <div class="text-h6 text-capitalize">
+        {{ $t(crudType) }} {{ $t('department') }}
       </div>
-    </q-form>
-
-  </div>
+      <q-space />
+      <q-btn icon="close"
+             flat
+             round
+             dense
+             v-close-popup />
+    </q-card-section>
+    <q-card-section class="q-mt-md">
+      <div class="q-pa-md"
+           style="max-width: 400px">
+        <q-form :autofocus="true"
+                v-on:submit.prevent
+                @reset="onReset"
+                class="q-gutter-md">
+          <q-select square
+                    outlined
+                    v-model="form.division_uid"
+                    :options="divisionStore.divisionList"
+                    label="Division"
+                    emit-value
+                    map-options
+                    option-label="name"
+                    option-value="uid" />
+          <q-input square
+                   filled
+                   v-model="form.name"
+                   label="Department name"
+                   lazy-rules
+                   :rules="[val => val && val.length > 0 || 'Please type something']" />
+          <FormActionButtons @on-update="onUpdate"
+                             @on-cancel="onCancel"
+                             @on-create="onCreate"
+                             :isUpdate="payload ? true : false" />
+        </q-form>
+      </div>
+    </q-card-section>
+  </q-card>
 </template>
 <script setup lang="ts">
 import {useDivisionStore} from 'src/stores/division-store';
-import {useDepartmentStore} from 'src/stores/department-store';
+import {useForms} from 'src/composables/forms'
+import {DepartmentCreate, DepartmentReadOne} from 'src/models/department';
+import FormActionButtons from 'src/components/FormActionButtons.vue'
 
-const emit = defineEmits(['save', 'reset', 'cancel'])
+const props = defineProps<{
+  payload: DepartmentReadOne | null;
+}>()
+
+const emits = defineEmits(['create', 'update', 'reset', 'cancel'])
 
 const divisionStore = useDivisionStore();
-const departmentStore = useDepartmentStore();
-function onSubmit() {
-  emit('save');
-}
-function onReset() {
-  emit('reset')
-}
-function onCancel() {
-  emit('cancel')
-}
+const {
+  crudType,
+  form,
+  onCreate,
+  onUpdate,
+  onReset,
+  onCancel
+} = useForms<DepartmentCreate>(props, emits);
+
 </script>
