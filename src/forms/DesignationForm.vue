@@ -40,7 +40,7 @@ import {DesignationCreate, DesignationReadOne} from 'src/models/designation';
 const props = defineProps<{
   payload: DesignationReadOne | null;
 }>()
-const emits = defineEmits(['save', 'reset', 'cancel'])
+const emits = defineEmits(['create', 'update', 'reset', 'cancel'])
 const {
   crudType,
   form,
