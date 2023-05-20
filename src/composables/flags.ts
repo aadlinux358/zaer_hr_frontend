@@ -1,11 +1,9 @@
-import {CRUDType} from 'src/models/common'
-import {Ref, ref} from 'vue'
+import {ref} from 'vue'
 import axios from 'axios';
 import {Notify} from 'quasar';
 
 export function useFlags() {
 
-  const crudType: Ref<CRUDType> = ref(CRUDType.READ)
   const loading = ref(false)
   const error = ref('')
 
@@ -34,7 +32,6 @@ export function useFlags() {
   }
   return {
     loading,
-    crudType,
     error,
     setError
   }
