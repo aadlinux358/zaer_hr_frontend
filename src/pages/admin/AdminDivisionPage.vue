@@ -51,7 +51,7 @@
 <script setup lang="ts">
 import {ref} from 'vue';
 import {useDialogPluginComponent} from 'quasar'
-import {DivisionCreate, DivisionReadOne} from 'src/models/division';
+import {DivisionCreate as C, DivisionReadOne as R} from 'src/models/division';
 import DivisionForm from 'src/forms/DivisionForm.vue'
 import {format, date} from 'quasar';
 import {useStores} from 'src/composables/stores';
@@ -77,7 +77,7 @@ const {
   onHide,
   downloadCSV,
   downloadExcel
-} = useCrud<DivisionCreate, DivisionReadOne>(divisionStore)
+} = useCrud<C, R>(divisionStore)
 
 const columns = [
   {
@@ -85,7 +85,7 @@ const columns = [
     required: true,
     label: 'Division Name',
     align: 'left',
-    field: (row: DivisionReadOne) => row.name,
+    field: (row: R) => row.name,
     format: (val: string) => capitalize(val),
     sortable: true
   },
@@ -94,7 +94,7 @@ const columns = [
     required: true,
     label: 'Date Created',
     align: 'left',
-    field: (row: DivisionReadOne) => row.date_created,
+    field: (row: R) => row.date_created,
     format: (val: string) => date.formatDate(val, 'DD-MMM-YYYY HH:mm A'),
     sortable: true
   },
@@ -103,7 +103,7 @@ const columns = [
     required: true,
     label: 'Division UUID',
     align: 'left',
-    field: (row: DivisionReadOne) => row.uid,
+    field: (row: R) => row.uid,
   },
   {
     name: 'actions',
