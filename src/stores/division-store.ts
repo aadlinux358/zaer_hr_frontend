@@ -1,13 +1,13 @@
 import {computed, ref, Ref} from 'vue';
 import {defineStore} from 'pinia';
-import {DivisionReadOne, DivisionReadMany, DivisionCreate} from 'src/models/division';
+import {DivisionReadOne as R, DivisionReadMany as RM, DivisionCreate as C} from 'src/models/division';
 import {useApiCrud} from 'src/composables/api';
 
 const ENDPOINT = '/divisions';
 
 export const useDivisionStore = defineStore('division', () => {
 
-  const divisions: Ref<Map<string, Readonly<DivisionReadOne>>> = ref(new Map());
+  const divisions: Ref<Map<string, Readonly<R>>> = ref(new Map());
 
   const divisionList = computed(() => {
     return Array.from(divisions.value, entry => entry[1])
@@ -20,7 +20,7 @@ export const useDivisionStore = defineStore('division', () => {
     updateDB,
     deleteDB,
     downloadFile
-  } = useApiCrud<DivisionCreate, DivisionReadOne, DivisionReadMany>(ENDPOINT, divisions.value, 'division')
+  } = useApiCrud<C, R, RM>(ENDPOINT, divisions.value, 'division')
 
   return {
     divisions,
