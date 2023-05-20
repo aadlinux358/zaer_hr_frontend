@@ -22,7 +22,7 @@
                    v-model="form.name"
                    label="Division name"
                    lazy-rules
-                   :rules="[val => val && val.length > 0 || 'Please type something']" />
+                   :rules="[val => val && val.length > 0 || 'Please type division name']" />
           <FormActionButtons @on-update="onUpdate"
                              @on-cancel="onCancel"
                              :isUpdate="division ? true : false" />
