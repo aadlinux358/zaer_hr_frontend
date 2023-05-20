@@ -1,64 +1,60 @@
 <template>
-  <div class="q-pa-md"
-       style="max-width: 400px">
-
-    <q-form :autofocus="true"
-            @submit="onSubmit"
-            @reset="onReset"
-            class="q-gutter-md">
-      <q-input square
-               filled
-               v-model="educationStore.form.level"
-               label="Educational level name"
-               lazy-rules
-               :rules="[val => val && val.length > 0 || 'Please type something']" />
-      <q-input square
-               filled
-               type="number"
-               v-model.number="educationStore.form.level_order"
-               label="Educational level order number"
-               lazy-rules
-               :rules="[val => val && val > 0 || 'Please type level order number']" />
-
-      <div class="q-gutter-xs">
-        <q-btn no-caps
-               class="text-capitalize"
-               square
-               :label="$t('save')"
-               type="submit"
-               color="primary" />
-        <q-btn no-caps
-               class="text-capitalize"
-               square
-               :label="$t('reset')"
-               type="reset"
-               color="primary" />
-        <q-btn no-caps
-               class="text-capitalize"
-               square
-               :label="$t('cancel')"
-               type="button"
-               @click="onCancel"
-               color="primary" />
+  <q-card class="q-dialog-plugin">
+    <q-card-section class="row items-center q-pb-none">
+      <div class="text-h6 text-capitalize">{{ $t(crudType) }} {{ $t('educational_level') }}</div>
+      <q-space />
+      <q-btn icon="close"
+             flat
+             round
+             dense
+             v-close-popup />
+    </q-card-section>
+    <q-card-section class="q-mt-md">
+      <div class="q-pa-md"
+           style="max-width: 400px">
+        <q-form :autofocus="true"
+                v-on:submit.prevent
+                @reset="onReset"
+                ref="formRef"
+                class="q-gutter-md">
+          <q-input square
+                   filled
+                   v-model="form.level"
+                   label="Educational level name"
+                   lazy-rules
+                   :rules="[val => val && val.length > 0 || 'Please type educational level name']" />
+          <q-input square
+                   filled
+                   type="number"
+                   v-model.number="form.level_order"
+                   label="Educational level order number"
+                   lazy-rules
+                   :rules="[val => val && val > 0 || 'Please type level order number']" />
+          <FormActionButtons @on-create="onCreate"
+                             @on-update="onUpdate"
+                             @on-cancel="onCancel"
+                             :isUpdate="payload ? true : false" />
+        </q-form>
       </div>
-    </q-form>
-
-  </div>
+    </q-card-section>
+  </q-card>
 </template>
 <script setup lang="ts">
-import {useEducationalLevelStore} from 'src/stores/educational-level-store';
+import {useForms} from 'src/composables/forms'
+import FormActionButtons from 'src/components/FormActionButtons.vue';
+import {EducationalLevelCreate, EducationalLevelReadOne} from 'src/models/educational-level';
 
-const emit = defineEmits(['save', 'reset', 'cancel'])
-
-const educationStore = useEducationalLevelStore();
-
-function onSubmit() {
-  emit('save');
-}
-function onReset() {
-  emit('reset')
-}
-function onCancel() {
-  emit('cancel')
-}
+const props = defineProps<{
+  payload: EducationalLevelReadOne | null;
+}>()
+const emits = defineEmits(['create', 'update', 'reset', 'cancel'])
+const {
+  crudType,
+  form,
+  formRef,
+  onCreate,
+  onUpdate,
+  onReset,
+  onCancel
+} = useForms<EducationalLevelCreate>(props, emits);
 </script>
