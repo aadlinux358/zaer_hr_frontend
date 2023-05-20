@@ -29,6 +29,7 @@ export default {
   save: 'ዓቅብ',
   cancel: 'ሰርዝ',
   reset: 'ባዶ ግበር',
+  search: 'ፈትሽ',
   confirm_delete: 'ክትድምስስ ርግጸኛ ዲኻ?',
   confirm_deactivate: 'ዘይንጡፍ ክትገብር ርግጸኛ ዲኻ?',
 }

@@ -28,6 +28,7 @@ export default {
   save: 'salva',
   cancel: 'annulla',
   reset: 'ripristina',
+  search: 'ricerca',
   confirm_delete: 'Sei sicuro di voler eliminare?',
   confirm_deactivate: 'sei sicuro di voler disattivare?',
 }

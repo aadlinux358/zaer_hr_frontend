@@ -31,6 +31,7 @@ export default {
   save: 'save',
   cancel: 'cancel',
   reset: 'reset',
+  search: 'search',
   confirm_delete: 'are you sure you want to delete?',
   confirm_deactivate: 'are you sure you want to deactivate?',
 };
