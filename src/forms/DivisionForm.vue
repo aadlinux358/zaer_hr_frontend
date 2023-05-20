@@ -16,6 +16,7 @@
         <q-form :autofocus="true"
                 v-on:submit.prevent
                 @reset="onReset"
+                ref="formRef"
                 class="q-gutter-md">
           <q-input square
                    filled
@@ -45,6 +46,7 @@ const emits = defineEmits(['create', 'update', 'reset', 'cancel'])
 const {
   crudType,
   form,
+  formRef,
   onCreate,
   onUpdate,
   onReset,
