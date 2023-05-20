@@ -30,6 +30,7 @@ export function useForms<T>(props, emits) {
     form.value = {};
   }
   function onCancel() {
+    form.value = {};
     emits('cancel')
   }
 
