@@ -32,7 +32,7 @@
                    v-model="form.name"
                    label="Department name"
                    lazy-rules
-                   :rules="[val => val && val.length > 0 || 'Please type something']" />
+                   :rules="[val => val && val.length > 0 || 'Please type department name']" />
           <FormActionButtons @on-update="onUpdate"
                              @on-cancel="onCancel"
                              @on-create="onCreate"
