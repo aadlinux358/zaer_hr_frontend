@@ -14,7 +14,7 @@
            style="max-width: 400px">
 
         <q-form :autofocus="true"
-                @submit="onSubmit"
+                v-on:submit.prevent
                 @reset="onReset"
                 class="q-gutter-md">
           <q-input square
@@ -25,7 +25,8 @@
                    :rules="[val => val && val.length > 0 || 'Please type division name']" />
           <FormActionButtons @on-update="onUpdate"
                              @on-cancel="onCancel"
-                             :isUpdate="division ? true : false" />
+                             @on-create="onCreate"
+                             :isUpdate="payload ? true : false" />
         </q-form>
 
       </div>
@@ -33,37 +34,20 @@
   </q-card>
 </template>
 <script setup lang="ts">
-import {Ref, onMounted, onUnmounted, ref} from 'vue';
+import {useForms} from 'src/composables/forms'
 import {DivisionCreate, DivisionReadOne} from 'src/models/division';
 import FormActionButtons from 'src/components/FormActionButtons.vue'
-import {CRUDType} from 'src/models/common';
 const props = defineProps<{
-  division: Readonly<DivisionReadOne> | null
-}>();
-const emit = defineEmits(['save', 'update', 'reset', 'cancel'])
+  payload: DivisionReadOne | null;
+}>()
 
-const form: Ref<DivisionCreate> = ref({
-  name: ''
-});
-const crudType = ref(CRUDType.CREATE)
-onMounted(() => {
-  if (props.division) {
-    form.value = {...props.division}
-    crudType.value = CRUDType.UPDATE
-  }
-})
-onUnmounted(() => form.value.name = '')
-
-function onSubmit() {
-  emit('save', form.value);
-}
-function onUpdate() {
-  emit('update', form.value)
-}
-function onReset() {
-  form.value.name = '';
-}
-function onCancel() {
-  emit('cancel')
-}
+const emits = defineEmits(['create', 'update', 'reset', 'cancel'])
+const {
+  crudType,
+  form,
+  onCreate,
+  onUpdate,
+  onReset,
+  onCancel
+} = useForms<DivisionCreate>(props, emits);
 </script>
