@@ -14,6 +14,7 @@ export default {
   nationality: 'nationality',
   nationalities: 'nationalities',
   section: 'section',
+  sections: 'sections',
   unit: 'unit',
   units: 'units',
   educational_level: 'educational level',

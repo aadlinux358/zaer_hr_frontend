@@ -9,6 +9,7 @@ export default {
   department: 'dipartimento',
   departments: 'dipartimenti',
   section: 'sezione',
+  sections: 'sezioni',
   unit: 'unità',
   units: 'unità',
   educational_level: 'livello di istruzione',
