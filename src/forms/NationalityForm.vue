@@ -1,57 +1,54 @@
 <template>
-  <div class="q-pa-md"
-       style="max-width: 400px">
-
-    <q-form :autofocus="true"
-            @submit="onSubmit"
-            @reset="onReset"
-            class="q-gutter-md">
-      <q-input square
-               filled
-               v-model="nationalityStore.form.name"
-               label="Nationality name"
-               lazy-rules
-               :rules="[val => val && val.length > 0 || 'Please type something']" />
-
-      <div class="q-gutter-xs">
-        <q-btn no-caps
-               class="text-capitalize"
-               square
-               :label="$t('save')"
-               type="submit"
-               color="primary" />
-        <q-btn no-caps
-               class="text-capitalize"
-               square
-               :label="$t('reset')"
-               type="reset"
-               color="primary" />
-        <q-btn no-caps
-               class="text-capitalize"
-               square
-               :label="$t('cancel')"
-               type="button"
-               @click="onCancel"
-               color="primary" />
+  <q-card class="q-dialog-plugin">
+    <q-card-section class="row items-center q-pb-none">
+      <div class="text-h6 text-capitalize">{{ $t(crudType) }} {{ $t('nationality') }}</div>
+      <q-space />
+      <q-btn icon="close"
+             flat
+             round
+             dense
+             v-close-popup />
+    </q-card-section>
+    <q-card-section class="q-mt-md">
+      <div class="q-pa-md"
+           style="max-width: 400px">
+        <q-form :autofocus="true"
+                v-on:submit.prevent
+                @reset="onReset"
+                ref="formRef"
+                class="q-gutter-md">
+          <q-input square
+                   filled
+                   v-model="form.name"
+                   label="Nationality name"
+                   lazy-rules
+                   :rules="[val => val && val.length > 0 || 'Please type nationality name']" />
+          <FormActionButtons @on-update="onUpdate"
+                             @on-cancel="onCancel"
+                             @on-create="onCreate"
+                             :isUpdate="payload ? true : false" />
+        </q-form>
       </div>
-    </q-form>
-
-  </div>
+    </q-card-section>
+  </q-card>
 </template>
 <script setup lang="ts">
-import {useNationalityStore} from 'src/stores/nationality-store';
+import {NationalityCreate} from 'src/models/nationality';
+import FormActionButtons from 'src/components/FormActionButtons.vue'
+import {useForms} from 'src/composables/forms';
+const props = defineProps<{
+  payload: NationalityCreate | null;
+}>()
+const emits = defineEmits(['create', 'update', 'reset', 'cancel'])
 
-const emit = defineEmits(['save', 'reset', 'cancel'])
+const {
+  crudType,
+  form,
+  formRef,
+  onCreate,
+  onUpdate,
+  onReset,
+  onCancel
+} = useForms<NationalityCreate>(props, emits);
 
-const nationalityStore = useNationalityStore();
-
-function onSubmit() {
-  emit('save');
-}
-function onReset() {
-  emit('reset')
-}
-function onCancel() {
-  emit('cancel')
-}
 </script>
