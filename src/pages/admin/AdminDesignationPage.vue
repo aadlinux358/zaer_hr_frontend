@@ -15,7 +15,7 @@
                        entity="designation"
                        :loading="designationStore.loading"
                        :table-props="props"
-                       @add="addDesignation"
+                       @add="add"
                        @download-csv="downloadCSV"
                        @download-excel="downloadExcel" />
     </template>
@@ -25,12 +25,12 @@
                class="q-mx-xs"
                color="primary"
                icon="mode_edit"
-               @click="onEdit(props.row.uid)"></q-btn>
+               @click="edit(props.row)"></q-btn>
         <q-btn size="xs"
                class="q-mx-xs"
                color="primary"
                icon="delete"
-               @click="onDelete(props.row.uid)"></q-btn>
+               @click="remove(props.row.uid)"></q-btn>
       </q-td>
     </template>
     <template v-slot:loading>
@@ -41,100 +41,43 @@
   <q-dialog ref="dialogRef"
             @hide="onHide"
             persistent>
-    <q-card class="q-dialog-plugin">
-      <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6 text-uppercase">{{ designationStore.crudType }} Designation</div>
-        <q-space />
-        <q-btn icon="close"
-               flat
-               round
-               dense
-               v-close-popup />
-      </q-card-section>
-      <q-card-section class="q-mt-md">
-        <DesignationForm @save="onSave"
-                         @reset="onFormReset"
-                         @cancel="onCancel" />
-      </q-card-section>
-    </q-card>
+    <DesignationForm @create="create"
+                     @update="update"
+                     @cancel="onCancel"
+                     :payload="selectedEntity" />
   </q-dialog>
 </template>
 <script setup lang="ts">
 import {ref} from 'vue';
-import {useDialogPluginComponent, useQuasar} from 'quasar'
-import {DesignationReadOne} from 'src/models/designation';
-import {CRUDType, DownloadFileType} from 'src/models/common';
+import {useDialogPluginComponent} from 'quasar'
+import {DesignationCreate, DesignationReadOne} from 'src/models/designation';
 import DesignationForm from 'src/forms/DesignationForm.vue'
 import {format, date} from 'quasar';
 import {useStores} from 'src/composables/stores';
 import DataTableHeader from 'src/components/DataTableHeader.vue';
+import {useCrud} from 'src/composables/crud';
+
 defineEmits({
   ...useDialogPluginComponent.emitsObject
 })
 
-const $q = useQuasar();
-const {dialogRef, onDialogHide, onDialogOK, onDialogCancel} = useDialogPluginComponent()
 const {capitalize} = format;
 const {designationStore} = useStores();
-
 const filter = ref('');
 
-function onEdit(uid: string) {
-  designationStore.editDesignation(uid);
-  dialogRef.value?.show();
-}
-
-function onDelete(uid: string) {
-  $q.dialog({
-    title: 'Delete',
-    message: 'Are you sure you want to delete?',
-    cancel: true,
-    persistent: true
-  }).onOk(async () => {
-    await designationStore.deleteDesignation(uid);
-  })
-}
-
-function addDesignation() {
-  designationStore.addDesignation();
-  dialogRef.value?.show()
-}
-function onSave() {
-  switch (designationStore.crudType) {
-    case CRUDType.CREATE: {
-      designationStore.createDBDesignation();
-      break;
-    }
-    case CRUDType.UPDATE: {
-      designationStore.updateDBDesignation();
-      break;
-    }
-    default: {
-      throw new Error('Invalid CRUD Operaion.')
-      break;
-    }
-  }
-  onDialogOK();
-}
-function onCancel() {
-  designationStore.resetForm();
-  onDialogCancel()
-}
-function onHide() {
-  onDialogHide()
-}
-
-function onFormReset() {
-  designationStore.resetForm();
-}
-
-function downloadCSV() {
-  designationStore.downloadFile(DownloadFileType.CSV)
-}
-
-function downloadExcel() {
-  designationStore.downloadFile(DownloadFileType.EXCEL)
-}
+const {
+  dialogRef,
+  selectedEntity,
+  create,
+  add,
+  edit,
+  update,
+  remove,
+  onCancel,
+  onHide,
+  downloadCSV,
+  downloadExcel
+} = useCrud<DesignationCreate, DesignationReadOne>(designationStore)
 
 const columns = [
   {
