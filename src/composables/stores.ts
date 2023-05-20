@@ -1,5 +1,6 @@
 import {onMounted} from 'vue';
 import {useQuasar} from 'quasar';
+import {useUiStore} from 'src/stores/ui-store';
 import {useDivisionStore} from 'src/stores/division-store';
 import {useDepartmentStore} from 'src/stores/department-store';
 import {useSectionStore} from 'src/stores/section-store';
@@ -8,9 +9,13 @@ import {useDesignationStore} from 'src/stores/designation-store';
 import {useEducationalLevelStore} from 'src/stores/educational-level-store';
 import {useNationalityStore} from 'src/stores/nationality-store';
 import {useEmployeeStore} from 'src/stores/employee-store';
+import {useAuthStore} from 'src/stores/auth-store';
+import {useChildStore} from 'src/stores/employee-child-store';
 
 export function useStores() {
   const $q = useQuasar();
+  const authStore = useAuthStore();
+  const uiStore = useUiStore();
   const divisionStore = useDivisionStore();
   const departmentStore = useDepartmentStore();
   const sectionStore = useSectionStore();
@@ -19,36 +24,38 @@ export function useStores() {
   const eduStore = useEducationalLevelStore()
   const nationalityStore = useNationalityStore()
   const empStore = useEmployeeStore();
-
+  const childStore = useChildStore();
   onMounted(async () => {
     $q.loading.show();
     if (divisionStore.divisions.size === 0) {
-      await divisionStore.getManyDBDivisions();
+      await divisionStore.getManyDB();
     }
     if (departmentStore.departments.size === 0) {
-      await departmentStore.getManyDBDepartments();
+      await departmentStore.getManyDB();
     }
     if (sectionStore.sections.size == 0) {
-      await sectionStore.getManyDBSections();
+      await sectionStore.getManyDB();
     }
     if (unitStore.units.size === 0) {
-      await unitStore.getManyDBUnits();
+      await unitStore.getManyDB();
     }
     if (designationStore.designations.size === 0) {
-      await designationStore.getManyDBDesignations();
+      await designationStore.getManyDB();
     }
     if (nationalityStore.nationalities.size === 0) {
-      await nationalityStore.getManyDBNationalities();
+      await nationalityStore.getManyDB();
     }
     if (eduStore.educationalLevels.size == 0) {
-      await eduStore.getManyDBEducationalLevels();
+      await eduStore.getManyDB();
     }
     if (empStore.employees.size === 0) {
-      await empStore.getManyDBEmployees();
+      await empStore.getManyDB();
     }
     $q.loading.hide();
   });
   return {
+    authStore,
+    uiStore,
     divisionStore,
     departmentStore,
     sectionStore,
@@ -56,6 +63,7 @@ export function useStores() {
     designationStore,
     eduStore,
     nationalityStore,
-    empStore
+    empStore,
+    childStore,
   }
 }
