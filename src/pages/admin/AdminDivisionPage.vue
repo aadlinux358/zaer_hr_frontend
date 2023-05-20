@@ -42,85 +42,42 @@
   <q-dialog ref="dialogRef"
             @hide="onHide"
             persistent>
-    <DivisionForm @save="create"
+    <DivisionForm @create="create"
                   @update="update"
                   @cancel="onCancel"
-                  :division="selectedDivision" />
+                  :payload="selectedEntity" />
   </q-dialog>
 </template>
 <script setup lang="ts">
-import {Ref, ref} from 'vue';
-import {useI18n} from 'vue-i18n';
-import {useQuasar, useDialogPluginComponent} from 'quasar'
+import {ref} from 'vue';
+import {useDialogPluginComponent} from 'quasar'
 import {DivisionCreate, DivisionReadOne} from 'src/models/division';
-import {DownloadFileType} from 'src/models/common';
 import DivisionForm from 'src/forms/DivisionForm.vue'
 import {format, date} from 'quasar';
 import {useStores} from 'src/composables/stores';
 import DataTableHeader from 'src/components/DataTableHeader.vue';
-
+import {useCrud} from 'src/composables/crud';
 defineEmits({
   ...useDialogPluginComponent.emitsObject
 })
 
-const $q = useQuasar();
-const {t} = useI18n({useScope: 'global'})
-const {
-  dialogRef,
-  onDialogHide,
-  onDialogOK,
-  onDialogCancel} = useDialogPluginComponent()
 const {capitalize} = format;
 const {divisionStore} = useStores();
-
-const selectedDivision: Ref<DivisionReadOne | null> = ref(null)
 const filter = ref('');
 
-async function create(div: DivisionCreate) {
-  await divisionStore.createDBDivision(div)
-  onDialogOK();
-}
-
-function add() {
-  selectedDivision.value = null;
-  dialogRef.value?.show()
-}
-
-function edit(div: Readonly<DivisionReadOne>) {
-  selectedDivision.value = {...div}
-  dialogRef.value?.show()
-}
-
-async function update(div: DivisionReadOne) {
-  await divisionStore.updateDBDivision(div);
-  onDialogOK();
-}
-async function remove(uid: string) {
-  $q.dialog({
-    title: t('delete'),
-    message: t('confirm_delete'),
-    cancel: true,
-    persistent: true
-  }).onOk(async () => {
-    await divisionStore.deleteDBDivision(uid);
-  })
-}
-
-function onCancel() {
-  selectedDivision.value = null;
-  onDialogCancel()
-}
-function onHide() {
-  onDialogHide()
-}
-
-function downloadCSV() {
-  divisionStore.downloadFile(DownloadFileType.CSV)
-}
-
-function downloadExcel() {
-  divisionStore.downloadFile(DownloadFileType.EXCEL)
-}
+const {
+  dialogRef,
+  selectedEntity,
+  create,
+  add,
+  edit,
+  update,
+  remove,
+  onCancel,
+  onHide,
+  downloadCSV,
+  downloadExcel
+} = useCrud<DivisionCreate, DivisionReadOne>(divisionStore)
 
 const columns = [
   {
