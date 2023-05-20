@@ -4,14 +4,14 @@ import {exportFile, Notify} from 'quasar';
 import {hrApi} from 'src/boot/axios';
 import {DivisionReadOne, DivisionReadMany, DivisionCreate} from 'src/models/division';
 import {useAuthStore} from './auth-store';
-import {CRUDType, DownloadFileType} from 'src/models/common';
+import {DownloadFileType} from 'src/models/common';
 import {useFlags} from 'src/composables/flags';
 
 const ENDPOINT = '/divisions';
 
 export const useDivisionStore = defineStore('division', () => {
 
-  const {crudType, loading, setError} = useFlags();
+  const {loading, setError} = useFlags();
   const {AuthorizationHeader} = useAuthStore();
   const config = {
     headers: {
@@ -19,42 +19,12 @@ export const useDivisionStore = defineStore('division', () => {
     }
   }
 
-  const divisions: Ref<Map<string, DivisionReadOne>> = ref(new Map());
-  const selectedDivision: Ref<DivisionReadOne | null | undefined> = ref(null);
-  const form: Ref<DivisionCreate> = ref({
-    name: ''
-  });
-
+  const divisions: Ref<Map<string, Readonly<DivisionReadOne>>> = ref(new Map());
 
   const divisionList = computed(() => {
     return Array.from(divisions.value, entry => entry[1])
   })
 
-
-  function resetForm() {
-    form.value.name = '';
-  }
-
-  function _removeDivision(uid: string) {
-    divisions.value.delete(uid);
-  }
-
-  function addDivision() {
-    crudType.value = CRUDType.CREATE;
-  }
-  function editDivision(uid: string) {
-    crudType.value = CRUDType.UPDATE;
-    const division = divisions.value.get(uid);
-    selectedDivision.value = division;
-    form.value = <DivisionCreate>{...selectedDivision.value}
-  }
-
-  async function deleteDivision(uid: string) {
-    crudType.value = CRUDType.DELETE
-    const division = divisions.value.get(uid);
-    selectedDivision.value = division;
-    await deleteDBDivision();
-  }
   async function getManyDBDivisions() {
     divisions.value.clear()
     loading.value = true;
@@ -70,11 +40,10 @@ export const useDivisionStore = defineStore('division', () => {
       loading.value = false;
     }
   }
-  async function createDBDivision() {
+  async function createDBDivision(div: DivisionCreate) {
     loading.value = true;
     try {
-      const response = await hrApi.post(`${ENDPOINT}`, form.value, config);
-      resetForm();
+      const response = await hrApi.post(`${ENDPOINT}`, div, config);
       const division: DivisionReadOne = response.data;
       divisions.value.set(division.uid, division);
       Notify.create({
@@ -89,17 +58,16 @@ export const useDivisionStore = defineStore('division', () => {
     }
   }
 
-  async function updateDBDivision() {
+  async function updateDBDivision(div: DivisionReadOne) {
     loading.value = true;
     try {
-      const response = await hrApi.patch(`${ENDPOINT}/${selectedDivision.value?.uid}`, form.value, config)
+      const response = await hrApi.patch(`${ENDPOINT}/${div.uid}`, div, config)
       const division: DivisionReadOne = response.data;
       divisions.value.set(division.uid, division);
       Notify.create({
         color: 'positive',
         message: 'Successfully updated division.'
       })
-
     } catch (err) {
       setError(err);
     }
@@ -108,20 +76,15 @@ export const useDivisionStore = defineStore('division', () => {
     }
   }
 
-  async function deleteDBDivision() {
+  async function deleteDBDivision(divUid: string) {
     loading.value = true;
     try {
-      if (selectedDivision.value) {
-        await hrApi.delete(`${ENDPOINT}/${selectedDivision.value.uid}`, config);
-        _removeDivision(selectedDivision.value.uid);
-        selectedDivision.value = null;
-        Notify.create({
-          color: 'positive',
-          message: 'Successfully deleted division.'
-        })
-      } else {
-        throw new Error('No division selected')
-      }
+      await hrApi.delete(`${ENDPOINT}/${divUid}`, config);
+      divisions.value.delete(divUid)
+      Notify.create({
+        color: 'positive',
+        message: 'Successfully deleted division.'
+      })
     } catch (err) {
       setError(err);
     }
@@ -146,19 +109,12 @@ export const useDivisionStore = defineStore('division', () => {
 
   return {
     divisions,
-    selectedDivision,
-    form,
-    crudType,
     loading,
-    addDivision,
-    editDivision,
-    deleteDivision,
     getManyDBDivisions,
     createDBDivision,
     updateDBDivision,
     deleteDBDivision,
     downloadFile,
     divisionList,
-    resetForm,
   }
 })

@@ -16,7 +16,7 @@
                        entity="division"
                        :loading="divisionStore.loading"
                        :table-props="props"
-                       @add="addDivision"
+                       @add="add"
                        @download-csv="downloadCSV"
                        @download-excel="downloadExcel" />
     </template>
@@ -26,12 +26,12 @@
                class="q-mx-xs"
                color="primary"
                icon="mode_edit"
-               @click="onEdit(props.row.uid)"></q-btn>
+               @click="edit(props.row)"></q-btn>
         <q-btn size="xs"
                class="q-mx-xs"
                color="primary"
                icon="delete"
-               @click="onDelete(props.row.uid)"></q-btn>
+               @click="remove(props.row.uid)"></q-btn>
       </q-td>
     </template>
     <template v-slot:loading>
@@ -42,29 +42,18 @@
   <q-dialog ref="dialogRef"
             @hide="onHide"
             persistent>
-    <q-card class="q-dialog-plugin">
-      <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6 text-capitalize">{{ $t(divisionStore.crudType) }} {{ $t('division') }}</div>
-        <q-space />
-        <q-btn icon="close"
-               flat
-               round
-               dense
-               v-close-popup />
-      </q-card-section>
-      <q-card-section class="q-mt-md">
-        <DivisionForm @save="onSave"
-                      @reset="onFormReset"
-                      @cancel="onCancel" />
-      </q-card-section>
-    </q-card>
+    <DivisionForm @save="create"
+                  @update="update"
+                  @cancel="onCancel"
+                  :division="selectedDivision" />
   </q-dialog>
 </template>
 <script setup lang="ts">
-import {ref} from 'vue';
+import {Ref, ref} from 'vue';
+import {useI18n} from 'vue-i18n';
 import {useQuasar, useDialogPluginComponent} from 'quasar'
-import {DivisionReadOne} from 'src/models/division';
-import {CRUDType, DownloadFileType} from 'src/models/common';
+import {DivisionCreate, DivisionReadOne} from 'src/models/division';
+import {DownloadFileType} from 'src/models/common';
 import DivisionForm from 'src/forms/DivisionForm.vue'
 import {format, date} from 'quasar';
 import {useStores} from 'src/composables/stores';
@@ -75,6 +64,7 @@ defineEmits({
 })
 
 const $q = useQuasar();
+const {t} = useI18n({useScope: 'global'})
 const {
   dialogRef,
   onDialogHide,
@@ -83,55 +73,45 @@ const {
 const {capitalize} = format;
 const {divisionStore} = useStores();
 
+const selectedDivision: Ref<DivisionReadOne | null> = ref(null)
 const filter = ref('');
 
-function onEdit(uid: string) {
-  divisionStore.editDivision(uid);
-  dialogRef.value?.show();
+async function create(div: DivisionCreate) {
+  await divisionStore.createDBDivision(div)
+  onDialogOK();
 }
 
-function onDelete(uid: string) {
+function add() {
+  selectedDivision.value = null;
+  dialogRef.value?.show()
+}
+
+function edit(div: Readonly<DivisionReadOne>) {
+  selectedDivision.value = {...div}
+  dialogRef.value?.show()
+}
+
+async function update(div: DivisionReadOne) {
+  await divisionStore.updateDBDivision(div);
+  onDialogOK();
+}
+async function remove(uid: string) {
   $q.dialog({
-    title: 'Delete',
-    message: 'Are you sure you want to delete?',
+    title: t('delete'),
+    message: t('confirm_delete'),
     cancel: true,
     persistent: true
   }).onOk(async () => {
-    await divisionStore.deleteDivision(uid);
+    await divisionStore.deleteDBDivision(uid);
   })
 }
 
-function addDivision() {
-  divisionStore.addDivision();
-  dialogRef.value?.show()
-}
-function onSave() {
-  switch (divisionStore.crudType) {
-    case CRUDType.CREATE: {
-      divisionStore.createDBDivision();
-      break;
-    }
-    case CRUDType.UPDATE: {
-      divisionStore.updateDBDivision();
-      break;
-    }
-    default: {
-      throw new Error('Invalid CRUD Operaion.')
-      break;
-    }
-  }
-  onDialogOK();
-}
 function onCancel() {
-  divisionStore.resetForm();
+  selectedDivision.value = null;
   onDialogCancel()
 }
 function onHide() {
   onDialogHide()
-}
-
-function onFormReset() {
-  divisionStore.resetForm();
 }
 
 function downloadCSV() {
@@ -174,7 +154,6 @@ const columns = [
     label: 'Action',
     align: 'left',
   }
-
 ]
 </script>
 <style lang="scss">

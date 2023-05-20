@@ -1,55 +1,67 @@
 <template>
-  <div class="q-pa-md"
-       style="max-width: 400px">
+  <q-card class="q-dialog-plugin">
+    <q-card-section class="row items-center q-pb-none">
+      <div class="text-h6 text-capitalize">{{ $t(crudType) }} {{ $t('division') }}</div>
+      <q-space />
+      <q-btn icon="close"
+             flat
+             round
+             dense
+             v-close-popup />
+    </q-card-section>
+    <q-card-section class="q-mt-md">
+      <div class="q-pa-md"
+           style="max-width: 400px">
 
-    <q-form :autofocus="true"
-            @submit="onSubmit"
-            @reset="onReset"
-            class="q-gutter-md">
-      <q-input square
-               filled
-               v-model="divisionStore.form.name"
-               label="Division name"
-               lazy-rules
-               :rules="[val => val && val.length > 0 || 'Please type something']" />
+        <q-form :autofocus="true"
+                @submit="onSubmit"
+                @reset="onReset"
+                class="q-gutter-md">
+          <q-input square
+                   filled
+                   v-model="form.name"
+                   label="Division name"
+                   lazy-rules
+                   :rules="[val => val && val.length > 0 || 'Please type something']" />
+          <FormActionButtons @on-update="onUpdate"
+                             @on-cancel="onCancel"
+                             :isUpdate="division ? true : false" />
+        </q-form>
 
-      <div class="q-gutter-xs">
-        <q-btn no-caps
-               class="text-capitalize"
-               square
-               :label="$t('save')"
-               type="submit"
-               color="primary" />
-        <q-btn no-caps
-               class="text-capitalize"
-               square
-               :label="$t('reset')"
-               type="reset"
-               color="primary" />
-        <q-btn no-caps
-               class="text-capitalize"
-               square
-               :label="$t('cancel')"
-               type="button"
-               @click="onCancel"
-               color="primary" />
       </div>
-    </q-form>
-
-  </div>
+    </q-card-section>
+  </q-card>
 </template>
 <script setup lang="ts">
-import {useDivisionStore} from 'src/stores/division-store';
+import {Ref, onMounted, onUnmounted, ref} from 'vue';
+import {DivisionCreate, DivisionReadOne} from 'src/models/division';
+import FormActionButtons from 'src/components/FormActionButtons.vue'
+import {CRUDType} from 'src/models/common';
+const props = defineProps<{
+  division: Readonly<DivisionReadOne> | null
+}>();
+const emit = defineEmits(['save', 'update', 'reset', 'cancel'])
 
-const emit = defineEmits(['save', 'reset', 'cancel'])
-
-const divisionStore = useDivisionStore();
+const form: Ref<DivisionCreate> = ref({
+  name: ''
+});
+const crudType = ref(CRUDType.CREATE)
+onMounted(() => {
+  if (props.division) {
+    form.value = {...props.division}
+    crudType.value = CRUDType.UPDATE
+  }
+})
+onUnmounted(() => form.value.name = '')
 
 function onSubmit() {
-  emit('save');
+  emit('save', form.value);
+}
+function onUpdate() {
+  emit('update', form.value)
 }
 function onReset() {
-  emit('reset')
+  form.value.name = '';
 }
 function onCancel() {
   emit('cancel')
