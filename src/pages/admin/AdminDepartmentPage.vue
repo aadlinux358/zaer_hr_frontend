@@ -50,7 +50,7 @@
 <script setup lang="ts">
 import {ref} from 'vue';
 import {useDialogPluginComponent} from 'quasar'
-import {DepartmentReadOne, DepartmentCreate} from 'src/models/department';
+import {DepartmentReadOne as R, DepartmentCreate as C} from 'src/models/department';
 import DepartmentForm from 'src/forms/DepartmentForm.vue'
 import {format, date} from 'quasar';
 import {useStores} from 'src/composables/stores';
@@ -77,7 +77,7 @@ const {
   onHide,
   downloadCSV,
   downloadExcel
-} = useCrud<DepartmentCreate, DepartmentReadOne>(departmentStore)
+} = useCrud<C, R>(departmentStore)
 
 const columns = [
   {
@@ -85,7 +85,7 @@ const columns = [
     required: true,
     label: 'Department Name',
     align: 'left',
-    field: (row: DepartmentReadOne) => row.name,
+    field: (row: R) => row.name,
     sortable: true,
     format: (val: string) => capitalize(val),
   },
@@ -94,7 +94,7 @@ const columns = [
     required: true,
     label: 'Division',
     align: 'left',
-    field: (row: DepartmentReadOne) => {
+    field: (row: R) => {
       const division = divisionStore.divisions.get(row.division_uid)
       return division?.name
     },
@@ -106,7 +106,7 @@ const columns = [
     required: true,
     label: 'Date Created',
     align: 'left',
-    field: (row: DepartmentReadOne) => row.date_created,
+    field: (row: R) => row.date_created,
     format: (val: string) => date.formatDate(val, 'DD-MMM-YYYY HH:mm A'),
     sortable: true
   },
@@ -115,7 +115,7 @@ const columns = [
     required: true,
     label: 'Department UUID',
     align: 'left',
-    field: (row: DepartmentReadOne) => row.uid,
+    field: (row: R) => row.uid,
   },
   {
     name: 'actions',
@@ -123,7 +123,6 @@ const columns = [
     label: 'Action',
     align: 'left',
   }
-
 ]
 </script>
 <style lang="scss">
