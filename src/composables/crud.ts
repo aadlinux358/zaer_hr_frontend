@@ -2,8 +2,8 @@ import {Ref, ref} from 'vue';
 import {useI18n} from 'vue-i18n';
 import {useQuasar, useDialogPluginComponent} from 'quasar'
 import {DownloadFileType} from 'src/models/common';
-
-export function useCrud<C, R, U, D>(store) {
+import {Store} from 'pinia';
+export function useCrud<C, R>(store: Store) {
 
   const {
     dialogRef,
