@@ -12,7 +12,6 @@
     <q-card-section class="q-mt-md">
       <div class="q-pa-md"
            style="max-width: 400px">
-
         <q-form :autofocus="true"
                 v-on:submit.prevent
                 @reset="onReset"
@@ -29,7 +28,6 @@
                              @on-create="onCreate"
                              :isUpdate="payload ? true : false" />
         </q-form>
-
       </div>
     </q-card-section>
   </q-card>
