@@ -1,19 +1,47 @@
 import {ref} from 'vue';
 import {format, date} from 'quasar';
-import {EmployeeReadOne} from 'src/models/employee';
+import {EmployeeReadOne as R} from 'src/models/employee';
 import {useStores} from './stores';
 
 export function useEmpColumns() {
-
   const {capitalize} = format;
-  const {empStore} = useStores();
+  const {
+    divisionStore,
+    departmentStore,
+    sectionStore,
+    unitStore,
+    designationStore} = useStores();
+  function getUnit(unitUid: string) {
+    return unitStore.units.get(unitUid)
+  }
+
+  function getSection(unitUid: string) {
+    const unit = unitStore.units.get(unitUid);
+    return sectionStore.sections.get(unit?.section_uid);
+  }
+
+  function getDepartment(unitUid: string) {
+    const unit = unitStore.units.get(unitUid);
+    const sec = sectionStore.sections.get(unit?.section_uid);
+    return departmentStore.departments.get(sec?.department_uid);
+  }
+  function getDivision(unitUid: string) {
+    const unit = unitStore.units.get(unitUid);
+    const sec = sectionStore.sections.get(unit?.section_uid);
+    const dep = departmentStore.departments.get(sec?.department_uid);
+    return divisionStore.divisions.get(dep?.division_uid);
+  }
+
+  function getDesignation(designationUid: string) {
+    return designationStore.designations.get(designationUid);
+  }
   const columns = ref([
     {
       name: 'badge_number',
       required: true,
       label: 'Badge Number',
       align: 'left',
-      field: (row: EmployeeReadOne) => row.badge_number,
+      field: (row: R) => row.badge_number,
       sortable: true
     },
     {
@@ -21,7 +49,7 @@ export function useEmpColumns() {
       required: true,
       label: 'First Name',
       align: 'left',
-      field: (row: EmployeeReadOne) => row.first_name,
+      field: (row: R) => row.first_name,
       format: (val: string) => capitalize(val),
       sortable: true
     },
@@ -30,7 +58,7 @@ export function useEmpColumns() {
       required: true,
       label: 'Last Name',
       align: 'left',
-      field: (row: EmployeeReadOne) => row.last_name,
+      field: (row: R) => row.last_name,
       format: (val: string) => capitalize(val),
       sortable: true
     },
@@ -39,7 +67,7 @@ export function useEmpColumns() {
       required: true,
       label: 'Grandfather Name',
       align: 'left',
-      field: (row: EmployeeReadOne) => row.grandfather_name,
+      field: (row: R) => row.grandfather_name,
       format: (val: string) => capitalize(val),
       sortable: true
     },
@@ -48,7 +76,7 @@ export function useEmpColumns() {
       required: true,
       label: 'Gender',
       align: 'left',
-      field: (row: EmployeeReadOne) => row.gender,
+      field: (row: R) => row.gender,
       format: (val: string) => capitalize(val),
       sortable: true
     },
@@ -57,7 +85,7 @@ export function useEmpColumns() {
       required: true,
       label: 'Hire Date',
       align: 'left',
-      field: (row: EmployeeReadOne) => row.current_hire_date,
+      field: (row: R) => row.current_hire_date,
       format: (val: string) => date.formatDate(val, 'DD-MMM-YYYY'),
       sortable: true
     },
@@ -66,8 +94,8 @@ export function useEmpColumns() {
       required: true,
       label: 'Division',
       align: 'left',
-      field: (row: EmployeeReadOne) => {
-        const division = empStore.getDivision(row.unit_uid);
+      field: (row: R) => {
+        const division = getDivision(row.unit_uid);
         return capitalize(division.name);
       }
     },
@@ -76,8 +104,8 @@ export function useEmpColumns() {
       required: true,
       label: 'Department',
       align: 'left',
-      field: (row: EmployeeReadOne) => {
-        const department = empStore.getDepartment(row.unit_uid);
+      field: (row: R) => {
+        const department = getDepartment(row.unit_uid);
         return capitalize(department.name);
       },
     },
@@ -86,8 +114,8 @@ export function useEmpColumns() {
       required: true,
       label: 'Section',
       align: 'left',
-      field: (row: EmployeeReadOne) => {
-        const section = empStore.getSection(row.unit_uid);
+      field: (row: R) => {
+        const section = getSection(row.unit_uid);
         return capitalize(section.name);
       }
     },
@@ -96,8 +124,8 @@ export function useEmpColumns() {
       required: true,
       label: 'Unit',
       align: 'left',
-      field: (row: EmployeeReadOne) => {
-        const unit = empStore.getUnit(row.unit_uid);
+      field: (row: R) => {
+        const unit = getUnit(row.unit_uid);
         return capitalize(unit.name)
       }
     },
@@ -106,8 +134,8 @@ export function useEmpColumns() {
       required: true,
       label: 'Designation',
       align: 'left',
-      field: (row: EmployeeReadOne) => {
-        const designation = empStore.getDesignation(row.designation_uid);
+      field: (row: R) => {
+        const designation = getDesignation(row.designation_uid);
         return capitalize(designation.title)
       }
     },
