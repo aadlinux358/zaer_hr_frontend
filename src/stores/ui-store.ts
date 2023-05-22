@@ -9,6 +9,7 @@ export const useUiStore = defineStore('ui', () => {
 
   const $q = useQuasar();
   const leftDrawerOpen = ref(false);
+  const denseTable = ref(true)
   const darkMode = ref(true);
   const selectedLanguage = ref('ENG')
   const {locale} = useI18n({useScope: 'global'})
@@ -51,6 +52,7 @@ export const useUiStore = defineStore('ui', () => {
     toggleLeftDrawer,
     toggleDark,
     darkMode,
+    denseTable,
     setLanguage,
     selectedLanguage
   };

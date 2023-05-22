@@ -1,6 +1,7 @@
 <template>
   <q-table bordered
            square
+           :dense="uiStore.denseTable"
            :columns="columns"
            :rows="designationStore.designationList"
            row-key="uid"
@@ -62,7 +63,7 @@ defineEmits({
 })
 
 const {capitalize} = format;
-const {designationStore} = useStores();
+const {designationStore, uiStore} = useStores();
 const filter = ref('');
 
 const {

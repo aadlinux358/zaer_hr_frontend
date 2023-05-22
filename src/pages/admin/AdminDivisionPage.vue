@@ -1,6 +1,7 @@
 <template>
   <q-table bordered
            square
+           :dense="uiStore.denseTable"
            title="Divisions"
            :columns="columns"
            :rows="divisionStore.divisionList"
@@ -62,7 +63,7 @@ defineEmits({
 })
 
 const {capitalize} = format;
-const {divisionStore} = useStores();
+const {divisionStore, uiStore} = useStores();
 const filter = ref('');
 
 const {

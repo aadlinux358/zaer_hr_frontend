@@ -1,6 +1,7 @@
 <template>
   <q-table bordered
            square
+           :dense="uiStore.denseTable"
            :columns="columns"
            :rows="sectionStore.sectionList"
            row-key="uid"
@@ -65,7 +66,8 @@ const filter = ref('');
 const {
   divisionStore,
   departmentStore,
-  sectionStore} = useStores();
+  sectionStore,
+  uiStore} = useStores();
 
 const {
   dialogRef,

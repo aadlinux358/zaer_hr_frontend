@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed} from 'vue';
-
+import {useStores} from 'src/composables/stores';
 
 const props = defineProps<{
   title: string
@@ -14,7 +14,7 @@ const props = defineProps<{
 }>()
 
 const emits = defineEmits(['update:filter', 'add', 'downloadCsv', 'downloadExcel'])
-
+const {uiStore} = useStores();
 const filter = computed({
   get() {return props.filter},
   set(value: string) {emits('update:filter', value)}
@@ -26,18 +26,12 @@ const filter = computed({
     <div class="row items-center full-width">
       <div class="col-2 q-table__title text-capitalize">{{ $t(title) }}</div>
       <q-space />
-      <q-input filled
-               square
-               class="text-capitalize"
-               :label="$t('search')"
-               dense
-               debounce="300"
-               color="primary"
-               v-model="filter">
-        <template v-slot:append>
-          <q-icon name="search" />
-        </template>
-      </q-input>
+      <q-btn flat
+             round
+             color="primary"
+             :icon="tableProps.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+             @click="tableProps.toggleFullscreen"
+             size="lg" />
     </div>
     <div class="row q-mt-md">
       <q-btn color="primary"
@@ -46,9 +40,12 @@ const filter = computed({
              no-caps
              :disable="loading"
              @click="$emit('add')"> {{ $t('new') }} {{ $t(entity) }} </q-btn>
-
     </div>
-    <div class="row justify-end">
+    <div class="row items-center">
+      <q-toggle v-model="uiStore.denseTable"
+                color="primary"
+                label="Dense" />
+      <q-space />
       <div class="row q-mx-md items-center">
         <q-btn color="primary"
                @click="$emit('downloadCsv')"
@@ -61,12 +58,18 @@ const filter = computed({
                round
                icon="fas fa-file-excel" />
       </div>
-      <q-btn flat
-             round
-             color="primary"
-             :icon="tableProps.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-             @click="tableProps.toggleFullscreen"
-             size="lg" />
+      <q-input filled
+               square
+               class="text-capitalize"
+               :label="$t('search')"
+               dense
+               debounce="300"
+               color="primary"
+               v-model="filter">
+        <template v-slot:append>
+          <q-icon name="search" />
+        </template>
+      </q-input>
     </div>
   </div>
 </template>
