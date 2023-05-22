@@ -10,7 +10,7 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: (to /* from */) => {
       const authStore = useAuthStore();
       if (!authStore.isAuthenticated && to.name !== 'Login') {
-        authStore.requestedUrl = to.name;
+        authStore.requestedUrl = to;
         return {name: 'Login'};
       }
       return true;
@@ -32,10 +32,9 @@ const routes: RouteRecordRaw[] = [
         component: () => import('src/forms/EmployeeForm.vue')
       },
       {
-        path: '/employees/:empUid',
+        path: '/employees/:uid',
         name: 'EmployeeDetail',
         component: () => import('src/pages/shared/EmloyeeDetailPage.vue'),
-        props: true
       },
       {
         path: '/divisions',

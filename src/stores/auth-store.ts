@@ -1,7 +1,7 @@
 import {computed, ref, Ref} from 'vue';
 import {defineStore} from 'pinia';
 import {Notify, Loading} from 'quasar';
-import {RouteRecordName} from 'vue-router';
+import {RouteLocationNormalized} from 'vue-router';
 import axios from 'axios';
 
 import Router from 'src/router/index';
@@ -15,7 +15,7 @@ export const useAuthStore = defineStore('auth', () => {
   const _access_token = ref('');
   const _user: Ref<AuthUser | null> = ref(null);
   const _isAuthenticated = ref(false)
-  const _requestedUrl: Ref<RouteRecordName | undefined | null> = ref('');
+  const _requestedUrl: Ref<RouteLocationNormalized | null> = ref(null);
   const _loading = ref(false);
   const _error = ref('');
   const _authHeader = ref('')
@@ -84,8 +84,9 @@ export const useAuthStore = defineStore('auth', () => {
       _password.value = '';
       if (!requestedUrl.value) {
         await Router.push({name: 'Main'});
+      } else {
+        await Router.push(requestedUrl.value);
       }
-      await Router.push({name: requestedUrl.value});
 
     } catch (err) {
       _setError(err);
@@ -99,7 +100,7 @@ export const useAuthStore = defineStore('auth', () => {
     _isAuthenticated.value = false;
     _access_token.value = '';
     _user.value = null;
-    _requestedUrl.value = '';
+    _requestedUrl.value = null;
     _username.value = '';
     _password.value = '';
     await Router.push({name: 'Login'});
