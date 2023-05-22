@@ -139,12 +139,6 @@ export function useEmpColumns() {
         return capitalize(designation.title)
       }
     },
-    {
-      name: 'actions',
-      required: true,
-      label: 'Action',
-      align: 'left',
-    }
   ])
   return {
     columns
