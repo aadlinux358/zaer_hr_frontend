@@ -32,4 +32,9 @@ export default {
   search: 'ricerca',
   confirm_delete: 'Sei sicuro di voler eliminare?',
   confirm_deactivate: 'sei sicuro di voler disattivare?',
+  address: 'indirizzo',
+  addresses: 'indirizzi',
+  child: 'bambina - bambino',
+  children: 'bambine - bambini',
+  contact_person: 'referente',
 }

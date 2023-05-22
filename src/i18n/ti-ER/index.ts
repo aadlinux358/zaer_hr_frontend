@@ -32,4 +32,9 @@ export default {
   search: 'ፈትሽ',
   confirm_delete: 'ክትድምስስ ርግጸኛ ዲኻ?',
   confirm_deactivate: 'ዘይንጡፍ ክትገብር ርግጸኛ ዲኻ?',
+  address: 'ኣድራሻ',
+  addresses: 'ኣድራሻታት',
+  child: 'ቆልዑ',
+  children: 'ቆልዑት',
+  contact_person: 'ናይ ቀረባ ተሓታቲ',
 }

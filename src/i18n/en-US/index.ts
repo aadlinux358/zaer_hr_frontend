@@ -1,6 +1,3 @@
-// This is just an example,
-// so you can safely delete all default props below
-
 export default {
   zaerhr: 'ZaEr Human Resources',
   appinfo: 'App Information',
@@ -35,4 +32,9 @@ export default {
   search: 'search',
   confirm_delete: 'are you sure you want to delete?',
   confirm_deactivate: 'are you sure you want to deactivate?',
+  address: 'address',
+  addresses: 'addresses',
+  child: 'child',
+  children: 'children',
+  contact_person: 'contact person',
 };
