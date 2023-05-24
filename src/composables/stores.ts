@@ -11,6 +11,8 @@ import {useNationalityStore} from 'src/stores/nationality-store';
 import {useEmployeeStore} from 'src/stores/employee-store';
 import {useAuthStore} from 'src/stores/auth-store';
 import {useChildStore} from 'src/stores/employee-child-store';
+import {useContactStore} from 'src/stores/employee-contact-person-store';
+import {useAddressStore} from 'src/stores/employee-address-store';
 
 export function useStores() {
   const $q = useQuasar();
@@ -25,6 +27,8 @@ export function useStores() {
   const nationalityStore = useNationalityStore()
   const empStore = useEmployeeStore();
   const childStore = useChildStore();
+  const contactStore = useContactStore();
+  const addressStore = useAddressStore();
   onMounted(async () => {
     $q.loading.show();
     if (divisionStore.divisions.size === 0) {
@@ -51,6 +55,15 @@ export function useStores() {
     if (empStore.employees.size === 0) {
       await empStore.getManyDB();
     }
+    if (childStore.children.size === 0) {
+      await childStore.getManyDB();
+    }
+    if (addressStore.addresses.size === 0) {
+      await addressStore.getManyDB();
+    }
+    if (contactStore.contacts.size === 0) {
+      await contactStore.getManyDB();
+    }
     $q.loading.hide();
   });
   return {
@@ -65,5 +78,7 @@ export function useStores() {
     nationalityStore,
     empStore,
     childStore,
+    contactStore,
+    addressStore,
   }
 }
