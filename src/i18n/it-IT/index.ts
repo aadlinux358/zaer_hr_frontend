@@ -24,6 +24,7 @@ export default {
   create: 'creare',
   read: 'leggere',
   update: 'aggiornamento',
+  edit: 'modificare',
   delete: 'eliminare',
   ok: 'sì',
   save: 'salva',
@@ -37,4 +38,7 @@ export default {
   child: 'bambina - bambino',
   children: 'bambine - bambini',
   contact_person: 'referente',
+  deactivate: 'disattivare',
+  terminate: 'terminare',
+  confirm_termination: 'sei sicuro di voler licenziare il dipendente?'
 }

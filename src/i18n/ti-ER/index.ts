@@ -24,6 +24,7 @@ export default {
   create: 'ፍጠር',
   read: 'ኣንብብ',
   update: 'ኣሐድስ',
+  edit: 'ምዕራይ',
   delete: 'ደምስስ',
   ok: 'እወ',
   save: 'ዓቅብ',
@@ -37,4 +38,7 @@ export default {
   child: 'ቆልዑ',
   children: 'ቆልዑት',
   contact_person: 'ናይ ቀረባ ተሓታቲ',
+  deactivate: 'ኣዛሕትል',
+  terminate: 'ዛዝም',
+  confirm_termination: 'ሰራሕተኛ ስርሑ ከም ዝዛዘመ ርግጸኛ ዲኻ?'
 }

@@ -24,6 +24,7 @@ export default {
   create: 'create',
   read: 'read',
   update: 'update',
+  edit: 'edit',
   delete: 'delete',
   ok: 'ok',
   save: 'save',
@@ -37,4 +38,7 @@ export default {
   child: 'child',
   children: 'children',
   contact_person: 'contact person',
+  deactivate: 'deactivate',
+  terminate: 'terminate',
+  confirm_termination: 'are you sure you want to terminate employee?',
 };
