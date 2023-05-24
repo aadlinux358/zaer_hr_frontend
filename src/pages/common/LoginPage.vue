@@ -2,82 +2,82 @@
   <Particles id="tsparticles"
              :particlesInit="particlesInit"
              :options="{
-                 background: {
-                   color: {
-                     value: '#a60914'
-                   }
-                 },
-                 fpsLimit: 100,
-                 interactivity: {
-                   events: {
-                     onClick: {
-                       enable: true,
-                       mode: 'push'
-                     },
-                     onHover: {
-                       enable: true,
-                       mode: 'repulse'
-                     },
-                     resize: true
+               background: {
+                 color: {
+                   value: '#f44336'
+                 }
+               },
+               fpsLimit: 100,
+               interactivity: {
+                 events: {
+                   onClick: {
+                     enable: true,
+                     mode: 'push'
                    },
-                   modes: {
-                     bubble: {
-                       distance: 200,
-                       duration: 2,
-                       opacity: 0.8,
-                       size: 10
-                     },
-                     push: {
-                       quantity: 2
-                     },
-                     repulse: {
-                       distance: 100,
-                       duration: 0.4
-                     }
-                   }
-                 },
-                 particles: {
-                   color: {
-                     value: '#ffffff'
+                   onHover: {
+                     enable: true,
+                     mode: 'repulse'
                    },
-                   links: {
-                     color: '#ffffff',
+                   resize: true
+                 },
+                 modes: {
+                   bubble: {
                      distance: 200,
-                     enable: true,
-                     opacity: 0.5,
-                     width: 1
+                     duration: 2,
+                     opacity: 0.8,
+                     size: 10
                    },
-                   collisions: {
-                     enable: true
+                   push: {
+                     quantity: 2
                    },
-                   move: {
-                     direction: 'none',
-                     enable: true,
-                     outMode: 'bounce',
-                     random: false,
-                     speed: 1,
-                     straight: false
-                   },
-                   number: {
-                     density: {
-                       enable: true,
-                       area: 800
-                     },
-                     value: 80
-                   },
-                   opacity: {
-                     value: 0.5
-                   },
-                   shape: {
-                     type: 'circle'
-                   },
-                   size: {
-                     random: true,
-                     value: 5
+                   repulse: {
+                     distance: 100,
+                     duration: 0.4
                    }
+                 }
+               },
+               particles: {
+                 color: {
+                   value: '#ffffff'
                  },
-                 detectRetina: true
-               }" />
+                 links: {
+                   color: '#2d2d2d',
+                   distance: 200,
+                   enable: true,
+                   opacity: 0.5,
+                   width: 1
+                 },
+                 collisions: {
+                   enable: true
+                 },
+                 move: {
+                   direction: 'none',
+                   enable: true,
+                   outMode: 'bounce',
+                   random: false,
+                   speed: 1,
+                   straight: false
+                 },
+                 number: {
+                   density: {
+                     enable: true,
+                     area: 800
+                   },
+                   value: 80
+                 },
+                 opacity: {
+                   value: 0.5
+                 },
+                 shape: {
+                   type: 'circle'
+                 },
+                 size: {
+                   random: true,
+                   value: 5
+                 }
+               },
+               detectRetina: true
+             }" />
 
 
   <div class="window-height window-width row justify-center items-center">
