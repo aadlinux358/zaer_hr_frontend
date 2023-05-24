@@ -84,6 +84,39 @@ export function useApiCrud<C, R, RM>(endpoint: string, entityMap: Map<string, R>
       loading.value = false;
     }
   }
+  async function deactivateDB(entityUid: string) {
+    loading.value = true
+    try {
+      const response = await hrApi.delete(`${endpoint}/deactivate/${entityUid}`, config)
+      const deactivatedEntity: R = response.data;
+      entityMap.set(deactivatedEntity.uid, deactivatedEntity);
+      Notify.create({
+        color: 'positive',
+        message: `Successfully deactivated ${entityName}.`
+      })
+    } catch (err) {
+      setError(err);
+    }
+    finally {
+      loading.value = false;
+    }
+  }
+  async function terminateDB(payload: C) {
+    try {
+      const response = await hrApi.post(`${endpoint}/terminate`, payload, config);
+      const entity: R = response.data;
+      entityMap.set(entity.uid, entity);
+      Notify.create({
+        color: 'positive',
+        message: `Successfully terminated ${entityName}.`
+      })
+    } catch (err) {
+      setError(err);
+    }
+    finally {
+      loading.value = false;
+    }
+  }
 
   async function downloadFile(fileType: DownloadFileType) {
     loading.value = true;
@@ -104,6 +137,8 @@ export function useApiCrud<C, R, RM>(endpoint: string, entityMap: Map<string, R>
     getManyDB,
     createDB,
     updateDB,
+    deactivateDB,
+    terminateDB,
     deleteDB,
     downloadFile,
   }
