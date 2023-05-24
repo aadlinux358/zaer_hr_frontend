@@ -2,8 +2,11 @@ import {ref} from 'vue';
 import {format, date} from 'quasar';
 import {EmployeeReadOne as R} from 'src/models/employee';
 import {useStores} from './stores';
+import {ChildReadOne} from 'src/models/child';
+import {AddressReadOne} from 'src/models/employee-address'
+import {ContactPersonReadOne} from 'src/models/employee-contact-person'
 
-export function useEmpColumns() {
+export function useTableColumns() {
   const {capitalize} = format;
   const {
     divisionStore,
@@ -35,7 +38,7 @@ export function useEmpColumns() {
   function getDesignation(designationUid: string) {
     return designationStore.designations.get(designationUid);
   }
-  const columns = ref([
+  const empColumns = ref([
     {
       name: 'badge_number',
       required: true,
@@ -136,11 +139,83 @@ export function useEmpColumns() {
       align: 'left',
       field: (row: R) => {
         const designation = getDesignation(row.designation_uid);
-        return capitalize(designation.title)
+        return capitalize(designation.title);
       }
     },
   ])
+  const childColumns = ref([
+    {
+      name: 'first_name',
+      required: true,
+      label: 'First Name',
+      field: (row: ChildReadOne) => row.first_name ? capitalize(row.first_name) : '',
+      align: 'left',
+    },
+    {
+      name: 'gender',
+      required: true,
+      label: 'Gender',
+      field: (row: ChildReadOne) => row.gender ? capitalize(row.gender) : '',
+      align: 'left',
+    },
+    {
+      name: 'birth_date',
+      required: true,
+      label: 'Birth Date',
+      field: (row: ChildReadOne) => row.birth_date,
+      align: 'left',
+    },
+  ])
+  const addressColumns = ref([
+    {
+      name: 'city',
+      required: true,
+      label: 'City',
+      field: (row: AddressReadOne) => row.city ? capitalize(row.city) : '',
+      align: 'left',
+    },
+    {
+      name: 'district',
+      required: true,
+      label: 'District',
+      field: (row: AddressReadOne) => row.district ? capitalize(row.district) : '',
+      align: 'left',
+    },
+  ])
+  const contactPersonColumns = ref([
+    {
+      name: 'first_name',
+      required: true,
+      label: 'First Name',
+      field: (row: ContactPersonReadOne) => row.first_name ? capitalize(row.first_name) : '',
+      align: 'left',
+    },
+    {
+      name: 'last_name',
+      required: true,
+      label: 'Last Name',
+      field: (row: ContactPersonReadOne) => row.last_name ? capitalize(row.last_name) : '',
+      align: 'left',
+    },
+    {
+      name: 'phone_number',
+      required: true,
+      label: 'Phone Number',
+      field: (row: ContactPersonReadOne) => row.phone_number,
+      align: 'left',
+    },
+    {
+      name: 'relationship_to_employee',
+      required: true,
+      label: 'Relationship',
+      field: (row: ContactPersonReadOne) => row.relationship_to_employee ? capitalize(row.relationship_to_employee) : '',
+      align: 'left',
+    },
+  ])
   return {
-    columns
+    empColumns,
+    childColumns,
+    addressColumns,
+    contactPersonColumns
   }
 }
