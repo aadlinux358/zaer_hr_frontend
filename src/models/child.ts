@@ -5,7 +5,7 @@ export interface ChildCreate {
   birth_date: string | null;
 }
 
-export interface ChieldReadOne extends ChildCreate {
+export interface ChildReadOne extends ChildCreate {
   uid: string | null;
   created_by: string | null;
   modified_by: string | null;
@@ -15,7 +15,7 @@ export interface ChieldReadOne extends ChildCreate {
 
 export interface ChildReadMany {
   count: number;
-  result: ChieldReadOne[];
+  result: ChildReadOne[];
 }
 
 export const ChildObj = {
