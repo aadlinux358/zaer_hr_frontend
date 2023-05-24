@@ -26,6 +26,9 @@ export function useForms<T>(props, emits) {
       emits('update', form.value)
     }
   }
+  function onDelete() {
+    emits('delete', form.value.uid)
+  }
   function onReset() {
     form.value = {};
   }
@@ -40,6 +43,7 @@ export function useForms<T>(props, emits) {
     formRef,
     onCreate,
     onUpdate,
+    onDelete,
     onReset,
     onCancel
   }
