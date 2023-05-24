@@ -29,11 +29,19 @@
            type="button"
            @click="emits('onCancel')"
            color="primary" />
+    <q-btn no-caps
+           v-if="props.isUpdate"
+           class="text-capitalize"
+           square
+           :label="$t('delete')"
+           type="button"
+           @click="emits('onDelete')"
+           color="primary" />
   </div>
 </template>
 <script setup lang="ts">
 const props = defineProps<{
   isUpdate: boolean
 }>()
-const emits = defineEmits(['onCreate', 'onCancel', 'onUpdate'])
+const emits = defineEmits(['onCreate', 'onCancel', 'onUpdate', 'onDelete'])
 </script>
