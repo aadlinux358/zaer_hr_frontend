@@ -34,7 +34,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/employees/:uid',
         name: 'EmployeeDetail',
-        component: () => import('src/pages/shared/EmloyeeDetailPage.vue'),
+        component: () => import('src/pages/shared/EmployeeDetailPage.vue'),
       },
       {
         path: '/divisions',
