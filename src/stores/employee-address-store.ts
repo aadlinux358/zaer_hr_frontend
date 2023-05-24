@@ -2,6 +2,7 @@ import {computed, Ref, ref} from 'vue';
 import {defineStore} from 'pinia';
 import {useApiCrud} from 'src/composables/api';
 import {AddressReadOne as R, AddressCreate as C, AddressReadMany as RM} from 'src/models/employee-address'
+
 const ENDPOINT = '/employee/addresses';
 
 export const useAddressStore = defineStore('address', () => {

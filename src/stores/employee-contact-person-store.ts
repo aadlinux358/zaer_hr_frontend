@@ -3,7 +3,7 @@ import {defineStore} from 'pinia';
 import {useApiCrud} from 'src/composables/api';
 import {ContactPersonReadOne as R, ContactPersonCreate as C, ContactPersonReadMany as RM} from 'src/models/employee-contact-person';
 
-const ENDPOINT = '/employee/contacts';
+const ENDPOINT = '/employee/contact-persons';
 
 export const useContactStore = defineStore('contact', () => {
   const contacts: Ref<Map<string, R>> = ref(new Map());

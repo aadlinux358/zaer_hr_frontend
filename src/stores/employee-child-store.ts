@@ -1,9 +1,9 @@
 import {computed, Ref, ref} from 'vue';
 import {defineStore} from 'pinia';
 import {useApiCrud} from 'src/composables/api';
-import {ChieldReadOne as R, ChildCreate as C, ChildReadMany as RM} from 'src/models/child';
+import {ChildReadOne as R, ChildCreate as C, ChildReadMany as RM} from 'src/models/child';
 
-const ENDPOINT = '/children';
+const ENDPOINT = '/employee/children';
 
 export const useChildStore = defineStore('child', () => {
   const children: Ref<Map<string, R>> = ref(new Map());
