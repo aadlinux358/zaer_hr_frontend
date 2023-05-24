@@ -1,6 +1,6 @@
 <template>
   <q-header>
-    <q-toolbar>
+    <q-toolbar class="bg-dark">
       <q-btn flat
              dense
              round
@@ -80,7 +80,7 @@
       <div>
         <q-btn flat
                round>
-          <q-avatar color="green-9"
+          <q-avatar color="primary"
                     text-color="white">
             {{ authStore.user?.first_name[0] }}
           </q-avatar>

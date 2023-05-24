@@ -1,8 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <MainAppHeader />
-    <q-drawer bordered
-              v-model="uiStore.leftDrawerOpen"
+    <q-drawer v-model="uiStore.leftDrawerOpen"
               show-if-above
               :width="250">
       <q-list>
