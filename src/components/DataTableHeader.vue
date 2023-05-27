@@ -47,16 +47,11 @@ const filter = computed({
                 label="Dense" />
       <q-space />
       <div class="row q-mx-md items-center">
-        <q-btn color="primary"
-               @click="$emit('downloadCsv')"
+        <q-btn @click="$emit('downloadCsv')"
+               :color="$q.dark.isActive ? 'white' : 'primary'"
                flat
                round
                icon="fas fa-file-csv" />
-        <q-btn color="primary"
-               @click="$emit('downloadExcel')"
-               flat
-               round
-               icon="fas fa-file-excel" />
       </div>
       <q-input filled
                square
