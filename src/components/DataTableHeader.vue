@@ -51,7 +51,9 @@ const filter = computed({
                :color="$q.dark.isActive ? 'white' : 'primary'"
                flat
                round
-               icon="fas fa-file-csv" />
+               icon="fas fa-file-csv">
+          <q-tooltip>Download full table info as a csv file</q-tooltip>
+        </q-btn>
       </div>
       <q-input filled
                square
