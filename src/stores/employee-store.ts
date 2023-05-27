@@ -18,6 +18,9 @@ export const useEmployeeStore = defineStore('employee', () => {
     createDB,
     updateDB,
     deleteDB,
+    activateDB,
+    terminateDB,
+    deactivateDB,
     downloadFile,
   } = useApiCrud<C, R, RM>(ENDPOINT, employees.value, 'employee')
 
@@ -28,6 +31,9 @@ export const useEmployeeStore = defineStore('employee', () => {
     getManyDB,
     createDB,
     updateDB,
+    activateDB,
+    terminateDB,
+    deactivateDB,
     deleteDB,
     downloadFile,
   }
