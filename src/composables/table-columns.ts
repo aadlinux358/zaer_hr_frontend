@@ -13,7 +13,8 @@ export function useTableColumns() {
     departmentStore,
     sectionStore,
     unitStore,
-    designationStore} = useStores();
+    designationStore,
+  } = useStores();
   function getUnit(unitUid: string) {
     return unitStore.units.get(unitUid)
   }
@@ -216,6 +217,11 @@ export function useTableColumns() {
     empColumns,
     childColumns,
     addressColumns,
-    contactPersonColumns
+    contactPersonColumns,
+    getDivision,
+    getDepartment,
+    getSection,
+    getUnit,
+    getDesignation,
   }
 }
