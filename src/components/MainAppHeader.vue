@@ -55,6 +55,9 @@
               <q-item clickable
                       v-close-popup
                       @click="uiStore.setLanguage(AppLanguage.ENG)">
+                <q-item-section avatar>
+                  <span class="fi fi-us"></span>
+                </q-item-section>
                 <q-item-section>
                   English
                 </q-item-section>
@@ -62,6 +65,9 @@
               <q-item clickable
                       v-close-popup
                       @click="uiStore.setLanguage(AppLanguage.ITA)">
+                <q-item-section avatar>
+                  <span class="fi fi-it"></span>
+                </q-item-section>
                 <q-item-section>
                   Italian
                 </q-item-section>
@@ -69,6 +75,9 @@
               <q-item clickable
                       v-close-popup
                       @click="uiStore.setLanguage(AppLanguage.TIG)">
+                <q-item-section avatar>
+                  <span class="fi fi-er"></span>
+                </q-item-section>
                 <q-item-section>
                   Tigrigna
                 </q-item-section>
