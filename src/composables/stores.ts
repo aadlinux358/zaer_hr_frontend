@@ -29,7 +29,8 @@ export function useStores() {
   const childStore = useChildStore();
   const contactStore = useContactStore();
   const addressStore = useAddressStore();
-  onMounted(async () => {
+
+  async function hydrateStore() {
     $q.loading.show();
     if (divisionStore.divisions.size === 0) {
       await divisionStore.getManyDB();
@@ -65,8 +66,12 @@ export function useStores() {
       await contactStore.getManyDB();
     }
     $q.loading.hide();
+  }
+  onMounted(async () => {
+    await hydrateStore();
   });
   return {
+    hydrateStore,
     authStore,
     uiStore,
     divisionStore,
