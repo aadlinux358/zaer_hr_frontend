@@ -37,7 +37,7 @@
                      label="Phone number"
                      v-model="form.phone_number"
                      lazy-rules
-                     :rules="[val => val && val.length > 0 || 'Please type phone number']" />
+                     :rules="[val => val && val.length > 0 && isDigit(val) || 'Please type valid (digits) phone number']" />
             <q-input square
                      dense
                      filled
@@ -59,6 +59,7 @@
 <script setup lang="ts">
 import {onMounted} from 'vue';
 import {useForms} from 'src/composables/forms'
+import {isDigit} from 'src/utils/strings'
 import FormActionButtons from 'src/components/FormActionButtons.vue';
 import {ContactPersonCreate, ContactPersonReadOne} from 'src/models/employee-contact-person'
 const props = defineProps<{

@@ -250,11 +250,12 @@
                      v-model="form.phone_number"
                      label="Phone number"
                      lazy-rules
-                     :rules="[val => val && val.length > 0 || 'Please type phone number']" />
+                     :rules="[val => val && val.length > 0 && isDigit(val) || 'Please type valid (digits) phone number']" />
           </div>
           <FormActionButtons @on-create="onCreate"
                              @on-update="onUpdate"
                              @on-cancel="onCancel"
+                             :no-delete="true"
                              :isUpdate="payload ? true : false" />
         </q-form>
 
@@ -268,6 +269,7 @@ import {useStores} from 'src/composables/stores';
 import {useForms} from 'src/composables/forms';
 import {useLookups} from 'src/composables/lookups';
 import {isValid} from 'date-fns'
+import {isDigit} from 'src/utils/strings'
 import {EmployeeReadOne} from 'src/models/employee';
 import FormActionButtons from 'src/components/FormActionButtons.vue';
 
