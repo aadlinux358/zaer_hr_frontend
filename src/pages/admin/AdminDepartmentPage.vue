@@ -1,40 +1,42 @@
 <template>
-  <q-table bordered
-           square
-           :dense="uiStore.denseTable"
-           :columns="columns"
-           :rows="departmentStore.departmentList"
-           @row-click="onSelected"
-           row-key="uid"
-           flat
-           separator="cell"
-           :loading="departmentStore.loading"
-           :filter="filter">
+  <q-page padding>
+    <q-table bordered
+             square
+             :dense="uiStore.denseTable"
+             :columns="columns"
+             :rows="departmentStore.departmentList"
+             @row-click="onSelected"
+             row-key="uid"
+             flat
+             separator="cell"
+             :loading="departmentStore.loading"
+             :filter="filter">
 
-    <template v-slot:top="props">
-      <DataTableHeader title="departments"
-                       v-model:filter="filter"
-                       entity="department"
-                       :loading="departmentStore.loading"
-                       :table-props="props"
-                       @add="add"
-                       @download-csv="downloadCSV"
-                       @download-excel="downloadExcel" />
-    </template>
-    <template v-slot:loading>
-      <q-inner-loading showing
-                       color="primary" />
-    </template>
-  </q-table>
-  <q-dialog ref="dialogRef"
-            @hide="onHide"
-            persistent>
-    <DepartmentForm @create="create"
-                    @update="update"
-                    @delete="remove"
-                    @cancel="onCancel"
-                    :payload="selectedEntity" />
-  </q-dialog>
+      <template v-slot:top="props">
+        <DataTableHeader title="departments"
+                         v-model:filter="filter"
+                         entity="department"
+                         :loading="departmentStore.loading"
+                         :table-props="props"
+                         @add="add"
+                         @download-csv="downloadCSV"
+                         @download-excel="downloadExcel" />
+      </template>
+      <template v-slot:loading>
+        <q-inner-loading showing
+                         color="primary" />
+      </template>
+    </q-table>
+    <q-dialog ref="dialogRef"
+              @hide="onHide"
+              persistent>
+      <DepartmentForm @create="create"
+                      @update="update"
+                      @delete="remove"
+                      @cancel="onCancel"
+                      :payload="selectedEntity" />
+    </q-dialog>
+  </q-page>
 </template>
 <script setup lang="ts">
 import {ref} from 'vue';
