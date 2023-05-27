@@ -7,6 +7,7 @@ export interface EmployeeBase {
   current_salary: number | null;
   current_hire_date: string | null;
   is_active: boolean | null;
+  is_terminated: boolean | null;
   birth_place: string | null;
   mother_first_name: string | null;
   mother_last_name: string | null;
@@ -53,30 +54,31 @@ export interface EmployeeResponsePrintFormatMany {
 }
 
 export const EmployeeObj: EmployeeReadOne = {
-  uid: null,
-  badge_number: null,
-  created_by: null,
-  modified_by: null,
-  date_created: null,
-  date_modified: null,
-  first_name: null,
-  last_name: null,
-  grandfather_name: null,
-  gender: null,
-  birth_date: null,
-  current_salary: null,
-  current_hire_date: null,
-  is_active: null,
-  birth_place: null,
-  mother_first_name: null,
-  mother_last_name: null,
-  marital_status: null,
-  phone_number: null,
-  national_id: null,
-  contract_type: null,
-  national_service: null,
-  unit_uid: null,
-  designation_uid: null,
-  nationality_uid: null,
-  educational_level_uid: null,
+  uid: '',
+  badge_number: 0,
+  created_by: '',
+  modified_by: '',
+  date_created: '',
+  date_modified: '',
+  first_name: '',
+  last_name: '',
+  grandfather_name: '',
+  gender: '',
+  birth_date: '',
+  current_salary: 0,
+  current_hire_date: '',
+  is_active: false,
+  is_terminated: false,
+  birth_place: '',
+  mother_first_name: '',
+  mother_last_name: '',
+  marital_status: '',
+  phone_number: '',
+  national_id: '',
+  contract_type: '',
+  national_service: '',
+  unit_uid: '',
+  designation_uid: '',
+  nationality_uid: '',
+  educational_level_uid: '',
 }

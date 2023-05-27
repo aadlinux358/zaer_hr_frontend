@@ -17,7 +17,7 @@
           <div class="row items-center full-width">
             <div class="col q-table__title text-capitalize">{{ $t(title) }}</div>
             <q-space />
-            <q-btn color="red-6"
+            <q-btn color="primary"
                    v-if="rows.length === 0 || title === 'children'"
                    no-caps
                    square
@@ -29,32 +29,7 @@
           </div>
         </div>
       </template>
-      <template v-slot:body-cell-actions="props">
-        <q-td :props="props">
-          <!--
-          <q-btn size="sm"
-                 class="q-ma-xs"
-                 square
-                 color="red-6"
-                 :label="$t('edit')"
-                 icon="mode_edit"
-                 @click="edit(props.row)"></q-btn>
-          <q-btn size="sm"
-                 class="q-ma-xs"
-                 square
-                 :label="$t('delete')"
-                 color="red-14"
-                 icon="delete"
-                 @click="remove(props.row.uid)"></q-btn>
-          -->
-        </q-td>
-      </template>
-      <template v-slot:loading>
-        <q-inner-loading showing
-                         color="primary" />
-      </template>
     </q-table>
-
     <q-dialog ref="dialogRef"
               @hide="onHide"
               persistent>

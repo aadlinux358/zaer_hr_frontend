@@ -3,7 +3,7 @@
     <q-table bordered
              :dense="uiStore.denseTable"
              square
-             :columns="columns"
+             :columns="empColumns"
              :rows="empStore.employeeList"
              row-key="uid"
              flat
@@ -57,7 +57,7 @@
 import {ref} from 'vue';
 import {useDialogPluginComponent} from 'quasar'
 import {useStores} from 'src/composables/stores';
-import {useEmpColumns} from 'src/composables/employee-columns';
+import {useTableColumns} from 'src/composables/table-columns';
 import {useCrud} from 'src/composables/crud';
 import {EmployeeCreate as C, EmployeeReadOne as R} from 'src/models/employee';
 import EmployeeForm from 'src/forms/EmployeeForm.vue'
@@ -80,15 +80,16 @@ const {
   downloadExcel
 } = useCrud<C, R>(empStore)
 
-const {columns} = useEmpColumns();
+const {empColumns} = useTableColumns();
 
 function onSelected(evt, row) {
   Router.push({path: `/employees/${row.uid}`})
 }
 </script>
 <style lang="scss">
+// $
 thead tr:first-child th {
-  /* bg color is important for th; just specify one */
-  background-color: #e91c1c;
+  background-color: $dark-page;
+  color: $indigo-1;
 }
 </style>
