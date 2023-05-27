@@ -23,7 +23,7 @@
              color="white"
              icon="notifications"
              class="q-mx-sm">
-        <q-badge color="green-9"
+        <q-badge color="primary"
                  text-color="white"
                  floating>
           5
@@ -91,8 +91,7 @@
                     style="min-width: 100px">
               <q-item>
                 <q-item-section avatar>
-                  <q-icon color="primary"
-                          name="person" />
+                  <q-icon name="person" />
                 </q-item-section>
                 <q-item-section>
                   <div>
@@ -111,8 +110,7 @@
                       v-close-popup
                       :to="{name: 'Profile'}">
                 <q-item-section avatar>
-                  <q-icon color="primary"
-                          name="account_circle" />
+                  <q-icon name="account_circle" />
                 </q-item-section>
                 <q-item-section>Profile</q-item-section>
               </q-item>
@@ -120,8 +118,7 @@
                       v-close-popup
                       :to="{name: 'Settings'}">
                 <q-item-section avatar>
-                  <q-icon color="primary"
-                          name="settings" />
+                  <q-icon name="settings" />
                 </q-item-section>
                 <q-item-section>Settings</q-item-section>
               </q-item>
@@ -129,8 +126,7 @@
                       v-close-popup
                       :to="{name: 'Message'}">
                 <q-item-section avatar>
-                  <q-icon color="primary"
-                          name="message" />
+                  <q-icon name="message" />
                 </q-item-section>
                 <q-item-section>Messages</q-item-section>
               </q-item>
@@ -139,8 +135,7 @@
                       v-close-popup
                       @click="authStore.logout">
                 <q-item-section avatar>
-                  <q-icon color="primary"
-                          name="logout" />
+                  <q-icon name="logout" />
                 </q-item-section>
                 <q-item-section>Logout</q-item-section>
               </q-item>

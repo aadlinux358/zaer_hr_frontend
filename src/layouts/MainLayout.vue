@@ -3,7 +3,7 @@
     <MainAppHeader />
     <q-drawer v-model="uiStore.leftDrawerOpen"
               show-if-above
-              :width="250">
+              :width="200">
       <q-list>
         <q-item-label header
                       class="text-capitalize"> {{ $t('zaerhr') }} </q-item-label>
