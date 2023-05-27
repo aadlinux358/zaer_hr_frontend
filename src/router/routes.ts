@@ -90,7 +90,7 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: (to /* from */) => {
       const authStore = useAuthStore();
       if (!authStore.isAuthenticated && to.name !== 'Login') {
-        authStore.requestedUrl = to.name;
+        authStore.requestedUrl = to;
         return {name: 'Login'};
       }
       if (authStore.user) {
