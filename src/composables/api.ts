@@ -84,10 +84,29 @@ export function useApiCrud<C, R, RM>(endpoint: string, entityMap: Map<string, R>
       loading.value = false;
     }
   }
+  async function activateDB(entityUid: string) {
+    loading.value = true
+    try {
+      const new_config = {headers: {...config.headers, 'Content-Length': 0}};
+      const response = await hrApi.post(`${endpoint}/activate/${entityUid}`, {}, new_config)
+      const activatedEntity: R = response.data;
+      entityMap.set(activatedEntity.uid, activatedEntity);
+      Notify.create({
+        color: 'positive',
+        message: `Successfully activated ${entityName}.`
+      })
+    } catch (err) {
+      setError(err);
+    }
+    finally {
+      loading.value = false;
+    }
+  }
   async function deactivateDB(entityUid: string) {
     loading.value = true
     try {
-      const response = await hrApi.delete(`${endpoint}/deactivate/${entityUid}`, config)
+      const new_config = {headers: {...config.headers, 'Content-Length': 0}};
+      const response = await hrApi.post(`${endpoint}/deactivate/${entityUid}`, {}, new_config)
       const deactivatedEntity: R = response.data;
       entityMap.set(deactivatedEntity.uid, deactivatedEntity);
       Notify.create({
@@ -137,6 +156,7 @@ export function useApiCrud<C, R, RM>(endpoint: string, entityMap: Map<string, R>
     getManyDB,
     createDB,
     updateDB,
+    activateDB,
     deactivateDB,
     terminateDB,
     deleteDB,

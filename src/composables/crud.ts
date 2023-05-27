@@ -60,6 +60,30 @@ export function useCrud<C, R>(store: Store | null) {
         onDialogCancel()
       })
     }
+    async function activate(uid: string) {
+      $q.dialog({
+        title: capitalize(t('activate')),
+        message: capitalize(t('confirm_activate')),
+        cancel: {
+          push: true,
+          label: t('cancel'),
+          square: true,
+          class: 'text-capitalize',
+          color: 'red-14',
+        },
+        ok: {
+          push: true,
+          label: t('ok'),
+          square: true,
+          class: 'text-capitalize',
+          color: 'red-14',
+        },
+        persistent: true
+      }).onOk(async () => {
+        await store.activateDB(uid)
+        onDialogCancel()
+      })
+    }
     async function deactivate(uid: string) {
       $q.dialog({
         title: capitalize(t('deactivate')),
@@ -80,7 +104,7 @@ export function useCrud<C, R>(store: Store | null) {
         },
         persistent: true
       }).onOk(async () => {
-        await store.deactivate(uid)
+        await store.deactivateDB(uid)
         onDialogCancel()
       })
     }
@@ -104,7 +128,7 @@ export function useCrud<C, R>(store: Store | null) {
         },
         persistent: true
       }).onOk(async () => {
-        await store.terminate(uid)
+        await store.terminateDB(uid)
         onDialogCancel()
       })
     }
@@ -130,6 +154,7 @@ export function useCrud<C, R>(store: Store | null) {
       add,
       edit,
       update,
+      activate,
       deactivate,
       terminate,
       remove,
