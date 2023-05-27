@@ -1,6 +1,7 @@
 import {ref} from 'vue'
 import axios from 'axios';
 import {Notify} from 'quasar';
+import {isString} from 'src/utils/strings'
 
 export function useFlags() {
 
@@ -12,7 +13,7 @@ export function useFlags() {
       if (!err.response) {
         error.value = 'connection error.'
       } else {
-        if (err.response?.data.detail instanceof String) {
+        if (isString(err.response?.data.detail)) {
           error.value = err.response?.data.detail
         } else {
           error.value = err.message
