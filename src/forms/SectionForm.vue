@@ -45,6 +45,7 @@
                    :rules="[val => val && val.length > 0 || 'Please type section name']" />
           <FormActionButtons @on-update="onUpdate"
                              @on-cancel="onCancel"
+                             @on-delete="onDelete"
                              @on-create="onCreate"
                              :isUpdate="payload ? true : false" />
         </q-form>
@@ -62,7 +63,7 @@ import FormActionButtons from 'src/components/FormActionButtons.vue';
 interface SectionForm extends SectionCreate {
   divisionUid: string
 }
-const emits = defineEmits(['create', 'update', 'reset', 'cancel'])
+const emits = defineEmits(['create', 'update', 'delete', 'reset', 'cancel'])
 const props = defineProps<{
   payload: SectionReadOne | null;
 }>()
@@ -75,6 +76,7 @@ const {
   formRef,
   onCreate,
   onUpdate,
+  onDelete,
   onReset,
   onCancel
 } = useForms<SectionForm>(props, emits)

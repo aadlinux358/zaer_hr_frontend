@@ -32,6 +32,7 @@
                    :rules="[val => val && val > 0 || 'Please type level order number']" />
           <FormActionButtons @on-create="onCreate"
                              @on-update="onUpdate"
+                             @on-delete="onDelete"
                              @on-cancel="onCancel"
                              :isUpdate="payload ? true : false" />
         </q-form>
@@ -47,13 +48,14 @@ import {EducationalLevelCreate, EducationalLevelReadOne} from 'src/models/educat
 const props = defineProps<{
   payload: EducationalLevelReadOne | null;
 }>()
-const emits = defineEmits(['create', 'update', 'reset', 'cancel'])
+const emits = defineEmits(['create', 'update', 'delete', 'reset', 'cancel'])
 const {
   crudType,
   form,
   formRef,
   onCreate,
   onUpdate,
+  onDelete,
   onReset,
   onCancel
 } = useForms<EducationalLevelCreate>(props, emits);

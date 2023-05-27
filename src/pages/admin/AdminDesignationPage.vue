@@ -1,52 +1,42 @@
 <template>
-  <q-table bordered
-           square
-           :dense="uiStore.denseTable"
-           :columns="columns"
-           :rows="designationStore.designationList"
-           row-key="uid"
-           flat
-           separator="cell"
-           :loading="designationStore.loading"
-           :filter="filter">
+  <q-page padding>
+    <q-table bordered
+             square
+             :dense="uiStore.denseTable"
+             :columns="columns"
+             :rows="designationStore.designationList"
+             @row-click="onSelected"
+             row-key="uid"
+             flat
+             separator="cell"
+             :loading="designationStore.loading"
+             :filter="filter">
 
-    <template v-slot:top="props">
-      <DataTableHeader title="designations"
-                       v-model:filter="filter"
-                       entity="designation"
-                       :loading="designationStore.loading"
-                       :table-props="props"
-                       @add="add"
-                       @download-csv="downloadCSV"
-                       @download-excel="downloadExcel" />
-    </template>
-    <template v-slot:body-cell-actions="props">
-      <q-td :props="props">
-        <q-btn size="xs"
-               class="q-mx-xs"
-               color="primary"
-               icon="mode_edit"
-               @click="edit(props.row)"></q-btn>
-        <q-btn size="xs"
-               class="q-mx-xs"
-               color="primary"
-               icon="delete"
-               @click="remove(props.row.uid)"></q-btn>
-      </q-td>
-    </template>
-    <template v-slot:loading>
-      <q-inner-loading showing
-                       color="primary" />
-    </template>
-  </q-table>
-  <q-dialog ref="dialogRef"
-            @hide="onHide"
-            persistent>
-    <DesignationForm @create="create"
-                     @update="update"
-                     @cancel="onCancel"
-                     :payload="selectedEntity" />
-  </q-dialog>
+      <template v-slot:top="props">
+        <DataTableHeader title="designations"
+                         v-model:filter="filter"
+                         entity="designation"
+                         :loading="designationStore.loading"
+                         :table-props="props"
+                         @add="add"
+                         @download-csv="downloadCSV"
+                         @download-excel="downloadExcel" />
+      </template>
+      <template v-slot:loading>
+        <q-inner-loading showing
+                         color="primary" />
+      </template>
+    </q-table>
+    <q-dialog ref="dialogRef"
+              @hide="onHide"
+              persistent>
+      <DesignationForm @create="create"
+                       @update="update"
+                       @delete="remove"
+                       @cancel="onCancel"
+                       :payload="selectedEntity" />
+    </q-dialog>
+  </q-page>
 </template>
 <script setup lang="ts">
 import {ref} from 'vue';
@@ -80,6 +70,9 @@ const {
   downloadExcel
 } = useCrud<DesignationCreate, DesignationReadOne>(designationStore)
 
+function onSelected(evt, row) {
+  edit(row);
+}
 const columns = [
   {
     name: 'title',
@@ -106,18 +99,5 @@ const columns = [
     align: 'left',
     field: (row: DesignationReadOne) => row.uid,
   },
-  {
-    name: 'actions',
-    required: true,
-    label: 'Action',
-    align: 'left',
-  }
-
 ]
 </script>
-<style lang="scss">
-thead tr:first-child th {
-  /* bg color is important for th; just specify one */
-  background-color: #e91c1c
-}
-</style>

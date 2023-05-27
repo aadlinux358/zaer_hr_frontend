@@ -25,6 +25,7 @@
                    :rules="[val => val && val.length > 0 || 'Please type nationality name']" />
           <FormActionButtons @on-update="onUpdate"
                              @on-cancel="onCancel"
+                             @on-delete="onDelete"
                              @on-create="onCreate"
                              :isUpdate="payload ? true : false" />
         </q-form>
@@ -39,13 +40,14 @@ import {useForms} from 'src/composables/forms';
 const props = defineProps<{
   payload: NationalityCreate | null;
 }>()
-const emits = defineEmits(['create', 'update', 'reset', 'cancel'])
+const emits = defineEmits(['create', 'update', 'delete', 'reset', 'cancel'])
 
 const {
   crudType,
   form,
   formRef,
   onCreate,
+  onDelete,
   onUpdate,
   onReset,
   onCancel

@@ -25,6 +25,7 @@
                    :rules="[val => val && val.length > 0 || 'Please type designation title']" />
           <FormActionButtons @on-update="onUpdate"
                              @on-cancel="onCancel"
+                             @on-delete="onDelete"
                              @on-create="onCreate"
                              :isUpdate="payload ? true : false" />
         </q-form>
@@ -40,12 +41,13 @@ import {DesignationCreate, DesignationReadOne} from 'src/models/designation';
 const props = defineProps<{
   payload: DesignationReadOne | null;
 }>()
-const emits = defineEmits(['create', 'update', 'reset', 'cancel'])
+const emits = defineEmits(['create', 'update', 'delete', 'reset', 'cancel'])
 const {
   crudType,
   form,
   formRef,
   onCreate,
+  onDelete,
   onUpdate,
   onReset,
   onCancel

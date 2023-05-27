@@ -55,6 +55,7 @@
                    :rules="[val => val && val.length > 0 || 'Please type unit name']" />
           <FormActionButtons @on-update="onUpdate"
                              @on-cancel="onCancel"
+                             @on-delete="onDelete"
                              @on-create="onCreate"
                              :isUpdate="payload ? true : false" />
         </q-form>
@@ -77,7 +78,7 @@ interface UnitForm extends UnitReadOne {
   departmentUid: string;
 }
 
-const emits = defineEmits(['create', 'update', 'reset', 'cancel'])
+const emits = defineEmits(['create', 'update', 'delete', 'reset', 'cancel'])
 const props = defineProps<{
   payload: UnitReadOne | null;
 }>()
@@ -90,6 +91,7 @@ const {
   formRef,
   onCreate,
   onUpdate,
+  onDelete,
   onReset,
   onCancel
 } = useForms<UnitForm>(props, emits)
