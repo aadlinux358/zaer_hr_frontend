@@ -37,6 +37,7 @@
                    :rules="[val => val && val.length > 0 || 'Please type department name']" />
           <FormActionButtons @on-update="onUpdate"
                              @on-cancel="onCancel"
+                             @on-delete="onDelete"
                              @on-create="onCreate"
                              :isUpdate="payload ? true : false" />
         </q-form>
@@ -54,7 +55,7 @@ const props = defineProps<{
   payload: DepartmentReadOne | null;
 }>()
 
-const emits = defineEmits(['create', 'update', 'reset', 'cancel'])
+const emits = defineEmits(['create', 'update', 'delete', 'reset', 'cancel'])
 
 const divisionStore = useDivisionStore();
 const {
@@ -62,9 +63,9 @@ const {
   form,
   formRef,
   onCreate,
+  onDelete,
   onUpdate,
   onReset,
   onCancel
 } = useForms<DepartmentCreate>(props, emits);
-
 </script>
