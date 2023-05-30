@@ -1,5 +1,6 @@
 <template>
   <q-page padding>
+    <StatsHeader />
     <q-table bordered
              :dense="uiStore.denseTable"
              square
@@ -62,6 +63,7 @@ import {useCrud} from 'src/composables/crud';
 import {EmployeeCreate as C, EmployeeReadOne as R} from 'src/models/employee';
 import EmployeeForm from 'src/forms/EmployeeForm.vue'
 import DataTableHeaderVue from 'src/components/DataTableHeader.vue';
+import StatsHeader from 'src/components/StatsHeader.vue';
 import Router from 'src/router'
 defineEmits({
   ...useDialogPluginComponent.emitsObject

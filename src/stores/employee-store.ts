@@ -12,6 +12,13 @@ export const useEmployeeStore = defineStore('employee', () => {
     return Array.from(employees.value, entry => entry[1])
   })
 
+  const salaryCost = computed(() => {
+    if (employeeList.value.length !== 0) {
+      return employeeList.value.reduce((acc, curr) => acc + curr.current_salary, 0)
+    }
+    return 0
+  })
+
   const {
     loading,
     getManyDB,
@@ -27,6 +34,7 @@ export const useEmployeeStore = defineStore('employee', () => {
   return {
     employees,
     employeeList,
+    salaryCost,
     loading,
     getManyDB,
     createDB,
