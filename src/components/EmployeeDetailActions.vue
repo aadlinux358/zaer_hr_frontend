@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import {useStores} from 'src/composables/stores';
+
+const {authStore} = useStores();
 const emits = defineEmits(['edit', 'terminate', 'activate', 'deactivate',])
 const props = defineProps<{
   isActive: boolean
@@ -15,7 +18,12 @@ const props = defineProps<{
              class="col text-capitalize"
              color="primary"
              icon="edit"
-             @click="emits('edit')" />
+             :disable="authStore.lock"
+             @click="emits('edit')">
+
+        <q-tooltip class="text-capitalize"
+                   v-if="authStore.lock">{{ $t('staff_or_admin_tooltip') }}</q-tooltip>
+      </q-btn>
       <q-btn :label="$t('activate')"
              v-if="!props.isActive"
              square
@@ -23,7 +31,11 @@ const props = defineProps<{
              class="col text-capitalize"
              color="primary"
              icon="add"
-             @click="emits('activate')" />
+             :disable="authStore.lock"
+             @click="emits('activate')">
+        <q-tooltip class="text-capitalize"
+                   v-if="authStore.lock">{{ $t('staff_or_admin_tooltip') }}</q-tooltip>
+      </q-btn>
       <q-btn :label="$t('deactivate')"
              v-if="props.isActive"
              square
@@ -31,17 +43,23 @@ const props = defineProps<{
              class="col text-capitalize"
              color="primary"
              icon="remove_circle"
-             @click="emits('deactivate')" />
+             :disable="authStore.lock"
+             @click="emits('deactivate')">
+        <q-tooltip class="text-capitalize"
+                   v-if="authStore.lock">{{ $t('staff_or_admin_tooltip') }}</q-tooltip>
+      </q-btn>
       <q-btn :label="$t('terminate')"
              v-if="!props.isTerminated"
              square
              no-caps
-             :disable="props.isActive"
+             :disable="props.isActive || authStore.lock"
              class="col text-capitalize"
              color="primary"
              icon="clear"
              @click="emits('terminate')">
         <q-tooltip v-if="props.isActive">Employee is active. Deactivate first.</q-tooltip>
+        <q-tooltip class="text-capitalize"
+                   v-if="authStore.lock">{{ $t('staff_or_admin_tooltip') }}</q-tooltip>
       </q-btn>
     </div>
   </div>

@@ -504,26 +504,6 @@ function activateLocal() {
   grid-column-end: 2;
 }
 
-.hr-header-light {
-  color: #757575;
-}
-
-.hr-header-dark {
-  color: rgba(255, 255, 255, 0.64)
-}
-
-.border-container {
-  border: 1px solid $separator-color;
-}
-
-.border-container-dark {
-  border: 1px solid $separator-dark-color;
-}
-
-.emp-active {
-  color: $green-14;
-}
-
 .emp-inactive {
   color: $red-14;
 }

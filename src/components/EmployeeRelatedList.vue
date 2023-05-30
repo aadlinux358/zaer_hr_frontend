@@ -24,8 +24,12 @@
                    class="text-capitalize"
                    icon="add"
                    :label="$t('new')"
-                   :disable="loading"
-                   @click="add" />
+                   :disable="loading || authStore.lock"
+                   @click="add">
+
+              <q-tooltip class="text-capitalize"
+                         v-if="authStore.lock">{{ $t('staff_or_admin_tooltip') }}</q-tooltip>
+            </q-btn>
           </div>
         </div>
       </template>
@@ -64,6 +68,7 @@ import {useStores} from 'src/composables/stores'
 import EmployeeChildForm from 'src/forms/EmployeeChildForm.vue';
 import EmployeeContactPersonForm from 'src/forms/EmployeeContactPersonForm.vue';
 import EmployeeAddressForm from 'src/forms/EmployeeAddressForm.vue';
+import {authApi} from 'src/boot/axios';
 const props = defineProps<{
   columns: []
   rows: []
@@ -73,7 +78,7 @@ const props = defineProps<{
   empUid: string | null;
 }>()
 
-const {childStore, addressStore, contactStore} = useStores();
+const {childStore, addressStore, contactStore, authStore} = useStores();
 function getStore() {
   switch (props.entity) {
     case 'address':

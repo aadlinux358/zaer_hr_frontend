@@ -20,6 +20,10 @@ export const useAuthStore = defineStore('auth', () => {
   const _error = ref('');
   const _authHeader = ref('')
 
+  const lock = computed(() => {
+    return !_user.value?.is_staff && !user.value?.is_superuser
+  })
+
   function _setError(err: unknown) {
     if (axios.isAxiosError(err)) {
       if (!err.response) {
@@ -110,6 +114,7 @@ export const useAuthStore = defineStore('auth', () => {
     password,
     login,
     logout,
+    lock,
     user,
     isAuthenticated,
     requestedUrl,

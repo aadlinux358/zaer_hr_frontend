@@ -14,7 +14,7 @@ const props = defineProps<{
 }>()
 
 const emits = defineEmits(['update:filter', 'add', 'downloadCsv', 'downloadExcel'])
-const {uiStore} = useStores();
+const {uiStore, authStore} = useStores();
 const filter = computed({
   get() {return props.filter},
   set(value: string) {emits('update:filter', value)}
@@ -38,8 +38,11 @@ const filter = computed({
              class="text-capitalize"
              square
              no-caps
-             :disable="loading"
-             @click="$emit('add')"> {{ $t('new') }} {{ $t(entity) }} </q-btn>
+             :disable="loading || authStore.lock"
+             @click="$emit('add')"> {{ $t('new') }} {{ $t(entity) }}
+        <q-tooltip class="text-capitalize"
+                   v-if="authStore.lock">{{ $t('staff_or_admin_tooltip') }}</q-tooltip>
+      </q-btn>
     </div>
     <div class="row items-center">
       <q-toggle v-model="uiStore.denseTable"

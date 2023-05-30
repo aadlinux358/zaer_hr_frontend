@@ -6,3 +6,19 @@ thead tr:first-child th {
   background-color: $dark-page;
   color: $indigo-1;
 }
+
+.hr-header-light {
+  color: #757575;
+}
+
+.hr-header-dark {
+  color: rgba(255, 255, 255, 0.64);
+}
+
+.hr-border {
+  border: 1px solid $separator-color;
+}
+
+.hr-border-dark {
+  border: 1px solid $separator-dark-color;
+}
