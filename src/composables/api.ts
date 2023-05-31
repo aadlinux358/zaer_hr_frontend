@@ -31,6 +31,23 @@ export function useApiCrud<C, R, RM>(endpoint: string, entityMap: Map<string, R>
       loading.value = false;
     }
   }
+
+  async function getById(uid: string) {
+    console.log('Getting by id')
+    loading.value = true;
+    try {
+      const response = await hrApi.get(`${endpoint}/${uid}`, config);
+      const entity: R = response.data;
+      entityMap.set(entity.uid, entity)
+    }
+    catch (err) {
+      setError(err);
+    }
+    finally {
+      loading.value = false;
+    }
+  }
+
   async function createDB(payload: C) {
     loading.value = true;
     try {
@@ -121,10 +138,12 @@ export function useApiCrud<C, R, RM>(endpoint: string, entityMap: Map<string, R>
     }
   }
   async function terminateDB(payload: C) {
+    console.log('Terminating..')
     try {
-      const response = await hrApi.post(`${endpoint}/terminate`, payload, config);
+      const response = await hrApi.post(`${endpoint}`, payload, config);
       const entity: R = response.data;
       entityMap.set(entity.uid, entity);
+      await getById(payload.employee_uid);
       Notify.create({
         color: 'positive',
         message: `Successfully terminated ${entityName}.`
@@ -154,6 +173,7 @@ export function useApiCrud<C, R, RM>(endpoint: string, entityMap: Map<string, R>
   return {
     loading,
     getManyDB,
+    getById,
     createDB,
     updateDB,
     activateDB,
