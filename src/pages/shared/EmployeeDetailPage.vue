@@ -361,4 +361,8 @@ function activateLocal() {
 .emp-inactive {
   color: $red-14;
 }
+
+.emp-active {
+  color: $positive
+}
 </style>

@@ -33,7 +33,6 @@ export function useApiCrud<C, R, RM>(endpoint: string, entityMap: Map<string, R>
   }
 
   async function getById(uid: string) {
-    console.log('Getting by id')
     loading.value = true;
     try {
       const response = await hrApi.get(`${endpoint}/${uid}`, config);
@@ -104,8 +103,8 @@ export function useApiCrud<C, R, RM>(endpoint: string, entityMap: Map<string, R>
   async function activateDB(entityUid: string) {
     loading.value = true
     try {
-      const new_config = {headers: {...config.headers, 'Content-Length': 0}};
-      const response = await hrApi.post(`${endpoint}/activate/${entityUid}`, {}, new_config)
+      //const new_config = {headers: {...config.headers, 'Content-Length': 0}};
+      const response = await hrApi.post(`${endpoint}/activate/${entityUid}`, {}, config)
       const activatedEntity: R = response.data;
       entityMap.set(activatedEntity.uid, activatedEntity);
       Notify.create({
@@ -122,8 +121,8 @@ export function useApiCrud<C, R, RM>(endpoint: string, entityMap: Map<string, R>
   async function deactivateDB(entityUid: string) {
     loading.value = true
     try {
-      const new_config = {headers: {...config.headers, 'Content-Length': 0}};
-      const response = await hrApi.post(`${endpoint}/deactivate/${entityUid}`, {}, new_config)
+      // const new_config = {headers: {...config.headers, 'Content-Length': 0}};
+      const response = await hrApi.post(`${endpoint}/deactivate/${entityUid}`, {}, config)
       const deactivatedEntity: R = response.data;
       entityMap.set(deactivatedEntity.uid, deactivatedEntity);
       Notify.create({
