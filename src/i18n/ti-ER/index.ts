@@ -57,4 +57,5 @@ export default {
   inactive_not_terminated_warning: 'ዘይንጡፍ ግን ከኣ ዘይተቛረጸ',
   staff_or_admin_tooltip: 'ንኣድሚን ወይ ስታፍ ጥራይ',
   terminate_tooltip: 'ሰራሕተኛ ንጡፍ እዩ፣ መጀመርታ ዘይንጡፍ ግበሮ',
+  termination: 'ምቁራጽ ስራሕ',
 }

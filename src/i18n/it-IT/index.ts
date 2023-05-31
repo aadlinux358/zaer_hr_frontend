@@ -57,4 +57,5 @@ export default {
   inactive_not_terminated_warning: 'inattivo ma non terminato',
   staff_or_admin_tooltip: 'solo per amministratori o membri dello staff',
   terminate_tooltip: 'il dipendente è attivo, prima disattivalo',
+  termination: 'cessazione',
 }

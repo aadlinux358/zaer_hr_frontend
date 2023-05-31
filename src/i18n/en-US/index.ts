@@ -57,4 +57,5 @@ export default {
   inactive_not_terminated_warning: 'inactive but not terminated',
   staff_or_admin_tooltip: 'only for admin or staff members',
   terminate_tooltip: 'employee is active, deactivate first',
+  termination: 'termination',
 };
