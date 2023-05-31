@@ -187,183 +187,6 @@
       </div>
       <!-- grid container end -->
     </div>
-    <!--
-    <div class="overflow-auto">
-    -->
-    <!--
-    <div class="row no-wrap q-col-gutter-sm">
-      <div class="column col">
-        <div class="column">
-          <EmployeeDetailActions @edit="onEditEmployee"
-                                 @terminate="terminateLocal"
-                                 @deactivate="deactivateLocal"
-                                 @activate="activateLocal"
-                                 :is-active="emp.is_active!"
-                                 :is-terminated="emp.is_terminated" />
-          <div class="column">
-            <span class="text-h5">Employee Detail</span>
-            <div class="row q-my-sm">
-              <div>Active Status:</div>
-              <div v-if="emp.is_active"
-                   class="q-mx-sm emp-active">ACTIVE</div>
-              <div v-if="!emp.is_active"
-                   class="q-mx-md emp-inactive">INACTIVE</div>
-            </div>
-            <div class="row q-my-sm"
-                 v-if="!emp.is_active">
-              <div>Termination Status:</div>
-              <div v-if="emp.is_terminated"
-                   class="q-mx-sm emp-active">TERMINATED</div>
-              <div v-if="!emp.is_terminated"
-                   class="q-mx-md emp-inactive">NOT TERMINATED</div>
-            </div>
-            <div class="emp-inactive"
-                 v-if="!emp.is_active && !emp.is_terminated">
-              [WARNING]: Employee is inactive but not terminated.
-            </div>
-          </div>
-          <div class="row">
-            <div class="column col q-pa-sm">
-              <div class="q-ma-xs">
-                <span class="text-caption q-mr-sm">Badge Number:</span><span class="text-uppercase">{{
-                  emp.badge_number
-                }}</span>
-              </div>
-              <div class="q-ma-xs">
-                <span class="text-caption q-mr-sm">First Name:</span><span class="text-uppercase">{{ emp.first_name
-                }}</span>
-              </div>
-              <div class="q-ma-xs">
-                <span class="text-caption q-mr-sm">Last Name:</span><span class="text-uppercase">{{ emp.last_name
-                }}</span>
-              </div>
-              <div class="q-ma-xs">
-                <span class="text-caption q-mr-sm">Grandfather Name:</span><span class="text-uppercase">{{
-                  emp.grandfather_name
-                }}</span>
-              </div>
-              <div class="q-ma-xs">
-                <span class="text-caption q-mr-sm">Gender:</span><span class="text-uppercase">{{
-                  emp.gender
-                }}</span>
-              </div>
-              <div class="q-ma-xs">
-                <span class="text-caption q-mr-sm">Birth Date:</span><span class="text-uppercase">{{
-                  emp.birth_date
-                }}</span>
-              </div>
-              <q-separator class="q-my-md" />
-              <div class="q-ma-xs">
-                <span class="text-caption q-mr-sm">Division:</span><span class="text-uppercase">{{
-                  empLookups.division.name
-                }}</span>
-              </div>
-              <div class="q-ma-xs">
-                <span class="text-caption q-mr-sm">Department:</span><span class="text-uppercase">{{
-                  empLookups.department.name
-                }}</span>
-              </div>
-              <div class="q-ma-xs">
-                <span class="text-caption q-mr-sm">Section:</span><span class="text-uppercase">{{
-                  empLookups.section.name
-                }}</span>
-              </div>
-              <div class="q-ma-xs">
-                <span class="text-caption q-mr-sm">Unit:</span><span class="text-uppercase">{{
-                  empLookups.unit.name
-                }}</span>
-              </div>
-              <div class="q-ma-xs">
-                <span class="text-caption q-mr-sm">Designation:</span><span class="text-uppercase">{{
-                  empLookups.designation.title
-                }}</span>
-              </div>
-            </div>
-            <div class="column q-pa-sm col q-mx-sm">
-              <div class="q-ma-xs">
-                <span class="text-caption q-mr-sm">Birth Place:</span><span class="text-uppercase">{{
-                  emp.birth_place
-                }}</span>
-              </div>
-              <div class="q-ma-xs">
-                <span class="text-caption q-mr-sm">Educational Level:</span><span class="text-capitalize">{{
-                  empLookups.educationalLevel.level
-                }}</span>
-              </div>
-              <div class="q-ma-xs">
-                <span class="text-caption q-mr-sm">Marital Status:</span><span class="text-uppercase">{{
-                  emp.marital_status
-                }}</span>
-              </div>
-              <div class="q-ma-xs">
-                <span class="text-caption q-mr-sm">Nationality:</span><span class="text-uppercase">{{
-                  empLookups.nationality.name
-                }}</span>
-              </div>
-              <div class="q-ma-xs">
-                <span class="text-caption q-mr-sm">National ID:</span><span class="text-uppercase">{{
-                  emp.national_id
-                }}</span>
-              </div>
-              <div class="q-ma-xs">
-                <span class="text-caption q-mr-sm">Phone Number:</span><span class="text-uppercase">{{
-                  emp.phone_number
-                }}</span>
-              </div>
-              <q-separator class="q-my-md" />
-              <div class="q-ma-xs">
-                <span class="text-caption q-mr-sm">National Service:</span><span class="text-uppercase">{{
-                  emp.national_service
-                }}</span>
-              </div>
-              <div class="q-ma-xs">
-                <span class="text-caption q-mr-sm">Contract Type:</span><span class="text-uppercase">{{
-                  emp.contract_type
-                }}</span>
-              </div>
-              <div class="q-ma-xs">
-                <span class="text-caption q-mr-sm">Hire Date:</span><span class="text-uppercase">{{
-                  emp.current_hire_date
-                }}</span>
-              </div>
-              <div class="q-ma-xs">
-                <span class="text-caption q-mr-sm">Current Salary:</span><span class="text-uppercase">{{
-                  emp.current_salary
-                }}</span>
-              </div>
-            </div>
-          </div>
-          <q-separator class="q-my-sm" />
-        </div>
-      </div>
-      <div class="column col q-gutter-lg">
-        <div>
-          <EmployeeRelatedList :columns="addressColumns"
-                               :rows="addressRows"
-                               title="address"
-                               entity="address"
-                               :emp-uid="emp.uid!"
-                               :loading="addressStore.loading" />
-        </div>
-        <div>
-          <EmployeeRelatedList :columns="childColumns"
-                               :rows="childRows"
-                               entity="child"
-                               :emp-uid="emp.uid!"
-                               title="children"
-                               :loading="childStore.loading" />
-        </div>
-        <div>
-          <EmployeeRelatedList :columns="contactPersonColumns"
-                               :rows="contactRows"
-                               entity="contact"
-                               :emp-uid="emp.uid!"
-                               title="contact_person"
-                               :loading="contactStore.loading" />
-        </div>
-      </div>
-    </div>
-    -->
     <q-dialog ref="dialogRef"
               @hide="onHide"
               full-width
@@ -374,9 +197,14 @@
                     @cancel="onCancel"
                     :payload="selectedEntity" />
     </q-dialog>
-    <!--
-    </div>
-      -->
+    <q-dialog ref="terminateDialogRef"
+              @hide="terminationOnHide"
+              persistent>
+      <TerminationForm @create="terminationCreate"
+                       @cancel="terminationOnCancel"
+                       :employee-uid="emp.uid"
+                       :payload="terminationSelectedEntity" />
+    </q-dialog>
   </q-page>
 </template>
 <script setup lang="ts">
@@ -390,7 +218,9 @@ import {EmployeeCreate as C, EmployeeReadOne as R, EmployeeObj} from 'src/models
 import EmployeeDetailActions from 'src/components/EmployeeDetailActions.vue';
 import EmployeeForm from 'src/forms/EmployeeForm.vue'
 import EmployeeRelatedList from 'src/components/EmployeeRelatedList.vue'
+import TerminationForm from 'src/forms/TerminationForm.vue'
 import Router from 'src/router';
+import {TerminationCreate, TerminationReadOne} from 'src/models/termination';
 
 defineEmits({
   ...useDialogPluginComponent.emitsObject
@@ -405,7 +235,7 @@ const empLookups = ref({
   nationality: {}
 })
 const emp: Ref<R> = ref(EmployeeObj)
-const {hydrateStore, empStore, childStore, contactStore, addressStore, eduStore, nationalityStore} = useStores();
+const {hydrateStore, empStore, childStore, contactStore, addressStore, eduStore, nationalityStore, terminationStore} = useStores();
 const route = useRoute();
 const {
   dialogRef,
@@ -414,11 +244,18 @@ const {
   edit,
   update,
   deactivate,
-  terminate,
   activate,
   onCancel,
   onHide,
 } = useCrud<C, R>(empStore)
+
+const {
+  dialogRef: terminateDialogRef,
+  selectedEntity: terminationSelectedEntity,
+  create: terminationCreate,
+  onHide: terminationOnHide,
+  onCancel: terminationOnCancel} = useCrud<TerminationCreate, TerminationReadOne>(terminationStore)
+
 
 const {
   childColumns,
@@ -453,8 +290,8 @@ const childRows = computed(() => childStore.childList.filter(child => child.pare
 const addressRows = computed(() => addressStore.addressList.filter(addr => addr.employee_uid === emp.value.uid))
 const contactRows = computed(() => contactStore.contactList.filter(contact => contact.employee_uid === emp.value.uid))
 
-const unsubscribe = empStore.$onAction(({name, store, after}) => {
-  const actions = new Set(['updateDB', 'terminateDB', 'activateDB', 'deactivateDB'])
+const empUnsubscribe = empStore.$onAction(({name, store, after}) => {
+  const actions = new Set(['updateDB', 'createDB', 'activateDB', 'deactivateDB'])
   if (actions.has(name)) {
     after(() => {
       if (emp.value && emp.value.uid) {
@@ -465,8 +302,24 @@ const unsubscribe = empStore.$onAction(({name, store, after}) => {
 
   }
 })
+const terminateUnsubscribe = terminationStore.$onAction(({name, after}) => {
+  const actions = new Set(['updateDB', 'createDB'])
+  if (actions.has(name)) {
+    after(async () => {
+      if (emp.value && emp.value.uid) {
+        await empStore.getById(emp.value.uid)
+        const result = empStore.employees.get(emp.value.uid)
+        if (result) {emp.value = result}
+      }
+    });
 
-onUnmounted(() => unsubscribe())
+  }
+})
+
+onUnmounted(() => {
+  empUnsubscribe();
+  terminateUnsubscribe();
+})
 
 function onEditEmployee() {
   const extra = {
@@ -480,7 +333,8 @@ function deactivateLocal() {
   deactivate(emp.value.uid)
 }
 function terminateLocal() {
-  terminate(emp.value.uid)
+  terminationSelectedEntity.value = null;
+  terminateDialogRef.value?.show();
 }
 function activateLocal() {
   activate(emp.value.uid)

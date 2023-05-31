@@ -13,6 +13,7 @@ import {useAuthStore} from 'src/stores/auth-store';
 import {useChildStore} from 'src/stores/employee-child-store';
 import {useContactStore} from 'src/stores/employee-contact-person-store';
 import {useAddressStore} from 'src/stores/employee-address-store';
+import {useTerminationStore} from 'src/stores/termination-store';
 
 export function useStores() {
   const $q = useQuasar();
@@ -29,6 +30,7 @@ export function useStores() {
   const childStore = useChildStore();
   const contactStore = useContactStore();
   const addressStore = useAddressStore();
+  const terminationStore = useTerminationStore();
 
   async function hydrateStore() {
     $q.loading.show();
@@ -65,6 +67,9 @@ export function useStores() {
     if (contactStore.contacts.size === 0) {
       await contactStore.getManyDB();
     }
+    if (terminationStore.terminations.size == 0) {
+      await terminationStore.getManyDB();
+    }
     $q.loading.hide();
   }
   onMounted(async () => {
@@ -85,5 +90,6 @@ export function useStores() {
     childStore,
     contactStore,
     addressStore,
+    terminationStore,
   }
 }

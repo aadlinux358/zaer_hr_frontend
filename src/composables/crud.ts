@@ -108,30 +108,6 @@ export function useCrud<C, R>(store: Store | null) {
         onDialogCancel()
       })
     }
-    async function terminate(uid: string) {
-      $q.dialog({
-        title: capitalize(t('terminate')),
-        message: capitalize(t('confirm_termination')),
-        cancel: {
-          push: true,
-          label: t('cancel'),
-          class: 'text-capitalize',
-          square: true,
-          color: 'red-14',
-        },
-        ok: {
-          push: true,
-          label: t('ok'),
-          class: 'text-capitalize',
-          square: true,
-          color: 'red-14',
-        },
-        persistent: true
-      }).onOk(async () => {
-        await store.terminateDB(uid)
-        onDialogCancel()
-      })
-    }
     function onCancel() {
       selectedEntity.value = null;
       onDialogCancel()
@@ -156,7 +132,6 @@ export function useCrud<C, R>(store: Store | null) {
       update,
       activate,
       deactivate,
-      terminate,
       remove,
       onCancel,
       onHide,
