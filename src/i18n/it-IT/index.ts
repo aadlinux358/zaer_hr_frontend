@@ -61,4 +61,6 @@ export default {
   active_list: 'elenco attivo',
   inactive_list: 'elenco inattivo',
   organization: 'organizzazione',
+  country: 'paese',
+  countries: 'paesi',
 }

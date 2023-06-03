@@ -61,4 +61,6 @@ export default {
   active_list: 'ዝርዝር ንጡፋት',
   inactive_list: 'ዝርዝር ዘይንጡፋት',
   organization: 'ኣወዳድባ',
+  country: 'ሃገር',
+  countries: 'ሃገራት',
 }
