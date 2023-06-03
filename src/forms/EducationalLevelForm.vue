@@ -29,7 +29,7 @@
                    v-model.number="form.level_order"
                    label="Educational level order number"
                    lazy-rules
-                   :rules="[val => val && val > 0 || 'Please type level order number']" />
+                   :rules="[val => val >= 0 || 'Please type level order number']" />
           <FormActionButtons @on-create="onCreate"
                              @on-update="onUpdate"
                              @on-delete="onDelete"
