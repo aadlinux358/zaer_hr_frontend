@@ -144,6 +144,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('src/pages/admin/AdminDesignationPage.vue')
       },
       {
+        path: 'countries',
+        name: 'AdminCountries',
+        component: () => import('src/pages/admin/AdminCountryPage.vue')
+      },
+      {
         path: 'nationalities',
         name: 'AdminNationalities',
         component: () => import('src/pages/admin/AdminNationalityPage.vue')

@@ -14,7 +14,7 @@ import {useChildStore} from 'src/stores/employee-child-store';
 import {useContactStore} from 'src/stores/employee-contact-person-store';
 import {useAddressStore} from 'src/stores/employee-address-store';
 import {useTerminationStore} from 'src/stores/termination-store';
-
+import {useCountryStore} from 'src/stores/country-store'
 export function useStores() {
   const $q = useQuasar();
   const authStore = useAuthStore();
@@ -25,6 +25,7 @@ export function useStores() {
   const unitStore = useUnitStore();
   const designationStore = useDesignationStore();
   const eduStore = useEducationalLevelStore()
+  const countryStore = useCountryStore();
   const nationalityStore = useNationalityStore()
   const empStore = useEmployeeStore();
   const childStore = useChildStore();
@@ -48,6 +49,9 @@ export function useStores() {
     }
     if (designationStore.designations.size === 0) {
       await designationStore.getManyDB();
+    }
+    if (countryStore.countries.size === 0) {
+      await countryStore.getManyDB();
     }
     if (nationalityStore.nationalities.size === 0) {
       await nationalityStore.getManyDB();
@@ -85,6 +89,7 @@ export function useStores() {
     unitStore,
     designationStore,
     eduStore,
+    countryStore,
     nationalityStore,
     empStore,
     childStore,

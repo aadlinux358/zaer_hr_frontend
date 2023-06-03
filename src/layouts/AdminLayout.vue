@@ -66,6 +66,11 @@ const essentialLinks: EssentialLinkProps[] = [
     link: 'AdminDesignations',
   },
   {
+    title: 'country',
+    icon: 'fas fa-earth-africa',
+    link: 'AdminCountries',
+  },
+  {
     title: 'nationality',
     icon: 'flag',
     link: 'AdminNationalities'
