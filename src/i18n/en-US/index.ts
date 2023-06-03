@@ -58,4 +58,7 @@ export default {
   staff_or_admin_tooltip: 'only for admin or staff members',
   terminate_tooltip: 'employee is active, deactivate first',
   termination: 'termination',
+  active_list: 'list active',
+  inactive_list: 'list inactive',
+  organization: 'organization',
 };

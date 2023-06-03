@@ -58,4 +58,7 @@ export default {
   staff_or_admin_tooltip: 'solo per amministratori o membri dello staff',
   terminate_tooltip: 'il dipendente è attivo, prima disattivalo',
   termination: 'cessazione',
+  active_list: 'elenco attivo',
+  inactive_list: 'elenco inattivo',
+  organization: 'organizzazione',
 }

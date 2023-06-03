@@ -58,4 +58,7 @@ export default {
   staff_or_admin_tooltip: 'ንኣድሚን ወይ ስታፍ ጥራይ',
   terminate_tooltip: 'ሰራሕተኛ ንጡፍ እዩ፣ መጀመርታ ዘይንጡፍ ግበሮ',
   termination: 'ምቁራጽ ስራሕ',
+  active_list: 'ዝርዝር ንጡፋት',
+  inactive_list: 'ዝርዝር ዘይንጡፋት',
+  organization: 'ኣወዳድባ',
 }
