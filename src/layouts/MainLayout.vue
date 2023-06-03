@@ -3,14 +3,34 @@
     <MainAppHeader />
     <q-drawer v-model="uiStore.leftDrawerOpen"
               show-if-above
-              :width="200">
+              :width="230">
       <q-list>
         <q-item-label header
                       class="text-capitalize"> {{ $t('zaerhr') }} </q-item-label>
         <EssentialLink v-for="link in essentialLinks"
                        :key="link.title"
                        v-bind="link" />
-        <q-separator />
+        <q-expansion-item icon="reduce_capacity"
+                          :label="$t('employee')">
+          <q-list dens
+                  class="q-pl-md">
+            <EssentialLink v-for="link in empLinks"
+                           :key="link.title"
+                           v-bind="link"
+                           :small-icon="true" />
+          </q-list>
+        </q-expansion-item>
+        <q-expansion-item icon="fas fa-sitemap fa-xs"
+                          :label="$t('organization')">
+          <q-list dense
+                  class="q-pl-md">
+            <EssentialLink v-for="link in orgLinks"
+                           :key="link.title"
+                           v-bind="link"
+                           :small-icon="true" />
+          </q-list>
+        </q-expansion-item>
+        <q-separator class="q-my-md" />
         <q-item-label header
                       class="text-capitalize">{{ $t('appinfo') }}</q-item-label>
         <EssentialLink v-for="link in infoLinks"
@@ -40,37 +60,19 @@ const essentialLinks: EssentialLinkProps[] = [
     icon: 'dashboard',
     link: 'Dashboard',
   },
-  {
-    title: 'employee',
-    icon: 'reduce_capacity',
-    link: 'Employees',
-  },
-  {
-    title: 'division',
-    icon: 'safety_divider',
-    link: 'Divisions',
-  },
-  {
-    title: 'department',
-    icon: 'factory',
-    link: 'Departments',
-  },
-  {
-    title: 'section',
-    icon: 'view_module',
-    link: 'Sections',
-  },
-  {
-    title: 'unit',
-    icon: 'segment',
-    link: 'Units',
-  },
-  {
-    title: 'designation',
-    icon: 'work',
-    link: 'Designations',
-  },
 ];
+const empLinks: EssentialLinkProps[] = [
+  {
+    title: 'active_list',
+    icon: 'group_add',
+    link: 'ActiveEmployees',
+  },
+  {
+    title: 'inactive_list',
+    icon: 'group_remove',
+    link: 'InactiveEmployees',
+  },
+]
 const infoLinks: EssentialLinkProps[] = [
 
   {
@@ -82,6 +84,34 @@ const infoLinks: EssentialLinkProps[] = [
     title: 'help',
     icon: 'help',
     link: 'Help',
+  },
+]
+
+const orgLinks: EssentialLinkProps[] = [
+  {
+    title: 'division',
+    icon: 'safety_divider',
+    link: 'Divisions',
+  },
+  {
+    title: 'department',
+    icon: 'factory',
+    link: 'Departments',
+  },
+  {
+    title: 'unit',
+    icon: 'segment',
+    link: 'Units',
+  },
+  {
+    title: 'section',
+    icon: 'view_module',
+    link: 'Sections',
+  },
+  {
+    title: 'designation',
+    icon: 'work',
+    link: 'Designations',
   },
 ]
 

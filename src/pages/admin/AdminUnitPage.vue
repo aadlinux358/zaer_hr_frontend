@@ -89,25 +89,12 @@ const columns = [
     sortable: true
   },
   {
-    name: 'section',
-    required: true,
-    label: 'Section Name',
-    align: 'left',
-    field: (row: R) => {
-      const sec = sectionStore.sections.get(row.section_uid);
-      return capitalize(sec?.name);
-    },
-    format: (val: string) => capitalize(val),
-    sortable: true
-  },
-  {
     name: 'department',
     required: true,
     label: 'Department Name',
     align: 'left',
     field: (row: R) => {
-      const sec = sectionStore.sections.get(row.section_uid);
-      const dep = departmentStore.departments.get(sec.department_uid);
+      const dep = departmentStore.departments.get(row.department_uid);
       return capitalize(dep?.name);
     },
     format: (val: string) => capitalize(val),
@@ -119,8 +106,7 @@ const columns = [
     label: 'Division Name',
     align: 'left',
     field: (row: R) => {
-      const sec = sectionStore.sections.get(row.section_uid);
-      const dep = departmentStore.departments.get(sec.department_uid);
+      const dep = departmentStore.departments.get(row.department_uid);
       const div = divisionStore.divisions.get(dep?.division_uid);
       return capitalize(div?.name);
     },

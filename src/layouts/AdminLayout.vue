@@ -1,8 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <MainAppHeader />
-    <q-drawer bordered
-              v-model="uiStore.leftDrawerOpen"
+    <q-drawer v-model="uiStore.leftDrawerOpen"
               show-if-above
               :width="250">
       <q-list>
@@ -26,7 +25,7 @@ import EssentialLink, {
   EssentialLinkProps,
 } from 'components/EssentialLink.vue';
 import MainAppHeader from 'components/MainAppHeader.vue'
-import {useUiStore} from 'src/stores/ui-store.ts'
+import {useUiStore} from 'src/stores/ui-store'
 
 const uiStore = useUiStore();
 
@@ -52,14 +51,14 @@ const essentialLinks: EssentialLinkProps[] = [
     link: 'AdminDepartments',
   },
   {
-    title: 'section',
-    icon: 'view_module',
-    link: 'AdminSections',
-  },
-  {
     title: 'unit',
     icon: 'segment',
     link: 'AdminUnits',
+  },
+  {
+    title: 'section',
+    icon: 'view_module',
+    link: 'AdminSections',
   },
   {
     title: 'designation',

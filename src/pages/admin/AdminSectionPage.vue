@@ -56,6 +56,7 @@ const filter = ref('');
 const {
   divisionStore,
   departmentStore,
+  unitStore,
   sectionStore,
   uiStore} = useStores();
 
@@ -87,12 +88,25 @@ const columns = [
     sortable: true
   },
   {
+    name: 'name',
+    required: true,
+    label: 'Unit Name',
+    align: 'left',
+    field: (row: R) => {
+      const unit = unitStore.units.get(row.unit_uid);
+      return capitalize(unit.name)
+    },
+    format: (val: string) => capitalize(val),
+    sortable: true
+  },
+  {
     name: 'department',
     required: true,
     label: 'Department Name',
     align: 'left',
     field: (row: R) => {
-      const dep = departmentStore.departments.get(row.department_uid);
+      const unit = unitStore.units.get(row.unit_uid)
+      const dep = departmentStore.departments.get(unit.department_uid);
       return capitalize(dep?.name);
     },
     format: (val: string) => capitalize(val),
@@ -104,7 +118,8 @@ const columns = [
     label: 'Division Name',
     align: 'left',
     field: (row: R) => {
-      const dep = departmentStore.departments.get(row.department_uid);
+      const unit = unitStore.units.get(row.unit_uid)
+      const dep = departmentStore.departments.get(unit.department_uid);
       const div = divisionStore.divisions.get(dep?.division_uid);
       return capitalize(div?.name);
     },

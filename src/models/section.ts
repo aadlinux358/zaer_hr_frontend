@@ -1,6 +1,6 @@
 export interface SectionCreate {
   name: string;
-  department_uid: string;
+  unit_uid: string;
 }
 
 export interface SectionReadOne extends SectionCreate {

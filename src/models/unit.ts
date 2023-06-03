@@ -1,6 +1,6 @@
 export interface UnitCreate {
   name: string;
-  section_uid: string;
+  department_uid: string;
 }
 
 export interface UnitReadOne extends UnitCreate {
