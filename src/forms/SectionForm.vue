@@ -29,7 +29,7 @@
                     :rules="[val => val && val.length > 0 || 'Please select division']" />
           <q-select square
                     outlined
-                    v-model="form.department_uid"
+                    v-model="form.departmentUid"
                     :options="filteredDepartments"
                     label="Department"
                     emit-value
@@ -37,6 +37,16 @@
                     option-label="name"
                     option-value="uid"
                     :rules="[val => val && val.length > 0 || 'Please select department']" />
+          <q-select square
+                    outlined
+                    v-model="form.unit_uid"
+                    :options="filteredUnits"
+                    label="Unit"
+                    emit-value
+                    map-options
+                    option-label="name"
+                    option-value="uid"
+                    :rules="[val => val && val.length > 0 || 'Please select unit']" />
           <q-input square
                    filled
                    v-model="form.name"
@@ -55,21 +65,24 @@
 </template>
 <script setup lang="ts">
 import {onMounted, computed, watch} from 'vue';
-import {useDivisionStore} from 'src/stores/division-store';
-import {useDepartmentStore} from 'src/stores/department-store';
 import {useForms} from 'src/composables/forms';
+import {useStores} from 'src/composables/stores';
 import {SectionCreate, SectionReadOne} from 'src/models/section';
 import FormActionButtons from 'src/components/FormActionButtons.vue';
 interface SectionForm extends SectionCreate {
   divisionUid: string
+  departmentUid: string;
 }
 const emits = defineEmits(['create', 'update', 'delete', 'reset', 'cancel'])
 const props = defineProps<{
   payload: SectionReadOne | null;
 }>()
 
-const divisionStore = useDivisionStore();
-const departmentStore = useDepartmentStore();
+const {
+  divisionStore,
+  departmentStore,
+  unitStore
+} = useStores();
 const {
   crudType,
   form,
@@ -83,17 +96,28 @@ const {
 const filteredDepartments = computed(() => {
   return departmentStore.departmentList.filter(d => d.division_uid === form.value.divisionUid)
 })
+const filteredUnits = computed(() => {
+  return unitStore.unitList.filter(s => s.department_uid === form.value.departmentUid)
+})
 const divisionUid = computed(() => form.value.divisionUid)
+const departmentUid = computed(() => form.value.departmentUid)
 watch(divisionUid, (newValue, oldVAlue) => {
   if (oldVAlue) {
     onReset();
   }
 })
+watch(departmentUid, (newValu, oldValue) => {
+  if (oldValue) {
+    onReset()
+  }
+})
 onMounted(() => {
   if (props.payload) {
     const section = props.payload;
-    const dep = departmentStore.departments.get(section.department_uid);
+    const unit = unitStore.units.get(section.unit_uid);
+    const dep = departmentStore.departments.get(unit.department_uid);
     form.value.divisionUid = dep.division_uid;
+    form.value.departmentUid = dep.uid
   }
 })
 </script>
