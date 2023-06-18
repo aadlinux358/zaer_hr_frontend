@@ -16,7 +16,7 @@
                 :autofocus="true"
                 ref="formRef"
                 v-on:submit.prevent>
-          <div class="row q-gutter-xs">
+          <div class="column q-gutter-sm q-my-sm">
             <q-input square
                      filled
                      dense
@@ -30,8 +30,22 @@
                      label="District"
                      v-model="form.district"
                      lazy-rules
-                     :rules="[val => val && val.length > 0 || 'Please enter district name']">
-            </q-input>
+                     :rules="[val => val && val.length > 0 || 'Please enter district name']" />
+            <q-input square
+                     dense
+                     filled
+                     label="Street"
+                     v-model="form.street"
+                     hint="Optional" />
+            <q-input square
+                     class="col"
+                     filled
+                     dense
+                     min="0"
+                     v-model.number="form.house_number"
+                     type="number"
+                     label="House number"
+                     hint="Optional" />
           </div>
           <FormActionButtons @on-create="onCreate"
                              @on-update="onUpdate"

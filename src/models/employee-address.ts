@@ -2,6 +2,8 @@ export interface AddressCreate {
   employee_uid: string | null;
   city: string | null;
   district: string | null;
+  street?: string
+  house_number?: number
 }
 
 export interface AddressReadOne extends AddressCreate {
