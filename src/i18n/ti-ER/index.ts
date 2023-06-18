@@ -63,4 +63,8 @@ export default {
   organization: 'ኣወዳድባ',
   country: 'ሃገር',
   countries: 'ሃገራት',
+  report: 'ጸብጻብ',
+  pivot: 'ፒቮት',
+  user: 'ተጠቃሚ',
+  users: 'ተጠቀምቲ',
 }

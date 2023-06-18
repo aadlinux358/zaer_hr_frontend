@@ -63,4 +63,8 @@ export default {
   organization: 'organization',
   country: 'country',
   countries: 'countries',
+  report: 'report',
+  pivot: 'pivot',
+  user: 'user',
+  users: 'users',
 };
