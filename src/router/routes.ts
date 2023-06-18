@@ -77,6 +77,18 @@ const routes: RouteRecordRaw[] = [
         component: () => import('src/pages/common/SettingsPage.vue')
       },
       {
+        path: '/reports',
+        name: 'Reports',
+        component: () => import('src/pages/shared/ReportsPage.vue'),
+        children: [
+          {
+            path: 'pivot',
+            name: 'PivotReport',
+            component: () => import('src/pages/shared/reports/PivotReportPage.vue')
+          }
+        ]
+      },
+      {
         path: '',
         name: 'Home',
         redirect: {name: 'Index'},
@@ -114,9 +126,9 @@ const routes: RouteRecordRaw[] = [
         component: () => import('src/pages/admin/AdminIndexPage.vue')
       },
       {
-        path: 'employees',
-        name: 'AdminEmployees',
-        component: () => import('src/pages/admin/AdminEmployeePage.vue')
+        path: 'users',
+        name: 'AdminUsers',
+        component: () => import('src/pages/admin/AdminUserPage.vue')
       },
       {
         path: 'divisions',

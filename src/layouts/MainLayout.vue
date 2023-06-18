@@ -30,6 +30,16 @@
                            :small-icon="true" />
           </q-list>
         </q-expansion-item>
+        <q-expansion-item icon="assessment"
+                          :label="$t('report')">
+          <q-list dense
+                  class="q-pl-md">
+            <EssentialLink v-for="link in reportLinks"
+                           :key="link.title"
+                           v-bind="link"
+                           :small-icon="true" />
+          </q-list>
+        </q-expansion-item>
         <q-separator class="q-my-md" />
         <q-item-label header
                       class="text-capitalize">{{ $t('appinfo') }}</q-item-label>
@@ -71,6 +81,13 @@ const empLinks: EssentialLinkProps[] = [
     title: 'inactive_list',
     icon: 'group_remove',
     link: 'InactiveEmployees',
+  },
+]
+const reportLinks: EssentialLinkProps[] = [
+  {
+    title: 'pivot',
+    icon: 'pivot_table_chart',
+    link: 'PivotReport',
   },
 ]
 const infoLinks: EssentialLinkProps[] = [

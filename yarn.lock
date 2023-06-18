@@ -4142,6 +4142,11 @@ wcwidth@^1.0.1:
   dependencies:
     defaults "^1.0.3"
 
+webdatarocks@^1.4.7:
+  version "1.4.7"
+  resolved "https://registry.yarnpkg.com/webdatarocks/-/webdatarocks-1.4.7.tgz#40fcf46fc73794699fc1361bd5874f8d2aea470f"
+  integrity sha512-5RER3sklP13tkv7Pa0r/XpsUnfrQ9Ts84OwcEyo8hvMVlYtbCR1Ph/dcSBrZOpwyLOhe7A3O8uCIEUYJFUjn+A==
+
 webidl-conversions@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-3.0.1.tgz#24534275e2a7bc6be7bc86611cc16ae0a5654871"
