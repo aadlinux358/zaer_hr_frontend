@@ -6,14 +6,14 @@ import axios from 'axios';
 
 import Router from 'src/router/index';
 import {authApi} from 'boot/axios';
-import {AuthUser} from 'src/models/auth-user';
+import {AuthUserReadOne} from 'src/models/auth-user';
 
 
 export const useAuthStore = defineStore('auth', () => {
   const _username = ref('');
   const _password = ref('');
   const _access_token = ref('');
-  const _user: Ref<AuthUser | null> = ref(null);
+  const _user: Ref<AuthUserReadOne | null> = ref(null);
   const _isAuthenticated = ref(false)
   const _requestedUrl: Ref<RouteLocationNormalized | null> = ref(null);
   const _loading = ref(false);
