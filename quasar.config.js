@@ -11,7 +11,7 @@
 const {configure} = require('quasar/wrappers');
 const path = require('path');
 
-module.exports = configure(function (/* ctx */) {
+module.exports = configure(function (ctx) {
   return {
     eslint: {
       // fix: true,
@@ -79,10 +79,10 @@ module.exports = configure(function (/* ctx */) {
 
       // publicPath: '/',
       // analyze: true,
-      // env: {
-      //   authApi: ctx.dev ? 'http://ashm:8001' : 'http://localhost:8001',
-      //   hrApi: ctc.dev ? 'http://ashm:8000' : 'http://localhost:8000'
-      // },
+      env: {
+        authApi: ctx.dev ? 'http://ashm:8001/api/v1/auth' : 'http://zion:8001/api/v1/auth',
+        hrApi: ctx.dev ? 'http://ashm:8000/api/v1/hr' : 'http://zion:8000/api/v1/hr'
+      },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
