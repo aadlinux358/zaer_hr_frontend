@@ -36,9 +36,9 @@ const essentialLinks: EssentialLinkProps[] = [
     link: 'AdminDashboard',
   },
   {
-    title: 'employee',
-    icon: 'reduce_capacity',
-    link: 'AdminEmployees',
+    title: 'user',
+    icon: 'person',
+    link: 'AdminUsers',
   },
   {
     title: 'division',
