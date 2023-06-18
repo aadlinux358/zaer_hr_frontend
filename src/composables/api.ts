@@ -5,7 +5,7 @@ import {exportFile, Notify} from 'quasar';
 import {DownloadFileType} from 'src/models/common';
 
 
-export function useApiCrud<C, R, RM>(endpoint: string, entityMap: Map<string, R>, entityName: string) {
+export function useApiCrud<C, R, RM>(endpoint: string, entityMap: Map<string, R>, entityName: string, api = hrApi) {
 
   // C => Type Create, R => Type ReadOne, RM => Type ReadMany
 
@@ -20,7 +20,7 @@ export function useApiCrud<C, R, RM>(endpoint: string, entityMap: Map<string, R>
     entityMap.clear()
     loading.value = true;
     try {
-      const response = await hrApi.get(`${endpoint}`, config);
+      const response = await api.get(`${endpoint}`, config);
       const data: RM = response.data;
       data.result.forEach((entity: R) => entityMap.set(entity.uid, entity));
     }
@@ -35,7 +35,7 @@ export function useApiCrud<C, R, RM>(endpoint: string, entityMap: Map<string, R>
   async function getById(uid: string) {
     loading.value = true;
     try {
-      const response = await hrApi.get(`${endpoint}/${uid}`, config);
+      const response = await api.get(`${endpoint}/${uid}`, config);
       const entity: R = response.data;
       entityMap.set(entity.uid, entity)
     }
@@ -50,7 +50,7 @@ export function useApiCrud<C, R, RM>(endpoint: string, entityMap: Map<string, R>
   async function createDB(payload: C) {
     loading.value = true;
     try {
-      const response = await hrApi.post(`${endpoint}`, payload, config);
+      const response = await api.post(`${endpoint}`, payload, config);
       const entity: R = response.data;
       entityMap.set(entity.uid, entity);
       Notify.create({
@@ -68,7 +68,7 @@ export function useApiCrud<C, R, RM>(endpoint: string, entityMap: Map<string, R>
   async function updateDB(entity: R) {
     loading.value = true;
     try {
-      const response = await hrApi.patch(`${endpoint}/${entity.uid}`, entity, config)
+      const response = await api.patch(`${endpoint}/${entity.uid}`, entity, config)
       const updatedEntity: R = response.data;
       entityMap.set(updatedEntity.uid, updatedEntity);
       Notify.create({
@@ -87,7 +87,7 @@ export function useApiCrud<C, R, RM>(endpoint: string, entityMap: Map<string, R>
   async function deleteDB(entityUid: string) {
     loading.value = true;
     try {
-      await hrApi.delete(`${endpoint}/${entityUid}`, config);
+      await api.delete(`${endpoint}/${entityUid}`, config);
       entityMap.delete(entityUid)
       Notify.create({
         color: 'positive',
@@ -104,7 +104,7 @@ export function useApiCrud<C, R, RM>(endpoint: string, entityMap: Map<string, R>
     loading.value = true
     try {
       //const new_config = {headers: {...config.headers, 'Content-Length': 0}};
-      const response = await hrApi.post(`${endpoint}/activate/${entityUid}`, {}, config)
+      const response = await api.post(`${endpoint}/activate/${entityUid}`, {}, config)
       const activatedEntity: R = response.data;
       entityMap.set(activatedEntity.uid, activatedEntity);
       Notify.create({
@@ -122,7 +122,7 @@ export function useApiCrud<C, R, RM>(endpoint: string, entityMap: Map<string, R>
     loading.value = true
     try {
       // const new_config = {headers: {...config.headers, 'Content-Length': 0}};
-      const response = await hrApi.post(`${endpoint}/deactivate/${entityUid}`, {}, config)
+      const response = await api.post(`${endpoint}/deactivate/${entityUid}`, {}, config)
       const deactivatedEntity: R = response.data;
       entityMap.set(deactivatedEntity.uid, deactivatedEntity);
       Notify.create({
@@ -139,7 +139,7 @@ export function useApiCrud<C, R, RM>(endpoint: string, entityMap: Map<string, R>
   async function terminateDB(payload: C) {
     console.log('Terminating..')
     try {
-      const response = await hrApi.post(`${endpoint}`, payload, config);
+      const response = await api.post(`${endpoint}`, payload, config);
       const entity: R = response.data;
       entityMap.set(entity.uid, entity);
       await getById(payload.employee_uid);
@@ -158,7 +158,7 @@ export function useApiCrud<C, R, RM>(endpoint: string, entityMap: Map<string, R>
   async function downloadFile(fileType: DownloadFileType) {
     loading.value = true;
     try {
-      const response = await hrApi.get(`${endpoint}/download/${fileType}`, Object.assign(config, {ResponseType: 'blob'}))
+      const response = await api.get(`${endpoint}/download/${fileType}`, Object.assign(config, {ResponseType: 'blob'}))
       exportFile(`${endpoint}.${fileType}`, response.data)
     }
     catch (err) {
