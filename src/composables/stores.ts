@@ -10,6 +10,7 @@ import {useEducationalLevelStore} from 'src/stores/educational-level-store';
 import {useNationalityStore} from 'src/stores/nationality-store';
 import {useEmployeeStore} from 'src/stores/employee-store';
 import {useAuthStore} from 'src/stores/auth-store';
+import {useUserStore} from 'src/stores/user-store';
 import {useChildStore} from 'src/stores/employee-child-store';
 import {useContactStore} from 'src/stores/employee-contact-person-store';
 import {useAddressStore} from 'src/stores/employee-address-store';
@@ -18,6 +19,7 @@ import {useCountryStore} from 'src/stores/country-store'
 export function useStores() {
   const $q = useQuasar();
   const authStore = useAuthStore();
+  const userStore = useUserStore();
   const uiStore = useUiStore();
   const divisionStore = useDivisionStore();
   const departmentStore = useDepartmentStore();
@@ -35,6 +37,9 @@ export function useStores() {
 
   async function hydrateStore() {
     $q.loading.show();
+    if (userStore.users.size === 0) {
+      await userStore.getManyDB();
+    }
     if (divisionStore.divisions.size === 0) {
       await divisionStore.getManyDB();
     }
@@ -82,6 +87,7 @@ export function useStores() {
   return {
     hydrateStore,
     authStore,
+    userStore,
     uiStore,
     divisionStore,
     departmentStore,
