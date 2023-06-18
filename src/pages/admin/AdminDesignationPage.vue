@@ -3,7 +3,7 @@
     <q-table bordered
              square
              :dense="uiStore.denseTable"
-             :columns="columns"
+             :columns="designationColumns"
              :rows="designationStore.designationList"
              @row-click="onSelected"
              row-key="uid"
@@ -43,8 +43,8 @@ import {ref} from 'vue';
 import {useDialogPluginComponent} from 'quasar'
 import {DesignationCreate, DesignationReadOne} from 'src/models/designation';
 import DesignationForm from 'src/forms/DesignationForm.vue'
-import {format, date} from 'quasar';
 import {useStores} from 'src/composables/stores';
+import {useTableColumns} from 'src/composables/table-columns';
 import DataTableHeader from 'src/components/DataTableHeader.vue';
 import {useCrud} from 'src/composables/crud';
 
@@ -52,10 +52,9 @@ defineEmits({
   ...useDialogPluginComponent.emitsObject
 })
 
-const {capitalize} = format;
 const {designationStore, uiStore} = useStores();
 const filter = ref('');
-
+const {designationColumns} = useTableColumns();
 const {
   dialogRef,
   selectedEntity,
@@ -73,31 +72,4 @@ const {
 function onSelected(evt, row) {
   edit(row);
 }
-const columns = [
-  {
-    name: 'title',
-    required: true,
-    label: 'Designation Title',
-    align: 'left',
-    field: (row: DesignationReadOne) => row.title,
-    format: (val: string) => capitalize(val),
-    sortable: true
-  },
-  {
-    name: 'date_created',
-    required: true,
-    label: 'Date Created',
-    align: 'left',
-    field: (row: DesignationReadOne) => row.date_created,
-    format: (val: string) => date.formatDate(val, 'DD-MMM-YYYY HH:mm A'),
-    sortable: true
-  },
-  {
-    name: 'uid',
-    required: true,
-    label: 'Designation UUID',
-    align: 'left',
-    field: (row: DesignationReadOne) => row.uid,
-  },
-]
 </script>

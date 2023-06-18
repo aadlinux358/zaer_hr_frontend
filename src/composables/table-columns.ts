@@ -1,10 +1,15 @@
 import {ref} from 'vue';
 import {format, date} from 'quasar';
-import {EmployeeReadOne as R} from 'src/models/employee';
+import {EmployeeReadOne} from 'src/models/employee';
 import {useStores} from './stores';
 import {ChildReadOne} from 'src/models/child';
 import {AddressReadOne} from 'src/models/employee-address'
 import {ContactPersonReadOne} from 'src/models/employee-contact-person'
+import {DesignationReadOne} from 'src/models/designation';
+import {DivisionReadOne} from 'src/models/division';
+import {DepartmentReadOne} from 'src/models/department';
+import {UnitReadOne} from 'src/models/unit';
+import {SectionReadOne} from 'src/models/section';
 
 export function useTableColumns() {
   const {capitalize} = format;
@@ -15,37 +20,249 @@ export function useTableColumns() {
     unitStore,
     designationStore,
   } = useStores();
-  function getUnit(unitUid: string) {
-    return unitStore.units.get(unitUid)
+  function getSection(sectionUid: string) {
+    return sectionStore.sections.get(sectionUid)
   }
 
-  function getSection(unitUid: string) {
-    const unit = unitStore.units.get(unitUid);
-    return sectionStore.sections.get(unit?.section_uid);
+  function getUnit(sectionUid: string) {
+    const section = sectionStore.sections.get(sectionUid);
+    return unitStore.units.get(section.unit_uid);
   }
 
-  function getDepartment(unitUid: string) {
-    const unit = unitStore.units.get(unitUid);
-    const sec = sectionStore.sections.get(unit?.section_uid);
-    return departmentStore.departments.get(sec?.department_uid);
+  function getDepartment(sectionUid: string) {
+    const sec = sectionStore.sections.get(sectionUid);
+    const unit = unitStore.units.get(sec?.unit_uid);
+    return departmentStore.departments.get(unit?.department_uid);
   }
-  function getDivision(unitUid: string) {
-    const unit = unitStore.units.get(unitUid);
-    const sec = sectionStore.sections.get(unit?.section_uid);
-    const dep = departmentStore.departments.get(sec?.department_uid);
+  function getDivision(sectionUid: string) {
+    const sec = sectionStore.sections.get(sectionUid);
+    const unit = unitStore.units.get(sec?.unit_uid);
+    const dep = departmentStore.departments.get(unit?.department_uid);
     return divisionStore.divisions.get(dep?.division_uid);
   }
 
   function getDesignation(designationUid: string) {
     return designationStore.designations.get(designationUid);
   }
+
+  const divisionColumns = [
+    {
+      name: 'name',
+      required: true,
+      label: 'Division Name',
+      align: 'left',
+      field: (row: DivisionReadOne) => row.name,
+      format: (val: string) => capitalize(val),
+      sortable: true
+    },
+    {
+      name: 'date_created',
+      required: true,
+      label: 'Date Created',
+      align: 'left',
+      field: (row: DivisionReadOne) => row.date_created,
+      format: (val: string) => date.formatDate(val, 'DD-MMM-YYYY HH:mm A'),
+      sortable: true
+    },
+    {
+      name: 'uid',
+      required: true,
+      label: 'Division UUID',
+      align: 'left',
+      field: (row: DivisionReadOne) => row.uid,
+    },
+  ]
+  const departmentColumns = [
+    {
+      name: 'name',
+      required: true,
+      label: 'Department Name',
+      align: 'left',
+      field: (row: DepartmentReadOne) => row.name,
+      sortable: true,
+      format: (val: string) => capitalize(val),
+    },
+    {
+      name: 'division_uid',
+      required: true,
+      label: 'Division',
+      align: 'left',
+      field: (row: DepartmentReadOne) => {
+        const division = divisionStore.divisions.get(row.division_uid)
+        return division?.name
+      },
+      format: (val: string) => capitalize(val),
+      sortable: true
+    },
+    {
+      name: 'date_created',
+      required: true,
+      label: 'Date Created',
+      align: 'left',
+      field: (row: DepartmentReadOne) => row.date_created,
+      format: (val: string) => date.formatDate(val, 'DD-MMM-YYYY HH:mm A'),
+      sortable: true
+    },
+    {
+      name: 'uid',
+      required: true,
+      label: 'Department UUID',
+      align: 'left',
+      field: (row: DepartmentReadOne) => row.uid,
+    },
+  ]
+  const unitColumns = [
+    {
+      name: 'name',
+      required: true,
+      label: 'Unit Name',
+      align: 'left',
+      field: (row: UnitReadOne) => row.name,
+      format: (val: string) => capitalize(val),
+      sortable: true
+    },
+    {
+      name: 'department',
+      required: true,
+      label: 'Department Name',
+      align: 'left',
+      field: (row: UnitReadOne) => {
+        const dep = departmentStore.departments.get(row.department_uid);
+        return capitalize(dep?.name);
+      },
+      format: (val: string) => capitalize(val),
+      sortable: true
+    },
+    {
+      name: 'division',
+      required: true,
+      label: 'Division Name',
+      align: 'left',
+      field: (row: UnitReadOne) => {
+        const dep = departmentStore.departments.get(row.department_uid);
+        const div = divisionStore.divisions.get(dep?.division_uid);
+        return capitalize(div?.name);
+      },
+      format: (val: string) => capitalize(val),
+      sortable: true
+    },
+    {
+      name: 'date_created',
+      required: true,
+      label: 'Date Created',
+      align: 'left',
+      field: (row: UnitReadOne) => row.date_created,
+      format: (val: string) => date.formatDate(val, 'DD-MMM-YYYY HH:mm A'),
+      sortable: true
+    },
+    {
+      name: 'uid',
+      required: true,
+      label: 'Unit UUID',
+      align: 'left',
+      field: (row: UnitReadOne) => row.uid,
+    },
+  ]
+  const sectionColumns = [
+    {
+      name: 'name',
+      required: true,
+      label: 'Section Name',
+      align: 'left',
+      field: (row: SectionReadOne) => row.name,
+      format: (val: string) => capitalize(val),
+      sortable: true
+    },
+    {
+      name: 'name',
+      required: true,
+      label: 'Unit Name',
+      align: 'left',
+      field: (row: SectionReadOne) => {
+        const unit = unitStore.units.get(row.unit_uid);
+        return capitalize(unit.name)
+      },
+      format: (val: string) => capitalize(val),
+      sortable: true
+    },
+    {
+      name: 'department',
+      required: true,
+      label: 'Department Name',
+      align: 'left',
+      field: (row: SectionReadOne) => {
+        const unit = unitStore.units.get(row.unit_uid)
+        const dep = departmentStore.departments.get(unit.department_uid);
+        return capitalize(dep?.name);
+      },
+      format: (val: string) => capitalize(val),
+      sortable: true
+    },
+    {
+      name: 'division',
+      required: true,
+      label: 'Division Name',
+      align: 'left',
+      field: (row: SectionReadOne) => {
+        const unit = unitStore.units.get(row.unit_uid)
+        const dep = departmentStore.departments.get(unit.department_uid);
+        const div = divisionStore.divisions.get(dep?.division_uid);
+        return capitalize(div?.name);
+      },
+      format: (val: string) => capitalize(val),
+      sortable: true
+    },
+    {
+      name: 'date_created',
+      required: true,
+      label: 'Date Created',
+      align: 'left',
+      field: (row: SectionReadOne) => row.date_created,
+      format: (val: string) => date.formatDate(val, 'DD-MMM-YYYY HH:mm A'),
+      sortable: true
+    },
+    {
+      name: 'uid',
+      required: true,
+      label: 'Section UUID',
+      align: 'left',
+      field: (row: SectionReadOne) => row.uid,
+    },
+  ]
+  const designationColumns = [
+    {
+      name: 'title',
+      required: true,
+      label: 'Designation Title',
+      align: 'left',
+      field: (row: DesignationReadOne) => row.title,
+      format: (val: string) => capitalize(val),
+      sortable: true
+    },
+    {
+      name: 'date_created',
+      required: true,
+      label: 'Date Created',
+      align: 'left',
+      field: (row: DesignationReadOne) => row.date_created,
+      format: (val: string) => date.formatDate(val, 'DD-MMM-YYYY HH:mm A'),
+      sortable: true
+    },
+    {
+      name: 'uid',
+      required: true,
+      label: 'Designation UUID',
+      align: 'left',
+      field: (row: DesignationReadOne) => row.uid,
+    },
+  ]
   const empColumns = ref([
     {
       name: 'badge_number',
       required: true,
       label: 'Badge Number',
       align: 'left',
-      field: (row: R) => row.badge_number,
+      field: (row: EmployeeReadOne) => row.badge_number,
       sortable: true
     },
     {
@@ -53,7 +270,7 @@ export function useTableColumns() {
       required: true,
       label: 'First Name',
       align: 'left',
-      field: (row: R) => row.first_name,
+      field: (row: EmployeeReadOne) => row.first_name,
       format: (val: string) => capitalize(val),
       sortable: true
     },
@@ -62,7 +279,7 @@ export function useTableColumns() {
       required: true,
       label: 'Last Name',
       align: 'left',
-      field: (row: R) => row.last_name,
+      field: (row: EmployeeReadOne) => row.last_name,
       format: (val: string) => capitalize(val),
       sortable: true
     },
@@ -71,7 +288,7 @@ export function useTableColumns() {
       required: true,
       label: 'Grandfather Name',
       align: 'left',
-      field: (row: R) => row.grandfather_name,
+      field: (row: EmployeeReadOne) => row.grandfather_name,
       format: (val: string) => capitalize(val),
       sortable: true
     },
@@ -80,7 +297,7 @@ export function useTableColumns() {
       required: true,
       label: 'Gender',
       align: 'left',
-      field: (row: R) => row.gender,
+      field: (row: EmployeeReadOne) => row.gender,
       format: (val: string) => capitalize(val),
       sortable: true
     },
@@ -89,7 +306,7 @@ export function useTableColumns() {
       required: true,
       label: 'Hire Date',
       align: 'left',
-      field: (row: R) => row.current_hire_date,
+      field: (row: EmployeeReadOne) => row.current_hire_date,
       format: (val: string) => date.formatDate(val, 'DD-MMM-YYYY'),
       sortable: true
     },
@@ -98,8 +315,8 @@ export function useTableColumns() {
       required: true,
       label: 'Division',
       align: 'left',
-      field: (row: R) => {
-        const division = getDivision(row.unit_uid);
+      field: (row: EmployeeReadOne) => {
+        const division = getDivision(row.section_uid);
         return capitalize(division.name);
       }
     },
@@ -108,29 +325,29 @@ export function useTableColumns() {
       required: true,
       label: 'Department',
       align: 'left',
-      field: (row: R) => {
-        const department = getDepartment(row.unit_uid);
+      field: (row: EmployeeReadOne) => {
+        const department = getDepartment(row.section_uid);
         return capitalize(department.name);
       },
-    },
-    {
-      name: 'section',
-      required: true,
-      label: 'Section',
-      align: 'left',
-      field: (row: R) => {
-        const section = getSection(row.unit_uid);
-        return capitalize(section.name);
-      }
     },
     {
       name: 'unit',
       required: true,
       label: 'Unit',
       align: 'left',
-      field: (row: R) => {
-        const unit = getUnit(row.unit_uid);
+      field: (row: EmployeeReadOne) => {
+        const unit = getUnit(row.section_uid);
         return capitalize(unit.name)
+      }
+    },
+    {
+      name: 'section',
+      required: true,
+      label: 'Section',
+      align: 'left',
+      field: (row: EmployeeReadOne) => {
+        const section = getSection(row.section_uid);
+        return capitalize(section.name);
       }
     },
     {
@@ -138,7 +355,7 @@ export function useTableColumns() {
       required: true,
       label: 'Designation',
       align: 'left',
-      field: (row: R) => {
+      field: (row: EmployeeReadOne) => {
         const designation = getDesignation(row.designation_uid);
         return capitalize(designation.title);
       }
@@ -182,6 +399,20 @@ export function useTableColumns() {
       field: (row: AddressReadOne) => row.district ? capitalize(row.district) : '',
       align: 'left',
     },
+    {
+      name: 'street',
+      required: false,
+      label: 'Street',
+      field: (row: AddressReadOne) => row.street ? capitalize(row.street) : '',
+      align: 'left',
+    },
+    {
+      name: 'house_number',
+      required: false,
+      label: 'House Number',
+      field: (row: AddressReadOne) => row.house_number || '',
+      align: 'left',
+    }
   ])
   const contactPersonColumns = ref([
     {
@@ -214,6 +445,11 @@ export function useTableColumns() {
     },
   ])
   return {
+    divisionColumns,
+    departmentColumns,
+    unitColumns,
+    sectionColumns,
+    designationColumns,
     empColumns,
     childColumns,
     addressColumns,
