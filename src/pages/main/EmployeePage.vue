@@ -6,6 +6,7 @@
              square
              :columns="empColumns"
              :rows="empStore.employeeList"
+             :pagination="{sortBy: 'badge_number', rowsPerPage: 20}"
              row-key="uid"
              flat
              separator="cell"

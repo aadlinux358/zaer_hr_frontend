@@ -1,6 +1,8 @@
 import {computed, Ref, ref} from 'vue';
 import {defineStore} from 'pinia';
-import {EmployeeReadOne as R, EmployeeReadMany as RM, EmployeeCreate as C} from 'src/models/employee';
+import {hrApi} from 'src/boot/axios';
+import {useFlags} from 'src/composables/flags';
+import {EmployeeReadOneFull as R, EmployeeReadManyFull as RM, EmployeeCreate as C} from 'src/models/employee';
 import {useApiCrud} from 'src/composables/api';
 
 const ENDPOINT = '/employees';
@@ -21,7 +23,7 @@ export const useEmployeeStore = defineStore('employee', () => {
 
   const {
     loading,
-    getManyDB,
+    config,
     getById,
     createDB,
     updateDB,
@@ -31,6 +33,22 @@ export const useEmployeeStore = defineStore('employee', () => {
     downloadFile,
   } = useApiCrud<C, R, RM>(ENDPOINT, employees.value, 'employee')
 
+  const {setError} = useFlags();
+  async function getManyDB() {
+    employees.value.clear()
+    loading.value = true;
+    try {
+      const response = await hrApi.get(`${ENDPOINT}/full`, config);
+      const data: RM = response.data;
+      data.result.forEach((entity: R) => employees.value.set(entity.uid, entity));
+    }
+    catch (err) {
+      setError(err);
+    }
+    finally {
+      loading.value = false;
+    }
+  }
   return {
     employees,
     employeeList,

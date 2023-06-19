@@ -45,20 +45,23 @@ export interface EmployeeReadMany {
   result: EmployeeReadOne[];
 }
 
-export interface EmployeeResponsePrintFormat extends EmployeeBase {
+export interface EmployeeReadOneFull extends EmployeeReadOne {
   division: string | null;
   department: string | null;
   section: string | null;
   unit: string | null;
   designation: string | null;
+  country: string | null;
+  nationality: string | null;
+  educational_level: string | null;
 }
 
-export interface EmployeeResponsePrintFormatMany {
+export interface EmployeeReadManyFull {
   count: number;
-  result: EmployeeResponsePrintFormat[];
+  result: EmployeeReadOneFull[];
 }
 
-export const EmployeeObj: EmployeeReadOne = {
+export const EmployeeObj: EmployeeReadOneFull = {
   uid: '',
   badge_number: 0,
   created_by: '',
@@ -75,6 +78,8 @@ export const EmployeeObj: EmployeeReadOne = {
   current_hire_date: '',
   is_active: false,
   is_terminated: false,
+  designation_uid: '',
+  designation: '',
   birth_place: '',
   mother_first_name: '',
   mother_last_name: '',
@@ -82,13 +87,19 @@ export const EmployeeObj: EmployeeReadOne = {
   marital_status: '',
   phone_number: '',
   national_id: '',
+  country: '',
+  nationality: '',
   contract_type: '',
   national_service: '',
+  division: '',
+  department: '',
+  unit: '',
   section_uid: '',
-  designation_uid: '',
+  section: '',
   country_uid: '',
   nationality_uid: '',
   educational_level_uid: '',
+  educational_level: '',
   apprenticeship_from_date: '',
   apprenticeship_to_date: '',
 }

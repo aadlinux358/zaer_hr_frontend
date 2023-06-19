@@ -1,6 +1,6 @@
 import {ref} from 'vue';
 import {format, date} from 'quasar';
-import {EmployeeReadOne} from 'src/models/employee';
+import {EmployeeReadOneFull} from 'src/models/employee';
 import {useStores} from './stores';
 import {ChildReadOne} from 'src/models/child';
 import {AddressReadOne} from 'src/models/employee-address'
@@ -16,34 +16,8 @@ export function useTableColumns() {
   const {
     divisionStore,
     departmentStore,
-    sectionStore,
     unitStore,
-    designationStore,
   } = useStores();
-  function getSection(sectionUid: string) {
-    return sectionStore.sections.get(sectionUid)
-  }
-
-  function getUnit(sectionUid: string) {
-    const section = sectionStore.sections.get(sectionUid);
-    return unitStore.units.get(section.unit_uid);
-  }
-
-  function getDepartment(sectionUid: string) {
-    const sec = sectionStore.sections.get(sectionUid);
-    const unit = unitStore.units.get(sec?.unit_uid);
-    return departmentStore.departments.get(unit?.department_uid);
-  }
-  function getDivision(sectionUid: string) {
-    const sec = sectionStore.sections.get(sectionUid);
-    const unit = unitStore.units.get(sec?.unit_uid);
-    const dep = departmentStore.departments.get(unit?.department_uid);
-    return divisionStore.divisions.get(dep?.division_uid);
-  }
-
-  function getDesignation(designationUid: string) {
-    return designationStore.designations.get(designationUid);
-  }
 
   const divisionColumns = [
     {
@@ -174,12 +148,12 @@ export function useTableColumns() {
       sortable: true
     },
     {
-      name: 'name',
+      name: 'unit_uid',
       required: true,
       label: 'Unit Name',
       align: 'left',
       field: (row: SectionReadOne) => {
-        const unit = unitStore.units.get(row.unit_uid);
+        const unit = unitStore.units.get(row.unit_uid)
         return capitalize(unit.name)
       },
       format: (val: string) => capitalize(val),
@@ -262,7 +236,7 @@ export function useTableColumns() {
       required: true,
       label: 'Badge Number',
       align: 'left',
-      field: (row: EmployeeReadOne) => row.badge_number,
+      field: (row: EmployeeReadOneFull) => row.badge_number,
       sortable: true
     },
     {
@@ -270,7 +244,7 @@ export function useTableColumns() {
       required: true,
       label: 'First Name',
       align: 'left',
-      field: (row: EmployeeReadOne) => row.first_name,
+      field: (row: EmployeeReadOneFull) => row.first_name,
       format: (val: string) => capitalize(val),
       sortable: true
     },
@@ -279,7 +253,7 @@ export function useTableColumns() {
       required: true,
       label: 'Last Name',
       align: 'left',
-      field: (row: EmployeeReadOne) => row.last_name,
+      field: (row: EmployeeReadOneFull) => row.last_name,
       format: (val: string) => capitalize(val),
       sortable: true
     },
@@ -288,7 +262,7 @@ export function useTableColumns() {
       required: true,
       label: 'Grandfather Name',
       align: 'left',
-      field: (row: EmployeeReadOne) => row.grandfather_name,
+      field: (row: EmployeeReadOneFull) => row.grandfather_name,
       format: (val: string) => capitalize(val),
       sortable: true
     },
@@ -297,7 +271,7 @@ export function useTableColumns() {
       required: true,
       label: 'Gender',
       align: 'left',
-      field: (row: EmployeeReadOne) => row.gender,
+      field: (row: EmployeeReadOneFull) => row.gender,
       format: (val: string) => capitalize(val),
       sortable: true
     },
@@ -306,7 +280,7 @@ export function useTableColumns() {
       required: true,
       label: 'Hire Date',
       align: 'left',
-      field: (row: EmployeeReadOne) => row.current_hire_date,
+      field: (row: EmployeeReadOneFull) => row.current_hire_date,
       format: (val: string) => date.formatDate(val, 'DD-MMM-YYYY'),
       sortable: true
     },
@@ -315,50 +289,45 @@ export function useTableColumns() {
       required: true,
       label: 'Division',
       align: 'left',
-      field: (row: EmployeeReadOne) => {
-        const division = getDivision(row.section_uid);
-        return capitalize(division.name);
-      }
+      field: (row: EmployeeReadOneFull) => row.division,
+      format: (val: string) => capitalize(val),
+      sortable: true
     },
     {
       name: 'department',
       required: true,
       label: 'Department',
       align: 'left',
-      field: (row: EmployeeReadOne) => {
-        const department = getDepartment(row.section_uid);
-        return capitalize(department.name);
-      },
+      field: (row: EmployeeReadOneFull) => row.department,
+      format: (val: string) => capitalize(val),
+      sortable: true
     },
     {
       name: 'unit',
       required: true,
       label: 'Unit',
       align: 'left',
-      field: (row: EmployeeReadOne) => {
-        const unit = getUnit(row.section_uid);
-        return capitalize(unit.name)
-      }
+      field: (row: EmployeeReadOneFull) => row.unit,
+      format: (val: string) => capitalize(val),
+      sortable: true
     },
     {
       name: 'section',
       required: true,
       label: 'Section',
       align: 'left',
-      field: (row: EmployeeReadOne) => {
-        const section = getSection(row.section_uid);
-        return capitalize(section.name);
-      }
+      field: (row: EmployeeReadOneFull) => row.section,
+      format: (val: string) => capitalize(val),
+      sortable: true
     },
     {
       name: 'designation',
       required: true,
       label: 'Designation',
       align: 'left',
-      field: (row: EmployeeReadOne) => {
-        const designation = getDesignation(row.designation_uid);
-        return capitalize(designation.title);
-      }
+      field: (row: EmployeeReadOneFull) => row.designation,
+      format: (val: string) => capitalize(val),
+      sortable: true
     },
   ])
   const childColumns = ref([
@@ -454,10 +423,5 @@ export function useTableColumns() {
     childColumns,
     addressColumns,
     contactPersonColumns,
-    getDivision,
-    getDepartment,
-    getSection,
-    getUnit,
-    getDesignation,
   }
 }

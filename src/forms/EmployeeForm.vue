@@ -397,7 +397,7 @@ watch(departmentUid, (newValue, oldValue) => {
   }
 })
 const hireDate = computed(() => form.value.current_hire_date)
-watch(hireDate, (newValue, oldValue) => {
+watch(hireDate, (newValue) => {
   if (isValid(new Date(newValue))) {
     form.value.apprenticeship_from_date = newValue;
     form.value.apprenticeship_to_date = formatDate(addToDate(new Date(newValue), {months: 2}), 'YYYY-MM-DD')
