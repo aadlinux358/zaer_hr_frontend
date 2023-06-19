@@ -7,11 +7,52 @@ const {
   empStore
 } = useStores();
 
-const dataSource = {
-  data: empStore.employeeList
+const options = {
+  dataSource: {
+    data: empStore.employeeList
+  },
+  slice: {
+    rows: [
+      {
+        uniqueName: 'division',
+      },
+      {
+        uniqueName: 'department',
+      },
+      {
+        uniqueName: 'unit',
+      },
+      {
+        uniqueName: 'section',
+      }
+    ],
+    columns: [],
+    measures: [
+      {
+        uniqueName: 'badge_number',
+        format: 'badge_number',
+        aggregation: 'count',
+      },
+      {
+        uniqueName: 'current_salary',
+        format: 'current_salary'
+      }
+    ]
+  },
+  formats: [
+    {
+      name: 'current_salary',
+      thousandsSeparator: ',',
+    },
+    {
+      name: 'badge_number',
+      thousandsSeparator: ',',
+    }
+  ]
 }
+
 </script>
 <template>
   <PivotComponent toolbar
-                  :report="dataSource" />
+                  :report="options" />
 </template>
