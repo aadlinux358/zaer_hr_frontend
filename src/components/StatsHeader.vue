@@ -10,6 +10,7 @@ interface SinceLastMonth {
 interface StatsData {
   title: string;
   value: number;
+  linkName: string;
   valueSymbol?: string
   againstLastMonth?: SinceLastMonth
 }
@@ -22,8 +23,9 @@ const {empStore,
 const data: Ref<Array<StatsData>> = ref([
   {
     title: 'Cost (Salary)',
-    value: computed(() => empStore.salaryCost),
-    valueSymbol: '$',
+    value: computed(() => empStore.salaryCost.toLocaleString()),
+    linkName: 'ActiveEmployees',
+    valueSymbol: 'Nfk',
     againstLastMonth: {
       arrow: 'up',
       percentage: 3.8
@@ -31,7 +33,8 @@ const data: Ref<Array<StatsData>> = ref([
   },
   {
     title: 'Employees',
-    value: computed(() => empStore.employees.size),
+    value: computed(() => empStore.employees.size.toLocaleString()),
+    linkName: 'ActiveEmployees',
     againstLastMonth: {
       arrow: 'down',
       percentage: 5.8
@@ -40,14 +43,7 @@ const data: Ref<Array<StatsData>> = ref([
   {
     title: 'Departments',
     value: computed(() => departmentStore.departments.size),
-    againstLastMonth: {
-      arrow: 'down',
-      percentage: 5.8
-    }
-  },
-  {
-    title: 'Sections',
-    value: computed(() => sectionStore.sections.size),
+    linkName: 'Departments',
     againstLastMonth: {
       arrow: 'down',
       percentage: 5.8
@@ -56,6 +52,16 @@ const data: Ref<Array<StatsData>> = ref([
   {
     title: 'Units',
     value: computed(() => unitStore.units.size),
+    linkName: 'Units',
+    againstLastMonth: {
+      arrow: 'down',
+      percentage: 5.8
+    }
+  },
+  {
+    title: 'Sections',
+    value: computed(() => sectionStore.sections.size),
+    linkName: 'Sections',
     againstLastMonth: {
       arrow: 'down',
       percentage: 5.8
@@ -73,8 +79,8 @@ function gotTo(routeName: string) {
     <q-banner dense
               v-for="s in data"
               :key="s.title"
-              class="my-banner"
-              @click="gotTo('Employees')"
+              class="my-banner cursor-pointer"
+              @click="gotTo(s.linkName)"
               :class="$q.dark.isActive ? 'hr-border-dark' : 'hr-border'">
       <q-list dense
               style="min-width: 100px;">
