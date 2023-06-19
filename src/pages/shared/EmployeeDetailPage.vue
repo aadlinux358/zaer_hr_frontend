@@ -111,17 +111,17 @@
             </div>
             <div class="q-ma-xs">
               <span class="text-caption q-mr-sm">Educational Level:</span><span class="text-capitalize">{{
-                empLookups.educationalLevel.level
+                emp.educationalLevel
               }}</span>
             </div>
             <div class="q-ma-xs">
               <span class="text-caption q-mr-sm">Country:</span><span class="text-uppercase">{{
-                empLookups.country.name
+                emp.country
               }}</span>
             </div>
             <div class="q-ma-xs">
               <span class="text-caption q-mr-sm">Nationality:</span><span class="text-uppercase">{{
-                empLookups.nationality.name
+                emp.nationality
               }}</span>
             </div>
             <div class="q-ma-xs">
@@ -154,27 +154,27 @@
           <div class="column col q-pl-sm">
             <div class="q-ma-xs">
               <span class="text-caption q-mr-sm">Division:</span><span class="text-uppercase">{{
-                empLookups.division.name
+                emp.division
               }}</span>
             </div>
             <div class="q-ma-xs">
               <span class="text-caption q-mr-sm">Department:</span><span class="text-uppercase">{{
-                empLookups.department.name
+                emp.department
               }}</span>
             </div>
             <div class="q-ma-xs">
               <span class="text-caption q-mr-sm">Unit:</span><span class="text-uppercase">{{
-                empLookups.unit.name
+                emp.unit
               }}</span>
             </div>
             <div class="q-ma-xs">
               <span class="text-caption q-mr-sm">Section:</span><span class="text-uppercase">{{
-                empLookups.section.name
+                emp.section
               }}</span>
             </div>
             <div class="q-ma-xs">
               <span class="text-caption q-mr-sm">Designation:</span><span class="text-uppercase">{{
-                empLookups.designation.title
+                emp.designation
               }}</span>
             </div>
           </div>
@@ -239,7 +239,7 @@ import {useDialogPluginComponent} from 'quasar'
 import {useStores} from 'src/composables/stores'
 import {useCrud} from 'src/composables/crud';
 import {useTableColumns} from 'src/composables/table-columns'
-import {EmployeeCreate as C, EmployeeReadOne as R, EmployeeObj} from 'src/models/employee';
+import {EmployeeCreate as C, EmployeeReadOneFull as R, EmployeeObj} from 'src/models/employee';
 import EmployeeDetailActions from 'src/components/EmployeeDetailActions.vue';
 import EmployeeForm from 'src/forms/EmployeeForm.vue'
 import EmployeeRelatedList from 'src/components/EmployeeRelatedList.vue'
@@ -250,18 +250,9 @@ import {TerminationCreate, TerminationReadOne} from 'src/models/termination';
 defineEmits({
   ...useDialogPluginComponent.emitsObject
 })
-const empLookups = ref({
-  division: {},
-  department: {},
-  section: {},
-  unit: {},
-  designation: {},
-  educationalLevel: {},
-  country: {},
-  nationality: {}
-})
+
 const emp: Ref<R> = ref(EmployeeObj)
-const {hydrateStore, empStore, childStore, contactStore, addressStore, eduStore, countryStore, nationalityStore, terminationStore} = useStores();
+const {hydrateStore, empStore, childStore, contactStore, addressStore, divisionStore, departmentStore, unitStore, sectionStore, terminationStore} = useStores();
 const route = useRoute();
 const {
   dialogRef,
@@ -287,22 +278,8 @@ const {
   childColumns,
   addressColumns,
   contactPersonColumns,
-  getDivision,
-  getDepartment,
-  getSection,
-  getUnit,
-  getDesignation} = useTableColumns();
+} = useTableColumns();
 
-function setLookups() {
-  empLookups.value.division = getDivision(emp.value.section_uid)
-  empLookups.value.department = getDepartment(emp.value.section_uid)
-  empLookups.value.section = getSection(emp.value.section_uid)
-  empLookups.value.unit = getUnit(emp.value.section_uid)
-  empLookups.value.designation = getDesignation(emp.value.designation_uid)
-  empLookups.value.country = countryStore.countries.get(emp.value?.country_uid)
-  empLookups.value.nationality = nationalityStore.nationalities.get(emp.value?.nationality_uid)
-  empLookups.value.educationalLevel = eduStore.educationalLevels.get(emp.value.educational_level_uid)
-}
 onMounted(async () => {
   if (empStore.employees.size === 0) {
     await hydrateStore()
@@ -313,7 +290,6 @@ onMounted(async () => {
     Router.push({name: 'Employees'})
   } else {
     emp.value = result;
-    setLookups();
   }
 })
 const childRows = computed(() => childStore.childList.filter(child => child.parent_uid === emp.value.uid))
@@ -328,7 +304,6 @@ const empUnsubscribe = empStore.$onAction(({name, store, after}) => {
         const result = store.employees.get(emp.value.uid)
         if (result) {
           emp.value = result;
-          setLookups();
         }
       }
     });
@@ -344,7 +319,6 @@ const terminateUnsubscribe = terminationStore.$onAction(({name, after}) => {
         const result = empStore.employees.get(emp.value.uid)
         if (result) {
           emp.value = result;
-          setLookups();
         }
       }
     });
@@ -358,10 +332,14 @@ onUnmounted(() => {
 })
 
 function onEditEmployee() {
+  const section = sectionStore.sections.get(emp.value.section_uid);
+  const unit = unitStore.units.get(section.unit_uid);
+  const department = departmentStore.departments.get(unit.department_uid)
+  const division = divisionStore.divisions.get(department.division_uid)
   const extra = {
-    divisionUid: empLookups.value.division.uid,
-    departmentUid: empLookups.value.department.uid,
-    unitUid: empLookups.value.unit.uid
+    divisionUid: division.uid,
+    departmentUid: department.uid,
+    unitUid: unit.uid
   }
   edit(Object.assign(emp.value, extra))
 }

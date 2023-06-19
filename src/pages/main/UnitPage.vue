@@ -4,16 +4,16 @@ import {useStores} from 'src/composables/stores';
 import ListView from 'src/components/ListView.vue'
 import StatsHeader from 'src/components/StatsHeader.vue';
 
-const {sectionColumns} = useTableColumns();
-const {sectionStore} = useStores();
+const {unitColumns} = useTableColumns();
+const {unitStore} = useStores();
 </script>
 <template>
   <q-page padding>
     <StatsHeader />
-    <ListView :columns="sectionColumns"
-              :rows="sectionStore.sectionList"
-              :loading="sectionStore.loading"
+    <ListView :columns="unitColumns"
+              :rows="unitStore.unitList"
+              :loading="unitStore.loading"
               sort-by="name"
-              title="section" />
+              title="unit" />
   </q-page>
 </template>
