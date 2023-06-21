@@ -67,4 +67,6 @@ export default {
   pivot: 'pivot',
   user: 'user',
   users: 'users',
+  active_employees: 'active employees',
+  inactive_employees: 'inactive employees',
 };

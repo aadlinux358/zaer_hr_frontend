@@ -67,4 +67,6 @@ export default {
   pivot: 'perno',
   user: 'utente',
   users: 'utenti',
+  active_employees: 'dipendenti attivi',
+  inactive_employees: 'dipendenti inattivi',
 }

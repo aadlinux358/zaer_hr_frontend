@@ -67,4 +67,6 @@ export default {
   pivot: 'ፒቮት',
   user: 'ተጠቃሚ',
   users: 'ተጠቀምቲ',
+  active_employees: 'ንጡፋት ሰራሕተኛታት',
+  inactive_employees: 'ዘይንጡፋት ሰራሕተኛታት',
 }
