@@ -5,7 +5,7 @@
              :dense="uiStore.denseTable"
              square
              :columns="empColumns"
-             :rows="empStore.employeeList"
+             :rows="empStore.inactiveEmployeeList"
              :pagination="{sortBy: 'badge_number', rowsPerPage: 20}"
              row-key="uid"
              flat
@@ -15,7 +15,7 @@
              :filter="filter">
 
       <template v-slot:top="props">
-        <DataTableHeaderVue title="active_employees"
+        <DataTableHeaderVue title="inactive_employees"
                             v-model:filter="filter"
                             entity="employee"
                             :loading="empStore.loading"

@@ -33,7 +33,7 @@ const data: Ref<Array<StatsData>> = ref([
   },
   {
     title: 'Employees',
-    value: computed(() => empStore.employees.size.toLocaleString()),
+    value: computed(() => empStore.employeeList.length.toLocaleString()),
     linkName: 'ActiveEmployees',
     againstLastMonth: {
       arrow: 'down',

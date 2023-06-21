@@ -11,7 +11,23 @@ export const useEmployeeStore = defineStore('employee', () => {
   const employees: Ref<Map<string, R>> = ref(new Map())
 
   const employeeList = computed(() => {
-    return Array.from(employees.value, entry => entry[1])
+    const data: R[] = [];
+    employees.value.forEach(e => {
+      if (e.is_active === true) {
+        data.push(e)
+      }
+    })
+    return data;
+  })
+
+  const inactiveEmployeeList = computed(() => {
+    const data: R[] = [];
+    employees.value.forEach(e => {
+      if (e.is_active === false) {
+        data.push(e)
+      }
+    })
+    return data;
   })
   const salaryCost = computed(() => {
     if (employeeList.value.length !== 0) {
@@ -51,6 +67,7 @@ export const useEmployeeStore = defineStore('employee', () => {
   return {
     employees,
     employeeList,
+    inactiveEmployeeList,
     salaryCost,
     loading,
     getManyDB,
