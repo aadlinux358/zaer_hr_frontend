@@ -80,8 +80,8 @@ module.exports = configure(function (ctx) {
       // publicPath: '/',
       // analyze: true,
       env: {
-        authApi: ctx.dev ? 'http://ashm:8001/api/v1/auth' : 'http://zion:8001/api/v1/auth',
-        hrApi: ctx.dev ? 'http://ashm:8000/api/v1/hr' : 'http://zion:8000/api/v1/hr'
+        authApi: ctx.dev ? 'http://ashm:8001/api/v1/auth' : 'http://192.168.99.8:8001/api/v1/auth',
+        hrApi: ctx.dev ? 'http://ashm:8000/api/v1/hr' : 'http://192.168.99.8:8000/api/v1/hr'
       },
       // rawDefine: {}
       // ignorePublicFolder: true,
