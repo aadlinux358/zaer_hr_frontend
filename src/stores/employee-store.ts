@@ -13,7 +13,6 @@ export const useEmployeeStore = defineStore('employee', () => {
   const employeeList = computed(() => {
     return Array.from(employees.value, entry => entry[1])
   })
-
   const salaryCost = computed(() => {
     if (employeeList.value.length !== 0) {
       return employeeList.value.reduce((acc, curr) => acc + curr.current_salary, 0)
