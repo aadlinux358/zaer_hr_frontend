@@ -18,7 +18,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '/dashboard',
-        name: 'Index',
+        name: 'Dashboard',
         component: () => import('src/pages/main/IndexPage.vue'),
       },
       {
@@ -91,7 +91,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         name: 'Home',
-        redirect: {name: 'Index'},
+        redirect: {name: 'Dashboard'},
       }
     ],
   },
