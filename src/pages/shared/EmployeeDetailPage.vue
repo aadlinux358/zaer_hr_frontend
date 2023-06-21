@@ -111,7 +111,7 @@
             </div>
             <div class="q-ma-xs">
               <span class="text-caption q-mr-sm">Educational Level:</span><span class="text-capitalize">{{
-                emp.educationalLevel
+                emp.educational_level
               }}</span>
             </div>
             <div class="q-ma-xs">
