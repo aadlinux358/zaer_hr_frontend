@@ -69,4 +69,9 @@ export default {
   users: 'ተጠቀምቲ',
   active_employees: 'ንጡፋት ሰራሕተኛታት',
   inactive_employees: 'ዘይንጡፋት ሰራሕተኛታት',
+  employees_by_gender: 'ሰራሕተኛታት ብመንጽር ጾታ',
+  employees_by_department: 'ሰራሕተኛታት ብመንጽር ጨንፈር',
+  employees_by_division: 'ሰራሕተኛታት ብመንጽር ድቪዥን',
+  employees_by_hire_date: 'ሰራሕተኛታት ብመንጽር ዕለተ ምቑጻር',
+  employees_by_designation: 'ሰራሕተኛታት ብመንጽር መዓርግ',
 }

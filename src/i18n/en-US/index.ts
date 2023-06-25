@@ -69,4 +69,9 @@ export default {
   users: 'users',
   active_employees: 'active employees',
   inactive_employees: 'inactive employees',
+  employees_by_gender: 'employees by gender',
+  employees_by_department: 'employees by department',
+  employees_by_division: 'employees by division',
+  employees_by_hire_date: 'employees by hire date',
+  employees_by_designation: 'employees by designation',
 };

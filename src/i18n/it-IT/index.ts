@@ -69,4 +69,9 @@ export default {
   users: 'utenti',
   active_employees: 'dipendenti attivi',
   inactive_employees: 'dipendenti inattivi',
+  employees_by_gender: 'dipendenti per genere',
+  employees_by_department: 'dipendenti per reparto',
+  employees_by_division: 'dipendenti per divisione',
+  employees_by_hire_date: 'dipendenti per data di assunzione',
+  employees_by_designation: 'dipendenti per designazione',
 }
