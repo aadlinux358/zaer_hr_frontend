@@ -94,12 +94,14 @@ function gotTo(routeName: string) {
             <template v-if="s.valueSymbol">{{ s.valueSymbol }}</template>{{ s.value }}
           </q-item-section>
         </q-item>
+        <!--
         <q-item v-if="s.againstLastMonth">
           <span class="text-caption">
             <i class="fa-solid "
                :class="s.againstLastMonth.arrow === 'up' ? 'fa-arrow-up-long' : 'fa-arrow-down-long'"></i>
             {{ s.againstLastMonth.percentage }}% Since last month</span>
         </q-item>
+        -->
       </q-list>
     </q-banner>
   </div>
