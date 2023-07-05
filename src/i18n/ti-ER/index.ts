@@ -74,4 +74,6 @@ export default {
   employees_by_division: 'ሰራሕተኛታት ብመንጽር ድቪዥን',
   employees_by_hire_date: 'ሰራሕተኛታት ብመንጽር ዕለተ ምቑጻር',
   employees_by_designation: 'ሰራሕተኛታት ብመንጽር መዓርግ',
+  employee_severance_pay: 'ክፍሊት እስትሕጋግ ሰራሕተኛ',
+  severance: 'እስትሕጋግ',
 }

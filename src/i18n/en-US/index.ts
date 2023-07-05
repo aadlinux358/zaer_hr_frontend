@@ -74,4 +74,6 @@ export default {
   employees_by_division: 'employees by division',
   employees_by_hire_date: 'employees by hire date',
   employees_by_designation: 'employees by designation',
+  employee_severance_pay: 'employee severance pay',
+  severance: 'severance',
 };

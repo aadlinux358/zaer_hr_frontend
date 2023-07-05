@@ -74,4 +74,6 @@ export default {
   employees_by_division: 'dipendenti per divisione',
   employees_by_hire_date: 'dipendenti per data di assunzione',
   employees_by_designation: 'dipendenti per designazione',
+  employee_severance_pay: 'trattamento di fine rapporto del dipendente',
+  severance: 'licenziamento',
 }
