@@ -82,6 +82,11 @@ const empLinks: EssentialLinkProps[] = [
     icon: 'group_remove',
     link: 'InactiveEmployees',
   },
+  {
+    title: 'severance',
+    icon: 'fas fa-handshake fa-xs',
+    link: 'Severance'
+  }
 ]
 const reportLinks: EssentialLinkProps[] = [
   {

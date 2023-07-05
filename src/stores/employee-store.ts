@@ -2,14 +2,13 @@ import {computed, Ref, ref} from 'vue';
 import {defineStore} from 'pinia';
 import {hrApi} from 'src/boot/axios';
 import {useFlags} from 'src/composables/flags';
-import {EmployeeReadOneFull as R, EmployeeReadManyFull as RM, EmployeeCreate as C} from 'src/models/employee';
+import {EmployeeReadOneFull as R, EmployeeReadManyFull as RM, EmployeeCreate as C, EmployeeSeverancePay} from 'src/models/employee';
 import {useApiCrud} from 'src/composables/api';
 
 const ENDPOINT = '/employees';
 
 export const useEmployeeStore = defineStore('employee', () => {
   const employees: Ref<Map<string, R>> = ref(new Map())
-
   const employeeList = computed(() => {
     const data: R[] = [];
     employees.value.forEach(e => {
@@ -19,6 +18,7 @@ export const useEmployeeStore = defineStore('employee', () => {
     })
     return data;
   })
+
 
   const inactiveEmployeeList = computed(() => {
     const data: R[] = [];
@@ -64,6 +64,35 @@ export const useEmployeeStore = defineStore('employee', () => {
       loading.value = false;
     }
   }
+  async function getEmployeeByBadgeNumber(badge_number: number) {
+    loading.value = true;
+    try {
+      const response = await hrApi.get(`${ENDPOINT}/badge-number/${badge_number}`, config);
+      const entity: R = response.data;
+      employees.value.set(entity.uid, entity)
+    }
+    catch (err) {
+      setError(err);
+    }
+    finally {
+      loading.value = false;
+    }
+  }
+  async function getSeverancePay(badge_number: number) {
+    loading.value = true;
+    try {
+      const response = await hrApi.get(`${ENDPOINT}/severance-pay/${badge_number}`, Object.assign(config, {ResponseType: 'blob'}))
+      return response.data
+    }
+    catch (err) {
+      setError(err);
+    }
+    finally {
+      loading.value = false;
+    }
+  }
+
+
   return {
     employees,
     employeeList,
@@ -71,6 +100,8 @@ export const useEmployeeStore = defineStore('employee', () => {
     salaryCost,
     loading,
     getManyDB,
+    getEmployeeByBadgeNumber,
+    getSeverancePay,
     getById,
     createDB,
     updateDB,
