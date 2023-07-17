@@ -37,6 +37,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('src/pages/main/EmployeeSeverancePayPage.vue')
       },
       {
+        path: '/terminations',
+        name: 'Terminations',
+        component: () => import('src/pages/main/TerminationPage.vue')
+      },
+      {
         path: '/employee-form',
         name: 'EmployeeForm',
         component: () => import('src/forms/EmployeeForm.vue')

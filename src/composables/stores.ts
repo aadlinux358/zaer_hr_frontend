@@ -76,7 +76,7 @@ export function useStores() {
     if (contactStore.contacts.size === 0) {
       await contactStore.getManyDB();
     }
-    if (terminationStore.terminations.size == 0) {
+    if (terminationStore.terminations.size === 0) {
       await terminationStore.getManyDB();
     }
     $q.loading.hide();

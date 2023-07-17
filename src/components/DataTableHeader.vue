@@ -1,17 +1,23 @@
 <script setup lang="ts">
 import {computed} from 'vue';
 import {useStores} from 'src/composables/stores';
-
-const props = defineProps<{
-  title: string
-  entity: string
-  loading: boolean
-  filter: string
+export interface Props {
+  title: string;
+  entity: string;
+  loading: boolean;
+  filter: string;
+  showAddButton?: boolean;
   tableProps: {
     toggleFullscreen: () => void
     inFullscreen: boolean
   }
-}>()
+}
+const props = withDefaults(defineProps<Props>(), {
+  title: '',
+  entity: '',
+  loading: false,
+  showAddButton: true
+})
 
 const emits = defineEmits(['update:filter', 'add', 'downloadCsv', 'downloadExcel'])
 const {uiStore, authStore} = useStores();
@@ -35,6 +41,7 @@ const filter = computed({
     </div>
     <div class="row q-mt-md">
       <q-btn color="primary"
+             v-if="props.showAddButton"
              class="text-capitalize"
              square
              no-caps

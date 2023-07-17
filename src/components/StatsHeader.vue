@@ -32,7 +32,7 @@ const data: Ref<Array<StatsData>> = ref([
     }
   },
   {
-    title: 'Employees',
+    title: 'Employees (Active)',
     value: computed(() => empStore.employeeList.length.toLocaleString()),
     linkName: 'ActiveEmployees',
     againstLastMonth: {

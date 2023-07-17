@@ -86,6 +86,11 @@ const empLinks: EssentialLinkProps[] = [
     title: 'severance',
     icon: 'fas fa-handshake fa-xs',
     link: 'Severance'
+  },
+  {
+    title: 'terminations',
+    icon: 'block',
+    link: 'Terminations'
   }
 ]
 const reportLinks: EssentialLinkProps[] = [

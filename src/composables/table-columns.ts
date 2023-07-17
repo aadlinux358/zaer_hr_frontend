@@ -10,6 +10,7 @@ import {DivisionReadOne} from 'src/models/division';
 import {DepartmentReadOne} from 'src/models/department';
 import {UnitReadOne} from 'src/models/unit';
 import {SectionReadOne} from 'src/models/section';
+import {TerminationReadOne} from 'src/models/termination';
 
 export function useTableColumns() {
   const {capitalize} = format;
@@ -17,6 +18,7 @@ export function useTableColumns() {
     divisionStore,
     departmentStore,
     unitStore,
+    empStore,
   } = useStores();
 
   const divisionColumns = [
@@ -290,7 +292,7 @@ export function useTableColumns() {
       label: 'Division',
       align: 'left',
       field: (row: EmployeeReadOneFull) => row.division,
-      format: (val: string) => capitalize(val),
+      format: (val: string) => val ? capitalize(val) : '',
       sortable: true
     },
     {
@@ -299,7 +301,7 @@ export function useTableColumns() {
       label: 'Department',
       align: 'left',
       field: (row: EmployeeReadOneFull) => row.department,
-      format: (val: string) => capitalize(val),
+      format: (val: string) => val ? capitalize(val) : '',
       sortable: true
     },
     {
@@ -308,7 +310,7 @@ export function useTableColumns() {
       label: 'Unit',
       align: 'left',
       field: (row: EmployeeReadOneFull) => row.unit,
-      format: (val: string) => capitalize(val),
+      format: (val: string) => val ? capitalize(val) : '',
       sortable: true
     },
     {
@@ -317,7 +319,7 @@ export function useTableColumns() {
       label: 'Section',
       align: 'left',
       field: (row: EmployeeReadOneFull) => row.section,
-      format: (val: string) => capitalize(val),
+      format: (val: string) => val ? capitalize(val) : '',
       sortable: true
     },
     {
@@ -326,7 +328,7 @@ export function useTableColumns() {
       label: 'Designation',
       align: 'left',
       field: (row: EmployeeReadOneFull) => row.designation,
-      format: (val: string) => capitalize(val),
+      format: (val: string) => val ? capitalize(val) : '',
       sortable: true
     },
   ])
@@ -413,6 +415,69 @@ export function useTableColumns() {
       align: 'left',
     },
   ])
+  const terminationColumns = ref([
+    {
+      name: 'badge_number',
+      required: false,
+      label: 'Badge Number',
+      field: (row: TerminationReadOne) => {
+        const emp = empStore.employees.get(row.employee_uid)
+        return emp?.badge_number ? emp.badge_number : ''
+      },
+      align: 'left',
+    },
+    {
+      name: 'first_name',
+      required: false,
+      label: 'First Name',
+      field: (row: TerminationReadOne) => {
+        const emp = empStore.employees.get(row.employee_uid)
+        return emp?.first_name ? capitalize(emp.first_name) : ''
+      },
+      align: 'left',
+    },
+    {
+      name: 'last_name',
+      required: false,
+      label: 'Last Name',
+      field: (row: TerminationReadOne) => {
+        const emp = empStore.employees.get(row.employee_uid)
+        return emp?.last_name ? capitalize(emp.last_name) : ''
+      },
+      align: 'left',
+    },
+    {
+      name: 'grandfather_name',
+      required: false,
+      label: 'Grandfather Name',
+      field: (row: TerminationReadOne) => {
+        const emp = empStore.employees.get(row.employee_uid)
+        return emp?.grandfather_name ? capitalize(emp.grandfather_name) : ''
+      },
+      align: 'left',
+    },
+    {
+      name: 'employee_uid',
+      required: true,
+      label: 'Employee UUID',
+      field: (row: TerminationReadOne) => row.employee_uid,
+      align: 'left',
+    },
+    {
+      name: 'hire_date',
+      required: true,
+      label: 'Hire Date',
+      field: (row: TerminationReadOne) => row.hire_date,
+      align: 'left',
+    },
+    {
+      name: 'termination_date',
+      required: true,
+      label: 'Termination Date',
+      field: (row: TerminationReadOne) => row.termination_date,
+      align: 'left',
+    },
+  ])
   return {
     divisionColumns,
     departmentColumns,
@@ -423,5 +488,6 @@ export function useTableColumns() {
     childColumns,
     addressColumns,
     contactPersonColumns,
+    terminationColumns,
   }
 }
